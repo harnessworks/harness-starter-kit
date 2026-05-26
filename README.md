@@ -16,6 +16,9 @@
 
 **English** | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-CN.md)
 
+[Static site](https://baskduf.github.io/harness-starter-kit/) |
+[Adoption prompt](docs/prompts/apply-to-target-repo.md)
+
 `harness-starter-kit` is a starter kit for applying harness engineering to any
 software project.
 
