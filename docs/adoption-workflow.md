@@ -68,6 +68,9 @@ Match constraints to the stack:
   development database ignores, and migration review rules
 - Flask: app factory checks, `python -m unittest discover -s tests`, Flask
   route table checks, and instance-data ignores
+- Spring: Maven or Gradle wrapper checks, Spring Boot context tests, generated
+  build output ignores, local config ignores, and migration review rules when
+  Flyway or Liquibase is present
 - TypeScript: ESLint, TypeScript strictness, dependency boundary rules,
   unused-export checks
 - Next.js: `next build`, `tsc --noEmit --incremental false`, generated-file
@@ -109,5 +112,5 @@ installer only adds the GitHub Actions workflow when `--with-ci` is provided.
 Finish with a short adoption report. Use
 `docs/templates/adoption-report.md` as a shape and compare against
 `examples/node-adoption-report.md`, `examples/nextjs-adoption-report.md`,
-`examples/django-adoption-report.md`, or `examples/flask-adoption-report.md`
-when the target stack is similar.
+`examples/django-adoption-report.md`, `examples/flask-adoption-report.md`, or
+`examples/spring-adoption-report.md` when the target stack is similar.

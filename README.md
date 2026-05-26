@@ -172,6 +172,11 @@ Use `flask` when the target project is a Flask app. It adds reference snippets
 for `unittest` discovery, Flask route checks, instance-data ignores, and a
 Python `check_harness.py` entrypoint.
 
+Use `spring` when the target project is a Spring Boot app. It adds reference
+snippets for Maven or Gradle wrapper checks, Spring test commands, generated
+build output ignores, local config ignores, and a Python `check_harness.py`
+entrypoint.
+
 Profiles are intentionally conservative reference material for the agent. They
 are not automatic project transformations. The installer copies profile files
 under `docs/harness/profiles/<profile>/` so an agent or maintainer can merge,
@@ -186,10 +191,13 @@ This kit has been smoke-tested against:
 - a small Next.js App Router project using TypeScript and `next build`
 - a small Django project using `manage.py check` and `manage.py test`
 - a small Flask app using an app factory and Flask's test client
+- a small Spring Boot Maven project using the Maven wrapper and a Spring context
+  test
 
 See `examples/node-adoption-report.md` and
 `examples/nextjs-adoption-report.md`, `examples/django-adoption-report.md`, or
-`examples/flask-adoption-report.md` for example adoption reports.
+`examples/flask-adoption-report.md` for example adoption reports. See
+`examples/spring-adoption-report.md` for a Spring example.
 
 ## Local Checks
 
