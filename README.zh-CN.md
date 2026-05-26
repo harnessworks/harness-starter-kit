@@ -22,10 +22,10 @@
 预期工作流很简单：
 
 ```text
-把 harness-starter-kit 克隆到目标项目内部。
-向代理发出请求：
-"先阅读 ./harness-starter-kit，然后把其中的 harness engineering 指南应用到
-这个仓库。保留现有架构，只添加缺失的最小 harness 文件。"
+Clone harness-starter-kit into a target project.
+Ask an agent: "Read ./harness-starter-kit and apply its harness engineering guidelines
+to this repo. Preserve the existing architecture and add only the minimum
+missing harness files."
 ```
 
 目标项目最终应该拥有一套实用的代理 harness：

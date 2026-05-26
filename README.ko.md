@@ -22,10 +22,10 @@
 기본 사용 흐름은 단순합니다.
 
 ```text
-harness-starter-kit을 대상 프로젝트 안에 클론합니다.
-에이전트에게 이렇게 요청합니다:
-"./harness-starter-kit을 읽고 이 저장소에 harness engineering 가이드를 적용해줘.
-기존 아키텍처를 보존하고, 누락된 최소 harness 파일만 추가해줘."
+Clone harness-starter-kit into a target project.
+Ask an agent: "Read ./harness-starter-kit and apply its harness engineering guidelines
+to this repo. Preserve the existing architecture and add only the minimum
+missing harness files."
 ```
 
 대상 프로젝트에는 실용적인 에이전트 harness가 생겨야 합니다.

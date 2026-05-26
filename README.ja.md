@@ -22,11 +22,10 @@ engineering を適用するためのスターターキットです。
 想定しているワークフローはシンプルです。
 
 ```text
-harness-starter-kit を対象プロジェクトの中にクローンします。
-エージェントに次のように依頼します:
-"./harness-starter-kit を読んで、このリポジトリに harness engineering の
-ガイドラインを適用してください。既存のアーキテクチャを保ち、不足している
-最小限の harness ファイルだけを追加してください。"
+Clone harness-starter-kit into a target project.
+Ask an agent: "Read ./harness-starter-kit and apply its harness engineering guidelines
+to this repo. Preserve the existing architecture and add only the minimum
+missing harness files."
 ```
 
 対象プロジェクトには、実用的なエージェント harness が残るべきです。
