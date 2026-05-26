@@ -1,3 +1,17 @@
+<pre align="center">
+ _   _    _    ____  _   _ _____ ____ ____
+| | | |  / \  |  _ \| \ | | ____/ ___/ ___|
+| |_| | / _ \ | |_) |  \| |  _| \___ \___ \
+|  _  |/ ___ \|  _ <| |\  | |___ ___) |__) |
+|_| |_/_/   \_\_| \_\_| \_|_____|____/____/
+
+ ____ _____  _    ____ _____ _____ ____    _  _____ _____
+/ ___|_   _|/ \  |  _ \_   _| ____|  _ \  | |/ /_ _|_   _|
+\___ \ | | / _ \ | |_) || | |  _| | |_) | | ' / | |  | |
+ ___) || |/ ___ \|  _ < | | | |___|  _ <  | . \ | |  | |
+|____/ |_/_/   \_\_| \_\|_| |_____|_| \_\ |_|\_\___| |_|
+</pre>
+
 # harness-starter-kit
 
 **English** | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-CN.md)
@@ -120,6 +134,10 @@ package scripts.
 
 Profiles are intentionally conservative. They provide snippets and guidance
 instead of rewriting existing build systems.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
 ## Core Principle
 
