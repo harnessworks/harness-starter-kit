@@ -138,6 +138,64 @@ python harness-starter-kit/scripts/apply_harness.py --target . --profile generic
 python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --with-ci
 ```
 
+## Harness Doctor
+
+Harness Doctor를 실행하면 저장소가 AI 코딩 에이전트 협업에 얼마나 준비되어
+있는지 평가할 수 있습니다.
+
+```text
+/harness doctor
+```
+
+Harness Doctor는 저장소를 다섯 영역으로 채점합니다.
+
+- Agent Instructions
+- Feedback Loops
+- Durable Memory
+- Structural Safety
+- Adoption Clarity
+
+목표는 문서를 게임처럼 점수화하는 것이 아닙니다. 코딩 에이전트가 같은 실수를
+반복할 가능성이 높은 약점을 찾는 것입니다.
+
+한 문장으로 말하면, `harness-starter-kit`은 저장소가 AI 코딩 에이전트에 얼마나
+준비되어 있는지 진단하고 개선하도록 돕습니다.
+
+에이전트 명령은
+[`commands/harness-doctor.md`](commands/harness-doctor.md)에 있습니다. 채점
+루브릭은
+[`docs/scoring/harness-score-rubric.md`](docs/scoring/harness-score-rubric.md)에
+있고, 예시 리포트는
+[`docs/examples/harness-doctor-report.md`](docs/examples/harness-doctor-report.md)에
+있습니다.
+
+객관적인 baseline scan은 다음으로 실행할 수 있습니다.
+
+```powershell
+python scripts/harness_doctor.py --target .
+```
+
+샘플 출력:
+
+```text
+Harness Doctor Report
+
+Score: 72/100
+Grade: B
+
+Verdict:
+Useful but incomplete. This repository has durable agent instructions and some
+validation loops, but it still lacks durable failure memory and CI-level
+structural enforcement.
+
+Breakdown:
+- Agent Instructions: 18/20
+- Feedback Loops: 14/20
+- Durable Memory: 10/20
+- Structural Safety: 16/20
+- Adoption Clarity: 14/20
+```
+
 ## 에이전트 주도 적용
 
 새 프로젝트나 기존 프로젝트에서 실제 적용 경로는 에이전트 주도 방식입니다.
@@ -182,11 +240,14 @@ Requirements:
 ```text
 harness-starter-kit/
 |-- AGENTS.md
+|-- commands/
 |-- docs/
 |   |-- adoption-workflow.md
 |   |-- component-map.md
 |   |-- overview.md
 |   |-- checklists/
+|   |-- examples/
+|   |-- scoring/
 |   `-- prompts/
 |-- scripts/
 |   `-- apply_harness.py
@@ -309,10 +370,11 @@ starter kit 템플릿, 설치 스크립트, drift script를 바꾼 뒤에는 다
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py scripts/harness_doctor.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
 python scripts/check_effectiveness_plan.py
+python scripts/harness_doctor.py --target .
 ```
 
 ## 라이선스

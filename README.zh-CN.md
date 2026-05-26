@@ -118,6 +118,59 @@ Actions harness workflow 时，才使用 `--with-ci`。
 python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --with-ci
 ```
 
+## Harness Doctor
+
+运行 Harness Doctor 可以评估一个仓库是否已经准备好与 AI 代码代理可靠协作。
+
+```text
+/harness doctor
+```
+
+Harness Doctor 会从五个方面为仓库评分：
+
+- Agent Instructions
+- Feedback Loops
+- Durable Memory
+- Structural Safety
+- Adoption Clarity
+
+目标不是把文档游戏化。目标是找出代码代理容易重复犯错的薄弱点。
+
+一句话概括：`harness-starter-kit` 帮助你诊断并改进仓库对 AI 代码代理的准备程度。
+
+代理命令位于
+[`commands/harness-doctor.md`](commands/harness-doctor.md)。评分规则位于
+[`docs/scoring/harness-score-rubric.md`](docs/scoring/harness-score-rubric.md)，
+示例报告位于
+[`docs/examples/harness-doctor-report.md`](docs/examples/harness-doctor-report.md)。
+
+如需客观的 baseline scan，可以运行：
+
+```powershell
+python scripts/harness_doctor.py --target .
+```
+
+示例输出：
+
+```text
+Harness Doctor Report
+
+Score: 72/100
+Grade: B
+
+Verdict:
+Useful but incomplete. This repository has durable agent instructions and some
+validation loops, but it still lacks durable failure memory and CI-level
+structural enforcement.
+
+Breakdown:
+- Agent Instructions: 18/20
+- Feedback Loops: 14/20
+- Durable Memory: 10/20
+- Structural Safety: 16/20
+- Adoption Clarity: 14/20
+```
+
 ## 由代理驱动的采用流程
 
 在新项目或已有项目中，把下面的提示交给你的代码代理：
@@ -159,11 +212,14 @@ Requirements:
 ```text
 harness-starter-kit/
 |-- AGENTS.md
+|-- commands/
 |-- docs/
 |   |-- adoption-workflow.md
 |   |-- component-map.md
 |   |-- overview.md
 |   |-- checklists/
+|   |-- examples/
+|   |-- scoring/
 |   `-- prompts/
 |-- scripts/
 |   `-- apply_harness.py
@@ -267,10 +323,11 @@ location。实际的 before/after 或后续观测结果应记录在
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py scripts/harness_doctor.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
 python scripts/check_effectiveness_plan.py
+python scripts/harness_doctor.py --target .
 ```
 
 ## 许可证
