@@ -214,7 +214,7 @@ test/build script 和 Vue-specific lint rule 的参考片段。
 profile 文件复制到 `docs/harness/profiles/<profile>/` 下，方便代理或 maintainer
 在保留目标项目现有构建系统的同时，只 merge、adapt 或 ignore 合适的片段。
 
-## 已测试场景
+## 安装和 Drift Check 覆盖范围
 
 自动 fixture smoke test 覆盖以下 stack 的 harness installation：
 
@@ -248,15 +248,29 @@ python -m unittest tests.test_fastapi_profile_e2e
 在 GitHub Actions 中，手动运行 `Harness Check` workflow 并启用
 `run_fastapi_e2e`，即可执行同一个 dependency-installing test。
 
+## 效果测量
+
+上面的自动测试验证安装行为和可运行的 drift check。它们不能证明 harness
+adoption 减少了重复出现的 agent mistake。效果应使用
+[`docs/evaluation.md`](docs/evaluation.md) 中的协议单独测量。
+
+adoption 时，请填写
+[`docs/templates/adoption-report.md`](docs/templates/adoption-report.md) 中的
+Effectiveness Measurement Plan。如果没有 baseline，请记录 harnessed-only
+tracking，并定义后续可比较任务、primary metric、review window 和 results
+location。实际的 before/after 或后续观测结果应记录在
+[`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md)。
+
 ## 本地检查
 
 修改 starter kit 模板、安装脚本或 drift script 后，请运行这些检查：
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
+python scripts/check_effectiveness_plan.py
 ```
 
 ## 许可证

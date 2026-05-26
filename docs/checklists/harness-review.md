@@ -13,3 +13,7 @@ Run this monthly or after repeated agent mistakes.
 - [ ] Are stack-specific snippets still aligned with the target toolchain?
 - [ ] If a new stack was introduced after generic adoption, was the profile
       absorption checklist completed?
+- [ ] Is the effectiveness measurement plan current, with a baseline status,
+      comparable tasks, primary metric, review window, and results location?
+- [ ] If comparable agent work has happened since adoption, was an
+      effectiveness report updated with observable results?

@@ -1,0 +1,75 @@
+# Harness Effectiveness Evaluation
+
+Use this protocol to measure whether harness adoption reduces repeated agent
+mistakes in a target repository.
+
+Smoke tests and fixture tests prove that starter-kit files can be installed and
+that drift checks can run. They do not prove that the harness improves agent
+outcomes. Effectiveness should be measured with comparable tasks before and
+after adoption, or with harnessed-only tracking when no baseline is available.
+
+## Evaluation Questions
+
+- Did agents edit fewer wrong files?
+- Did agents repeat fewer previously documented mistakes?
+- Did first-pass verification succeed more often?
+- Did drift checks catch architecture or structure violations earlier?
+- Did maintainers spend less time reverting or reworking agent changes?
+
+## Conditions
+
+Use one of these modes:
+
+- Baseline versus harnessed: compare the same or similar tasks before and after
+  harness adoption.
+- Harnessed-only tracking: when no baseline exists, record the next comparable
+  agent tasks after adoption and use those results as the initial benchmark.
+
+Record the mode in the effectiveness report. Do not infer improvement from
+harnessed-only tracking until there is a later comparison point.
+
+## Metrics
+
+| Metric | Definition | Example observation |
+| --- | --- | --- |
+| Wrong-file edits | Files changed outside the intended task boundary. | Agent touched generated files while editing UI copy. |
+| Repeated mistakes | Mistakes already documented in `AGENTS.md`, `docs/failures`, or decision records. | Agent added direct database access from a route after the rule existed. |
+| First-pass verification | Whether documented checks passed before human correction. | `npm test` and `npm run lint` both passed. |
+| Drift violations detected | Violations caught by harness checks. | Forbidden import, temporary file, or broken docs link found. |
+| Human rework | Maintainer time spent reverting, rewriting, or explaining the same issue. | Reviewer spent 20 minutes undoing misplaced files. |
+| Reverted files | Files removed or restored by a human reviewer. | Two generated files reverted from the PR. |
+
+## Protocol
+
+1. Pick 3 to 5 realistic tasks that represent common agent work in the target
+   repository.
+2. For each task, define the expected file boundary and the known failure mode
+   the harness should prevent or surface.
+3. Run each task at least 5 times per condition when practical.
+4. Use the same task prompt, repository state, verification command, and review
+   criteria for each comparable run.
+5. Record observable outcomes only. Do not count intentions or explanations as
+   successful behavior.
+6. Store results in an effectiveness report using
+   `docs/templates/effectiveness-report.md`.
+
+## Minimum Adoption-Time Plan
+
+When adopting the harness into a new target repository, the agent should fill an
+effectiveness measurement plan even if no baseline data exists yet:
+
+- whether baseline data is available
+- which tasks should be repeated or tracked
+- the primary metric for the target repository
+- the review window, such as the next 5 agent PRs
+- where future results should be recorded
+
+If measurement is not possible yet, state why and name the next observable event
+that will make measurement possible.
+
+## Interpretation
+
+Treat the data as operational evidence, not a controlled scientific study. Small
+repositories and changing agents can introduce noise. The useful signal is
+whether the same classes of mistakes become less frequent, easier to detect, or
+cheaper to correct after the harness becomes part of the repository.

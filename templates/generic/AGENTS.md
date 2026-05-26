@@ -63,6 +63,11 @@ introduced after generic adoption, review the closest profile under
 `docs/harness/profiles/<profile>/` if present. Decide which profile snippets to
 adopt, adapt, skip, or defer, then report those choices before finishing.
 
+When harness rules, checks, CI, architecture boundaries, or agent-facing docs
+change, update the effectiveness measurement plan in the adoption report or the
+current effectiveness report. If the task is not comparable to prior agent work,
+say so explicitly.
+
 ## Documentation Rules
 
 When a change affects project structure, UI architecture, state management,
@@ -101,4 +106,6 @@ Before reporting completion:
 - Run the documented checks that are relevant to the change.
 - Confirm no temporary files were left behind.
 - Update docs when behavior, architecture, commands, or known failures changed.
+- Update the harness effectiveness measurement plan when the change affects
+  agent rules, checks, CI, docs, or architecture boundaries.
 - Summarize changed files, verification performed, and remaining risks.

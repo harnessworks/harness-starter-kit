@@ -85,6 +85,17 @@ automatically.
 - The local `harness-starter-kit/` clone is adoption reference material, not
   target project source.
 
+## Effectiveness Measurement Plan
+
+- Baseline available: No historical agent PR data was available for this sample
+  project.
+- Comparable tasks to repeat or track: add a utility function, update a test,
+  and make a docs-only change without editing source.
+- Primary metric: wrong-file edits, repeated temporary-file mistakes, and
+  first-pass `npm.cmd run check:harness` success.
+- Review window: next 5 comparable Node.js agent changes.
+- Results location: `docs/effectiveness/node-harness.md`.
+
 ## Remaining Manual Steps
 
 - Remove, ignore, or intentionally keep `harness-starter-kit/` before committing

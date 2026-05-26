@@ -15,3 +15,8 @@ Use this checklist after copying the starter kit into a target repository.
 - [ ] If the first real stack or app has been introduced, run
       `docs/checklists/profile-absorption.md`.
 - [ ] The final adoption report lists remaining manual integration steps.
+- [ ] The final adoption report includes an effectiveness measurement plan with
+      baseline status, comparable tasks, primary metric, review window, and
+      results location.
+- [ ] If the adoption report is saved as a file,
+      `scripts/check_effectiveness_plan.py --require-report` passes.

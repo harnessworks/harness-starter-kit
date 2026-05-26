@@ -44,6 +44,18 @@ All checks passed.
   through Next.js transitive dependencies; do not apply breaking audit fixes
   blindly.
 
+## Effectiveness Measurement Plan
+
+- Baseline available: No historical agent PR data was available for this sample
+  app.
+- Comparable tasks to repeat or track: edit app UI without changing generated
+  Next.js files, add a typed component, and update build config only when the
+  task requires it.
+- Primary metric: wrong-file edits and first-pass `npm.cmd run check:harness`
+  success.
+- Review window: next 5 comparable Next.js agent changes.
+- Results location: `docs/effectiveness/nextjs-harness.md`.
+
 ## Remaining Manual Steps
 
 - Remove, ignore, or intentionally keep `harness-starter-kit/` before committing

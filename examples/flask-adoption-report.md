@@ -44,6 +44,18 @@ All checks passed.
 - Avoid documenting optional local directories as backtick paths unless they
   exist, because document drift checks may treat them as missing references.
 
+## Effectiveness Measurement Plan
+
+- Baseline available: No historical agent PR data was available for this sample
+  app.
+- Comparable tasks to repeat or track: add a route, add a service helper without
+  putting business logic in the route, and update tests without touching
+  instance data.
+- Primary metric: repeated route-boundary mistakes and first-pass
+  `scripts/check_harness.py` success.
+- Review window: next 5 comparable Flask agent changes.
+- Results location: `docs/effectiveness/flask-harness.md`.
+
 ## Remaining Manual Steps
 
 - Remove, ignore, or intentionally keep `harness-starter-kit/` before committing

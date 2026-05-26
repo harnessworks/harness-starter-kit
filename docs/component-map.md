@@ -11,10 +11,12 @@ This map connects harness engineering concepts to files in a target repository.
 | Domain knowledge | `docs/domain/*.md` | `templates/generic/docs/domain/glossary.md` |
 | Document drift check | `scripts/check_docs_drift.py` | `templates/generic/scripts/check_docs_drift.py` |
 | Structure drift check | `scripts/check_structure.py` | `templates/generic/scripts/check_structure.py` |
+| Effectiveness plan check | `scripts/check_effectiveness_plan.py` | `templates/generic/scripts/check_effectiveness_plan.py` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
 | Stack-specific rules | lint/type/pre-commit/framework snippets | `templates/profiles/*` |
 | Profile absorption | checklist for turning profile snippets into project rules | `docs/checklists/profile-absorption.md` |
 | Adoption report example | final adoption summary | `docs/templates/adoption-report.md`, `examples/*-adoption-report.md` |
+| Effectiveness evaluation | agent mistake reduction measurement | `docs/evaluation.md`, `docs/templates/effectiveness-report.md` |
 
 ## Minimum Useful Adoption
 
@@ -25,6 +27,7 @@ For a very small project, the agent should add or adapt only:
 - `docs/failures/000-template.md`
 - `scripts/check_docs_drift.py`
 - `scripts/check_structure.py`
+- `scripts/check_effectiveness_plan.py`
 
 Then grow the harness as the project and agent usage mature.
 Use the optional GitHub Actions workflow skeleton with `--with-ci` only after

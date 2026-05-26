@@ -45,6 +45,17 @@ improvement would be adding behavior tests for real app logic.
 - Existing migrations should be treated as source and changed only when model
   changes require it.
 
+## Effectiveness Measurement Plan
+
+- Baseline available: No historical agent PR data was available for this sample
+  scaffold.
+- Comparable tasks to repeat or track: add a model field with a migration, add a
+  view without editing settings directly, and add a test for sample app behavior.
+- Primary metric: wrong-file edits and first-pass `scripts/check_harness.py`
+  success.
+- Review window: next 5 comparable Django agent changes.
+- Results location: `docs/effectiveness/django-harness.md`.
+
 ## Remaining Manual Steps
 
 - Remove, ignore, or intentionally keep `harness-starter-kit/` before committing

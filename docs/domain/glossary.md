@@ -12,5 +12,5 @@ that agents should use consistently when changing docs, templates, or scripts.
 | Drift check | A script that detects stale docs, temporary files, or structure that no longer matches project rules. | Drift checks should be lightweight enough to run locally. |
 | Knowledge store | Durable context under `docs/decisions`, `docs/failures`, `docs/conventions`, and `docs/domain`. | Empty folders are less useful than one real record. |
 | Adoption report | The final summary after applying the kit to a target repository. | It should list changed files, checks, assumptions, and manual steps. |
+| Effectiveness measurement plan | The adoption-time plan for measuring whether harness rules reduce repeated agent mistakes. | If no baseline exists, record the next comparable tasks and review window. |
 | Optional CI | The GitHub Actions harness workflow shipped with the generic templates. | Install it only with `--with-ci` after confirming GitHub Actions fits the target repository. |
-

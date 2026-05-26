@@ -58,6 +58,8 @@ For each available snippet, decide whether to adopt, adapt, skip, or defer it.
 - [ ] Run the target stack's tests, type checks, lint checks, and build checks.
 - [ ] Run `scripts/check_docs_drift.py`.
 - [ ] Run `scripts/check_structure.py`.
+- [ ] Run `scripts/check_effectiveness_plan.py` if adoption or effectiveness
+      reports are stored in the repository.
 - [ ] If a profile check script was copied or adapted, run it directly.
 - [ ] Wire stable checks into CI or the existing local task runner when it fits
       the target repository.

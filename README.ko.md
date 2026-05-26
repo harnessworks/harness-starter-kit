@@ -244,6 +244,8 @@ generic drift check는 baseline hygiene check입니다.
 - `scripts/check_docs_drift.py`는 문서의 깨진 로컬 Markdown link와 오래된 파일
   참조를 잡습니다.
 - `scripts/check_structure.py`는 임시 파일과 drift-prone filename을 잡습니다.
+- `scripts/check_effectiveness_plan.py`는 adoption report와 effectiveness
+  report의 누락되거나 placeholder로 남은 효과 측정 field를 잡습니다.
 
 유용한 architecture drift check는 대상 저장소의 실제 규칙에서 나와야 합니다.
 예를 들어 `AGENTS.md`가 route에서 DB 직접 접근을 금지한다면 route file의 DB
@@ -252,7 +254,7 @@ Redux dependency가 들어올 때 실패하는 check를 추가하세요. generat
 디렉터리에만 있어야 한다면 다른 위치의 generated file을 거부하는 structure
 rule을 추가하세요.
 
-## 테스트된 시나리오
+## 설치 및 Drift Check Coverage
 
 자동 fixture smoke test는 다음 stack의 harness 설치를 확인합니다.
 
@@ -286,6 +288,20 @@ python -m unittest tests.test_fastapi_profile_e2e
 GitHub Actions에서는 `Harness Check` workflow를 수동 실행하고
 `run_fastapi_e2e`를 켜면 같은 dependency-installing test가 실행됩니다.
 
+## 효과 측정
+
+위 자동 테스트는 설치 동작과 실행 가능한 drift check를 검증합니다. harness
+적용이 반복되는 agent 실수를 줄였다는 증거는 아닙니다. 그 효과는
+[`docs/evaluation.md`](docs/evaluation.md)의 프로토콜로 별도 측정해야 합니다.
+
+adoption 시점에는
+[`docs/templates/adoption-report.md`](docs/templates/adoption-report.md)의
+Effectiveness Measurement Plan을 채우세요. baseline이 없다면 harnessed-only
+tracking으로 기록하고 다음 비교 가능 task, primary metric, review window,
+results location을 정의하세요. 실제 before/after 또는 후속 관측값은
+[`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md)에
+기록하세요.
+
 ## 로컬 검사
 
 starter kit 템플릿, 설치 스크립트, drift script를 바꾼 뒤에는 다음 검사를
@@ -293,9 +309,10 @@ starter kit 템플릿, 설치 스크립트, drift script를 바꾼 뒤에는 다
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
+python scripts/check_effectiveness_plan.py
 ```
 
 ## 라이선스

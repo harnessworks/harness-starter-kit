@@ -55,6 +55,12 @@ Expected work:
   explain the tradeoff first.
 - Add stack-specific lint/type/test recommendations based on the detected
   language.
+- Fill the Effectiveness Measurement Plan in the adoption report. If baseline
+  data does not exist, define the next comparable tasks, primary metric, review
+  window, and results location instead of leaving TODOs.
+- If you save the adoption report as a file, run
+  `scripts/check_effectiveness_plan.py --require-report` when that script is
+  present.
 
 Drift check examples:
 - If AGENTS.md says routes must not access the database directly, add a check
@@ -67,10 +73,13 @@ Drift check examples:
 Finish by reporting:
 - files added or changed
 - checks I can run locally
+- effectiveness measurement plan
 - assumptions you made
 - remaining manual steps
 - what to do with ./harness-starter-kit before committing
 
 Use ./harness-starter-kit/docs/templates/adoption-report.md as the report shape
-if present.
+if present. Use ./harness-starter-kit/docs/evaluation.md for the measurement
+protocol and ./harness-starter-kit/docs/templates/effectiveness-report.md when
+recording actual before/after results.
 ```

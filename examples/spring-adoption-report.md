@@ -44,6 +44,18 @@ All checks passed.
 - Flyway or Liquibase migrations should be treated as source and reviewed
   carefully when model or schema behavior changes.
 
+## Effectiveness Measurement Plan
+
+- Baseline available: No historical agent PR data was available for this sample
+  app.
+- Comparable tasks to repeat or track: add a controller endpoint, add service
+  behavior without editing generated build output, and update tests without
+  committing local application config.
+- Primary metric: wrong-file edits and first-pass `scripts/check_harness.py`
+  success.
+- Review window: next 5 comparable Spring agent changes.
+- Results location: `docs/effectiveness/spring-harness.md`.
+
 ## Remaining Manual Steps
 
 - Remove, ignore, or intentionally keep `harness-starter-kit/` before committing

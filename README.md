@@ -244,6 +244,8 @@ The generic drift checks are baseline hygiene checks:
 - `scripts/check_docs_drift.py` catches broken local Markdown links and stale
   file references in docs.
 - `scripts/check_structure.py` catches temporary and drift-prone filenames.
+- `scripts/check_effectiveness_plan.py` catches missing or placeholder
+  effectiveness measurement fields in adoption and effectiveness reports.
 
 Useful architecture drift checks must come from the target repository's actual
 rules. For example, if `AGENTS.md` says routes must not access the database
@@ -258,7 +260,7 @@ stack, run the
 helps decide which profile snippets should become real project scripts,
 configuration, ignores, documentation, or checks.
 
-## Tested Scenarios
+## Installation And Drift Check Coverage
 
 Automated fixture smoke tests cover harness installation for:
 
@@ -297,15 +299,30 @@ See `examples/node-adoption-report.md` and
 `examples/flask-adoption-report.md` for example adoption reports. See
 `examples/spring-adoption-report.md` for a Spring example.
 
+## Effectiveness Measurement
+
+The automated tests above verify installation behavior and runnable drift
+checks. They do not prove that harness adoption reduces repeated agent mistakes.
+Measure that separately with the protocol in
+[`docs/evaluation.md`](docs/evaluation.md).
+
+At adoption time, fill the Effectiveness Measurement Plan in
+[`docs/templates/adoption-report.md`](docs/templates/adoption-report.md). If no
+baseline exists, record harnessed-only tracking and define the next comparable
+tasks, primary metric, review window, and results location. Record actual
+before/after or follow-up observations with
+[`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md).
+
 ## Local Checks
 
 Run these checks before changing the starter kit templates or installer:
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
+python scripts/check_effectiveness_plan.py
 ```
 
 ## License

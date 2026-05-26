@@ -145,3 +145,14 @@ The report should make clear what the agent observed, which existing structures
 were reused, which snippets were adopted or skipped, which checks were run, and
 whether the nested `harness-starter-kit/` clone should be removed, ignored, or
 kept intentionally before committing.
+
+The report should also include an effectiveness measurement plan. Use
+`docs/evaluation.md` to choose the evaluation mode and metrics. If no baseline
+data exists, record harnessed-only tracking as the initial mode and name the
+next comparable tasks, primary metric, review window, and results location.
+Actual results should be recorded later with
+`docs/templates/effectiveness-report.md`.
+
+When the adoption report is saved as a file, run
+`scripts/check_effectiveness_plan.py --require-report` to catch missing sections
+or placeholder measurement fields before finishing.

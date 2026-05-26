@@ -49,6 +49,17 @@ Result: TODO
 - Target-specific architecture checks: TODO
 - Not added: TODO: explain why if no target-specific drift check was practical.
 
+## Effectiveness Measurement Plan
+
+Do not leave this section as TODO. If measurement is not possible yet, explain
+why and define the next observable event.
+
+- Baseline available: TODO
+- Comparable tasks to repeat or track: TODO
+- Primary metric: TODO
+- Review window: TODO
+- Results location: TODO
+
 ## Assumptions
 
 - TODO
