@@ -165,6 +165,10 @@ Use `django` when the target project is a Django app. It adds reference
 snippets for `manage.py check`, `manage.py test`, virtual environment ignores,
 SQLite development database ignores, and a Python `check_harness.py` entrypoint.
 
+Use `flask` when the target project is a Flask app. It adds reference snippets
+for `unittest` discovery, Flask route checks, instance-data ignores, and a
+Python `check_harness.py` entrypoint.
+
 Profiles are intentionally conservative. They provide snippets and guidance
 instead of rewriting existing build systems.
 
@@ -175,10 +179,11 @@ This kit has been smoke-tested against:
 - a small Node.js ES module project using `node --test`
 - a small Next.js App Router project using TypeScript and `next build`
 - a small Django project using `manage.py check` and `manage.py test`
+- a small Flask app using an app factory and Flask's test client
 
 See `examples/node-adoption-report.md` and
-`examples/nextjs-adoption-report.md` or `examples/django-adoption-report.md`
-for example adoption reports.
+`examples/nextjs-adoption-report.md`, `examples/django-adoption-report.md`, or
+`examples/flask-adoption-report.md` for example adoption reports.
 
 ## Local Checks
 
