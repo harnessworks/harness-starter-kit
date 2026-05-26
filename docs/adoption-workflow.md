@@ -1,6 +1,11 @@
 # Adoption Workflow
 
-Use this workflow when applying `harness-starter-kit` to another repository.
+Use this workflow when `harness-starter-kit` has been cloned or downloaded
+inside another repository and an agent is applying it from the target root.
+
+The target repository is the current working directory. The
+`./harness-starter-kit` directory is reference material during adoption; do not
+edit it unless the user asks to change the kit itself.
 
 ## 1. Read The Target Repository
 
@@ -45,10 +50,10 @@ Create these directories if the target has no equivalent:
 
 ```text
 docs/
-├── decisions/
-├── failures/
-├── conventions/
-└── domain/
+|-- decisions/
+|-- failures/
+|-- conventions/
+`-- domain/
 ```
 
 Start small. Empty directories are less useful than one real decision or failure
@@ -71,7 +76,7 @@ Make the common path fast:
 
 - local check command
 - pre-commit checks when the project already uses them
-- CI workflow
+- CI workflow only when it matches the target repository's CI provider
 - clear test names and error messages
 
 Agents improve fastest when feedback is quick and concrete.
@@ -85,4 +90,5 @@ Install lightweight drift checks:
 - stale commands in `AGENTS.md`
 - unused code checks for the chosen stack
 
-Run them manually at first, then wire them into CI once they are stable.
+Run them manually at first, then wire them into CI once they are stable. The
+installer only adds the GitHub Actions workflow when `--with-ci` is provided.

@@ -58,11 +58,20 @@ workspace/
 然后在目标仓库中打开你的代码代理，并给它这个提示词：
 
 ```text
-Read ./harness-starter-kit first. Apply the harness engineering starter kit to this
-repository.
+Read ./harness-starter-kit first, then apply the harness engineering starter kit
+to this repository.
 
-Preserve existing architecture, tools, and conventions. Add only the minimum
-missing harness files. Finish with a short adoption report.
+Treat the current working directory as the target repository. Treat
+./harness-starter-kit as read-only reference material unless I explicitly ask
+you to edit the kit itself.
+
+Preserve this repository's existing architecture, tools, package manager,
+commands, and conventions. Add only the minimum missing harness files. Prefer
+updating existing docs/configs over duplicating them. Do not overwrite or delete
+existing files without explaining why.
+
+Finish with a short adoption report listing files changed, checks I can run,
+assumptions made, and remaining manual steps.
 ```
 
 如果你想手动运行安装脚本，请先预览将要生成的文件：
@@ -72,6 +81,12 @@ python harness-starter-kit/scripts/apply_harness.py --target . --profile generic
 ```
 
 除非提供 `--force`，否则脚本不会覆盖已有文件。
+默认安装只会添加本地 harness 文件。只有在确认目标仓库也需要可选的 GitHub
+Actions harness workflow 时，才使用 `--with-ci`。
+
+```powershell
+python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --with-ci
+```
 
 ## 由代理驱动的采用流程
 
@@ -111,6 +126,7 @@ harness-starter-kit/
 |   `-- prompts/
 |-- scripts/
 |   `-- apply_harness.py
+|-- tests/
 `-- templates/
     |-- generic/
     `-- profiles/
@@ -128,6 +144,17 @@ pre-commit 的 Python 参考片段。
 ESLint、dependency boundary、unused export check 和 package script 的参考片段。
 
 这些 profile 有意保持保守。它们提供片段和指南，而不是重写现有构建系统。
+
+## 本地检查
+
+修改 starter kit 模板、安装脚本或 drift script 后，请运行这些检查：
+
+```powershell
+python -m unittest discover -s tests
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python scripts/check_docs_drift.py
+python scripts/check_structure.py
+```
 
 ## 许可证
 

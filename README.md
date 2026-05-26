@@ -59,24 +59,42 @@ workspace/
     `-- existing-project-files
 ```
 
-Then open the target repository with your coding agent and give it this prompt:
+Then open `target-repo`, not `target-repo/harness-starter-kit`, with your
+coding agent and give it this prompt:
 
 ```text
-Read ./harness-starter-kit first. Apply the harness engineering starter kit to this
-repository.
+Read ./harness-starter-kit first, then apply the harness engineering starter kit
+to this repository.
 
-Preserve existing architecture, tools, and conventions. Add only the minimum
-missing harness files. Finish with a short adoption report.
+Treat the current working directory as the target repository. Treat
+./harness-starter-kit as read-only reference material unless I explicitly ask
+you to edit the kit itself.
+
+Preserve this repository's existing architecture, tools, package manager,
+commands, and conventions. Add only the minimum missing harness files. Prefer
+updating existing docs/configs over duplicating them. Do not overwrite or delete
+existing files without explaining why.
+
+Finish with a short adoption report listing files changed, checks I can run,
+assumptions made, and remaining manual steps.
 ```
 
-If you want to run the installer manually instead, preview the generated files
-first:
+The prompt-first workflow is the main way to use this kit because the agent can
+inspect the target repository and adapt to its existing tools.
+
+If you want a mechanical bootstrap instead, preview the generated files first:
 
 ```powershell
 python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --dry-run
 ```
 
 The script never overwrites existing files unless `--force` is provided.
+By default it installs local harness files only; add `--with-ci` when the target
+repository should also receive the optional GitHub Actions harness workflow.
+
+```powershell
+python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --with-ci
+```
 
 ## Agent-Driven Adoption
 
@@ -116,6 +134,7 @@ harness-starter-kit/
 |   `-- prompts/
 |-- scripts/
 |   `-- apply_harness.py
+|-- tests/
 `-- templates/
     |-- generic/
     `-- profiles/
@@ -135,6 +154,17 @@ package scripts.
 
 Profiles are intentionally conservative. They provide snippets and guidance
 instead of rewriting existing build systems.
+
+## Local Checks
+
+Run these checks before changing the starter kit templates or installer:
+
+```powershell
+python -m unittest discover -s tests
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python scripts/check_docs_drift.py
+python scripts/check_structure.py
+```
 
 ## License
 

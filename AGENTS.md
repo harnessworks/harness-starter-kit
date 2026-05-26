@@ -9,6 +9,38 @@ knowledge storage, and drift checks to another repository.
 When applying this kit to a target repository, treat the target repository as
 the source of truth. Preserve its existing architecture and tools.
 
+## Prompt-First Adoption Context
+
+The primary usage pattern is:
+
+```text
+target-repo/
+|-- harness-starter-kit/
+`-- existing-project-files
+```
+
+When an agent is applying the kit from this nested layout:
+
+- Treat the current working directory as the target repository root.
+- Treat `./harness-starter-kit` as read-only reference material unless the user
+  explicitly asks to edit the kit itself.
+- Read this kit's docs, prompts, templates, and scripts to understand the
+  harness pattern, then modify only the target repository files needed for
+  adoption.
+- Prefer adapting the target repository's existing docs, scripts, package
+  manager, CI, and conventions over copying starter-kit defaults verbatim.
+
+## Commands
+
+Run these checks after changing installer behavior, templates, or drift scripts:
+
+```powershell
+python -m unittest discover -s tests
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python scripts/check_docs_drift.py
+python scripts/check_structure.py
+```
+
 ## How To Apply This Kit To A Target Repository
 
 1. Inspect the target repository before editing.
@@ -23,6 +55,8 @@ the source of truth. Preserve its existing architecture and tools.
      `docs/domain` if the target has no equivalent knowledge store.
    - Add drift checks under `scripts/` when no equivalent checks exist.
    - Add CI or pre-commit wiring only when it fits the existing tooling.
+   - Use `--with-ci` only when the target should receive the optional GitHub
+     Actions workflow.
 
 3. Prefer local conventions over starter-kit defaults.
    - Use the target repo's naming, formatting, package manager, and test runner.
@@ -91,4 +125,3 @@ Add checks for drift:
 - Add profile-specific guidance under `templates/profiles/<profile>/`.
 - Scripts should be safe by default and avoid overwriting user files.
 - Favor clear Markdown and small Python scripts over heavyweight generators.
-

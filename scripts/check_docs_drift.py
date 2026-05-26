@@ -23,6 +23,8 @@ IGNORED_PREFIXES = (
 
 OPTIONAL_REFERENCES = {
     "CLAUDE.md",
+    "./harness-starter-kit",
+    "target-repo/harness-starter-kit",
 }
 
 

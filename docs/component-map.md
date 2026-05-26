@@ -11,7 +11,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Domain knowledge | `docs/domain/*.md` | `templates/generic/docs/domain/glossary.md` |
 | Document drift check | `scripts/check_docs_drift.py` | `templates/generic/scripts/check_docs_drift.py` |
 | Structure drift check | `scripts/check_structure.py` | `templates/generic/scripts/check_structure.py` |
-| Scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
+| Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
 | Stack-specific rules | lint/type/pre-commit snippets | `templates/profiles/*` |
 
 ## Minimum Useful Install
@@ -25,4 +25,5 @@ For a very small project, install only:
 - `scripts/check_structure.py`
 
 Then grow the harness as the project and agent usage mature.
-
+Install the optional GitHub Actions workflow with `--with-ci` only after
+confirming the target repository uses GitHub Actions.

@@ -63,11 +63,20 @@ workspace/
 次に、対象リポジトリをコーディングエージェントで開き、このプロンプトを渡します。
 
 ```text
-Read ./harness-starter-kit first. Apply the harness engineering starter kit to this
-repository.
+Read ./harness-starter-kit first, then apply the harness engineering starter kit
+to this repository.
 
-Preserve existing architecture, tools, and conventions. Add only the minimum
-missing harness files. Finish with a short adoption report.
+Treat the current working directory as the target repository. Treat
+./harness-starter-kit as read-only reference material unless I explicitly ask
+you to edit the kit itself.
+
+Preserve this repository's existing architecture, tools, package manager,
+commands, and conventions. Add only the minimum missing harness files. Prefer
+updating existing docs/configs over duplicating them. Do not overwrite or delete
+existing files without explaining why.
+
+Finish with a short adoption report listing files changed, checks I can run,
+assumptions made, and remaining manual steps.
 ```
 
 インストーラーを手動で実行したい場合は、まず生成されるファイルを確認します。
@@ -77,6 +86,12 @@ python harness-starter-kit/scripts/apply_harness.py --target . --profile generic
 ```
 
 このスクリプトは、`--force` を指定しない限り既存ファイルを上書きしません。
+デフォルトではローカル harness ファイルだけを導入します。対象リポジトリに
+任意の GitHub Actions harness workflow も追加する場合だけ `--with-ci` を指定します。
+
+```powershell
+python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --with-ci
+```
 
 ## エージェント主導の導入
 
@@ -118,6 +133,7 @@ harness-starter-kit/
 |   `-- prompts/
 |-- scripts/
 |   `-- apply_harness.py
+|-- tests/
 `-- templates/
     |-- generic/
     `-- profiles/
@@ -137,6 +153,18 @@ script 向けのリファレンススニペットを追加します。
 
 プロファイルは意図的に保守的です。既存のビルドシステムを書き換えるのではなく、
 スニペットとガイドを提供します。
+
+## ローカルチェック
+
+starter kit のテンプレート、インストーラー、drift script を変更した後は、
+次のチェックを実行してください。
+
+```powershell
+python -m unittest discover -s tests
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python scripts/check_docs_drift.py
+python scripts/check_structure.py
+```
 
 ## ライセンス
 

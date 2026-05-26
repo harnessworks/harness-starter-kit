@@ -8,8 +8,15 @@
   var terminalSignature = "";
   var terminalRunId = 0;
 
-  var commandText =
-    "Read ./harness-starter-kit first. Apply the harness engineering starter kit to this repository. Preserve existing architecture, tools, and conventions. Add only the minimum missing harness files. Finish with a short adoption report.";
+  var commandText = [
+    "Read ./harness-starter-kit first, then apply the harness engineering starter kit to this repository.",
+    "",
+    "Treat the current working directory as the target repository. Treat ./harness-starter-kit as read-only reference material unless I explicitly ask you to edit the kit itself.",
+    "",
+    "Preserve this repository's existing architecture, tools, package manager, commands, and conventions. Add only the minimum missing harness files. Prefer updating existing docs/configs over duplicating them. Do not overwrite or delete existing files without explaining why.",
+    "",
+    "Finish with a short adoption report listing files changed, checks I can run, assumptions made, and remaining manual steps."
+  ].join("\n");
 
   var copy = {
     en: {

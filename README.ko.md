@@ -61,11 +61,20 @@ workspace/
 그 다음 대상 저장소를 코딩 에이전트로 열고 이 프롬프트를 주세요.
 
 ```text
-Read ./harness-starter-kit first. Apply the harness engineering starter kit to this
-repository.
+Read ./harness-starter-kit first, then apply the harness engineering starter kit
+to this repository.
 
-Preserve existing architecture, tools, and conventions. Add only the minimum
-missing harness files. Finish with a short adoption report.
+Treat the current working directory as the target repository. Treat
+./harness-starter-kit as read-only reference material unless I explicitly ask
+you to edit the kit itself.
+
+Preserve this repository's existing architecture, tools, package manager,
+commands, and conventions. Add only the minimum missing harness files. Prefer
+updating existing docs/configs over duplicating them. Do not overwrite or delete
+existing files without explaining why.
+
+Finish with a short adoption report listing files changed, checks I can run,
+assumptions made, and remaining manual steps.
 ```
 
 설치 스크립트를 직접 실행하고 싶다면 먼저 생성될 파일을 확인하세요.
@@ -75,6 +84,12 @@ python harness-starter-kit/scripts/apply_harness.py --target . --profile generic
 ```
 
 이 스크립트는 `--force`를 제공하지 않는 한 기존 파일을 덮어쓰지 않습니다.
+기본 설치는 로컬 harness 파일만 추가합니다. 대상 저장소에 선택 사항인 GitHub
+Actions harness workflow도 추가해야 할 때만 `--with-ci`를 사용하세요.
+
+```powershell
+python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --with-ci
+```
 
 ## 에이전트 주도 적용
 
@@ -115,6 +130,7 @@ harness-starter-kit/
 |   `-- prompts/
 |-- scripts/
 |   `-- apply_harness.py
+|-- tests/
 `-- templates/
     |-- generic/
     `-- profiles/
@@ -134,6 +150,18 @@ vulture, pre-commit을 위한 Python 중심 참고 스니펫을 추가합니다.
 
 프로필은 의도적으로 보수적입니다. 기존 빌드 시스템을 다시 쓰는 대신 스니펫과
 가이드를 제공합니다.
+
+## 로컬 검사
+
+starter kit 템플릿, 설치 스크립트, drift script를 바꾼 뒤에는 다음 검사를
+실행하세요.
+
+```powershell
+python -m unittest discover -s tests
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py
+python scripts/check_docs_drift.py
+python scripts/check_structure.py
+```
 
 ## 라이선스
 
