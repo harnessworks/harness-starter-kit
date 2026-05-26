@@ -28,6 +28,10 @@ IGNORED_TEMPLATE_PARTS = {
     ".mypy_cache",
 }
 
+OPTIONAL_CI_PATHS = {
+    Path(".github") / "workflows" / "harness-check.yml",
+}
+
 
 @dataclass(frozen=True)
 class CopyResult:
@@ -66,6 +70,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Overwrite existing generated files.",
     )
+    parser.add_argument(
+        "--with-ci",
+        action="store_true",
+        help="Also install the optional GitHub Actions harness workflow.",
+    )
     return parser.parse_args()
 
 
@@ -86,12 +95,15 @@ def copy_tree(
     profile: str,
     dry_run: bool,
     force: bool,
+    include_ci: bool,
 ) -> list[CopyResult]:
     results: list[CopyResult] = []
 
     for source in sorted(path for path in source_root.rglob("*") if path.is_file()):
         relative = source.relative_to(source_root)
         if any(part in IGNORED_TEMPLATE_PARTS for part in relative.parts):
+            continue
+        if not include_ci and relative in OPTIONAL_CI_PATHS:
             continue
         destination = target_root / relative
 
@@ -141,6 +153,7 @@ def main() -> int:
             args.profile,
             args.dry_run,
             args.force,
+            args.with_ci,
         )
     )
 
@@ -154,6 +167,7 @@ def main() -> int:
                 args.profile,
                 args.dry_run,
                 args.force,
+                True,
             )
         )
 
