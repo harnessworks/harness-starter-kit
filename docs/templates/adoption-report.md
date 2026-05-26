@@ -14,6 +14,15 @@ TODO: command
 
 Result: TODO
 
+## Documentation Updated
+
+- `README.md`: TODO
+- `AGENTS.md`: TODO
+- `docs/conventions/coding.md`: TODO
+- `docs/decisions/`: TODO
+- Not updated: TODO: explain why if this adoption or change did not require a
+  durable docs update.
+
 ## Assumptions
 
 - TODO

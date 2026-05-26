@@ -58,6 +58,26 @@ Before making architectural or domain-level changes, inspect:
 When a decision or rejected approach becomes relevant, add a short record to the
 appropriate directory.
 
+## Documentation Rules
+
+When a change affects project structure, UI architecture, state management,
+commands, conventions, or recurring workflow, update at least one durable
+documentation artifact before finishing.
+
+Prefer:
+
+- The project README for user-facing setup and usage changes.
+- `AGENTS.md` for agent workflow, commands, and repository rules.
+- `docs/conventions/coding.md` for implementation conventions and recurring
+  code patterns.
+- `docs/decisions/*.md` for architectural choices, new tools, major structure
+  changes, or tradeoffs.
+- `docs/failures/*.md` only when an attempted approach failed and should not be
+  repeated.
+
+If no `docs/` file is updated for a non-trivial code change, explicitly explain
+why in the final report.
+
 ## Forbidden Actions
 
 - Do not rewrite large parts of the project without an explicit request.

@@ -26,6 +26,8 @@ OPTIONAL_REFERENCES = {
     ".next/",
     ".venv",
     ".venv/",
+    ".vite",
+    ".vite/",
     "coverage",
     "coverage/",
     "db.sqlite3",
@@ -55,6 +57,7 @@ OPTIONAL_REFERENCE_PREFIXES = (
     ".ruff_cache/",
     "__pycache__/",
     ".gradle/",
+    ".vite/",
     "node_modules/",
     "target/",
 )

@@ -70,6 +70,7 @@ class CheckDocsDriftTests(unittest.TestCase):
                         "`db.sqlite3`",
                         "`target/`",
                         "`.gradle/`",
+                        "`.vite/`",
                         "`tsconfig.tsbuildinfo`",
                         "[Local clone](harness-starter-kit/)",
                     ]
