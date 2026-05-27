@@ -165,7 +165,10 @@ Add checks for drift:
   config.
 - Run the relevant documented checks before committing. If a check cannot be
   run, record why in the final report or PR notes.
-- Use a clear imperative commit subject that names the harness area changed,
-  such as `Add commit hygiene rules`.
+- Follow the target repository's existing commit convention first.
+- If the target repository uses Conventional Commits, follow its prefixes, such
+  as `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, or `chore:`.
+- If no convention exists, use a clear imperative commit subject that names the
+  harness area changed, such as `Add commit hygiene rules`.
 - PR descriptions should summarize changed files, checks run, assumptions,
   remaining risks, and any manual follow-up.

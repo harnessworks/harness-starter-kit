@@ -92,6 +92,10 @@ class RepositoryHygieneTests(unittest.TestCase):
             self.assertIn("## Commit And PR Rules", text)
             self.assertIn("staged diff", text)
             self.assertIn("checks before committing", text)
+            self.assertIn("Conventional Commits", text)
+            self.assertIn("feat:", text)
+            self.assertIn("chore:", text)
+            self.assertIn("If no convention exists", text)
             self.assertIn("changed files", text)
             self.assertIn("remaining risks", text)
 

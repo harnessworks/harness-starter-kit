@@ -106,7 +106,11 @@ why in the final report.
   clone unless the repository intentionally tracks it.
 - Run the relevant documented checks before committing. If a check cannot be
   run, explain why in the final report or PR notes.
-- Use a clear commit subject that describes the change in imperative form.
+- Follow this repository's existing commit convention first.
+- If this repository uses Conventional Commits, use prefixes such as `feat:`,
+  `fix:`, `docs:`, `test:`, `refactor:`, or `chore:`.
+- If no convention exists, use a clear commit subject that describes the change
+  in imperative form.
 - PRs or adoption reports should summarize changed files, checks run,
   assumptions, remaining risks, and manual follow-up.
 
