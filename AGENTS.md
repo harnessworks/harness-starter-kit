@@ -133,6 +133,10 @@ Store durable context in `docs/`:
 - `docs/conventions/` for project-specific coding rules
 - `docs/domain/` for business language, workflows, and invariants
 
+If you fix a failed CI run, failed harness check, repeated agent mistake, or
+cross-environment mismatch, add a `docs/failures/*.md` record unless the failure
+is purely transient. If you skip it, explain why in the final report.
+
 ### Garbage Collection
 
 Add checks for drift:

@@ -58,6 +58,10 @@ Before making architectural or domain-level changes, inspect:
 When a decision or rejected approach becomes relevant, add a short record to the
 appropriate directory.
 
+If you fix a failed CI run, failed harness check, repeated agent mistake, or
+cross-environment mismatch, add a `docs/failures/*.md` record unless the failure
+is purely transient. If you skip it, explain why in the final report.
+
 When a new stack, framework, build tool, UI layer, API layer, or test runner is
 introduced after generic adoption, review the closest profile. If the kit is
 still present as a reference clone, read

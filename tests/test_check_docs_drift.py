@@ -83,6 +83,29 @@ class CheckDocsDriftTests(unittest.TestCase):
             self.assertEqual("", result.stdout)
             self.assertEqual(0, result.returncode)
 
+    def test_virtualenv_python_commands_are_not_treated_as_missing_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text(
+                "\n".join(
+                    [
+                        "# Sample",
+                        "Run:",
+                        r"`.\.venv\Scripts\python.exe manage.py check`",
+                        r"`.\.venv\Scripts\python.exe scripts\check_harness.py`",
+                        "`.venv/bin/python manage.py test`",
+                        r"`.\.venv\Scripts\python.exe`",
+                        "`.venv/bin/python`",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertEqual("", result.stdout)
+            self.assertEqual(0, result.returncode)
+
 
 if __name__ == "__main__":
     unittest.main()

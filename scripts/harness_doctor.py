@@ -176,6 +176,25 @@ def agent_instruction_files(root: Path) -> list[Path]:
     return files
 
 
+def is_placeholder_record(path: Path, text: str) -> bool:
+    name = path.name.lower()
+    lowered = text.lower()
+    placeholder_terms = (
+        "todo",
+        "yyyy-mm-dd",
+        "template",
+        "placeholder",
+        "entrypoint",
+        "entry point",
+        "no known",
+    )
+    return (
+        name == "readme.md"
+        or "template" in name
+        or any(term in lowered for term in placeholder_terms)
+    )
+
+
 def non_template_records(root: Path, relatives: tuple[str, ...]) -> list[Path]:
     records: list[Path] = []
     for relative in relatives:
@@ -183,9 +202,8 @@ def non_template_records(root: Path, relatives: tuple[str, ...]) -> list[Path]:
         if not directory.is_dir():
             continue
         for path in sorted(directory.rglob("*.md")):
-            name = path.name.lower()
-            text = read_text(path).lower()
-            if "template" in name or "todo" in text:
+            text = read_text(path)
+            if is_placeholder_record(path, text):
                 continue
             records.append(path)
     return records

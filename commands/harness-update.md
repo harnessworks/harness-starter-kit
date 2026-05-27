@@ -71,7 +71,11 @@ fallback evidence before updating.
    carefully after reading them.
 8. Update `.harness/source.json` only after the updated kit source is known and
    the report can explain what was applied, skipped, or deferred.
-9. Run relevant local checks, such as docs drift, structure drift, effectiveness
+9. If the update fixes a failed CI run, failed harness check, repeated agent
+   mistake, or cross-environment mismatch, add a `docs/failures/*.md` record
+   unless the failure is purely transient. If no failure note is added, explain
+   why in the update report.
+10. Run relevant local checks, such as docs drift, structure drift, effectiveness
    plan checks, project tests, linting, type checks, or `/harness doctor`.
 
 ## Required Report Format
@@ -100,6 +104,10 @@ Manual Review:
 
 Checks Run:
 - <command>: <result>
+
+Failure Memory:
+- Recorded: <docs/failures/... or none>
+- Skipped: <reason if no failure note was added>
 
 Source Tracking:
 - `.harness/source.json`: <created, updated, unchanged, or blocked>

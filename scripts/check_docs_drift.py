@@ -53,6 +53,9 @@ OPTIONAL_REFERENCES = {
 }
 
 OPTIONAL_REFERENCE_PREFIXES = (
+    ".venv/",
+    "venv/",
+    "env/",
     ".mypy_cache/",
     ".pytest_cache/",
     ".ruff_cache/",
@@ -165,6 +168,7 @@ def referenced_path_exists(root: Path, doc: Path, reference: str) -> bool:
 def looks_like_command(reference: str) -> bool:
     command_roots = {
         "python",
+        "python.exe",
         "pytest",
         "npm",
         "pnpm",
@@ -179,7 +183,9 @@ def looks_like_command(reference: str) -> bool:
         first = shlex.split(reference, posix=False)[0]
     except (IndexError, ValueError):
         return False
-    return first in command_roots
+    normalized = normalize_reference(first)
+    command_name = Path(normalized).name.lower()
+    return first in command_roots or command_name in command_roots
 
 
 def check_docs(root: Path) -> int:

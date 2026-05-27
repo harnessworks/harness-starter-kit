@@ -27,6 +27,12 @@ TODO: command
 
 Result: TODO
 
+## Failure Memory
+
+- Recorded: TODO: list `docs/failures/...` records added while fixing failed
+  checks, CI failures, repeated agent mistakes, or cross-environment mismatches.
+- Skipped: TODO: explain why no failure note was needed.
+
 ## Documentation Updated
 
 - `README.md`: TODO

@@ -61,6 +61,27 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("They do not prove", readme)
         self.assertIn("docs/evaluation.md", readme)
 
+    def test_failure_memory_is_required_for_fixed_harness_failures(self) -> None:
+        root_agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        agent_template = (REPO_ROOT / "templates" / "generic" / "AGENTS.md").read_text(
+            encoding="utf-8"
+        )
+        update_command = (REPO_ROOT / "commands" / "harness-update.md").read_text(
+            encoding="utf-8"
+        )
+        adoption_report = (
+            REPO_ROOT / "docs" / "templates" / "adoption-report.md"
+        ).read_text(encoding="utf-8")
+
+        for text in (root_agents, agent_template, update_command):
+            self.assertIn("failed harness check", text)
+            self.assertIn("cross-environment mismatch", text)
+            self.assertIn("docs/failures/*.md", text)
+
+        self.assertIn("## Failure Memory", adoption_report)
+        self.assertIn("Recorded:", update_command)
+        self.assertIn("Skipped:", update_command)
+
     def test_commit_and_pr_rules_are_wired_into_agent_instructions(self) -> None:
         root_agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
         agent_template = (REPO_ROOT / "templates" / "generic" / "AGENTS.md").read_text(

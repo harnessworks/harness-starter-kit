@@ -99,6 +99,42 @@ class HarnessDoctorTests(unittest.TestCase):
             self.assertIn("Durable Memory: 20/20", result.stdout)
             self.assertIn("Structural Safety:", result.stdout)
 
+    def test_failure_readme_does_not_count_as_real_failure_record(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp)
+            (target / "docs" / "decisions").mkdir(parents=True)
+            (target / "docs" / "failures").mkdir(parents=True)
+            (target / "docs" / "conventions").mkdir(parents=True)
+            (target / "docs" / "domain").mkdir(parents=True)
+            (target / "README.md").write_text(
+                "# Example\n\n## Quick Start\n\nRun `python -m unittest`.\n",
+                encoding="utf-8",
+            )
+            (target / "docs" / "decisions" / "000-template.md").write_text(
+                "# 000. Decision Title\n\nTODO\n",
+                encoding="utf-8",
+            )
+            (target / "docs" / "failures" / "README.md").write_text(
+                "# Failure Memory\n\nEntry point for future failure notes.\n",
+                encoding="utf-8",
+            )
+            (target / "docs" / "conventions" / "coding.md").write_text(
+                "# Coding conventions\n",
+                encoding="utf-8",
+            )
+            (target / "docs" / "domain" / "glossary.md").write_text(
+                "# Glossary\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_doctor(target)
+
+            self.assertIn("Durable Memory: 17/20", result.stdout)
+            self.assertIn(
+                "Durable Memory: At least one real decision or failure record exists",
+                result.stdout,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

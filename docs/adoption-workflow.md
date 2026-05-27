@@ -156,6 +156,11 @@ were reused, which snippets were adopted or skipped, which checks were run, and
 whether the nested `harness-starter-kit/` clone should be removed, ignored, or
 kept intentionally before committing.
 
+If adoption fixes a failed CI run, failed harness check, repeated agent mistake,
+or cross-environment mismatch, record it under `docs/failures/*.md` unless the
+failure is purely transient. If no failure note is added, explain why in the
+adoption report.
+
 The report should also include an effectiveness measurement plan. Use
 `docs/evaluation.md` to choose the evaluation mode and metrics. If no baseline
 data exists, record harnessed-only tracking as the initial mode and name the

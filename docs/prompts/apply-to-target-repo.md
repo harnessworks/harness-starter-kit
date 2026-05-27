@@ -71,6 +71,9 @@ Expected work:
 - Fill the Effectiveness Measurement Plan in the adoption report. If baseline
   data does not exist, define the next comparable tasks, primary metric, review
   window, and results location instead of leaving TODOs.
+- If adoption fixes a failed check, CI failure, repeated agent mistake, or
+  cross-environment mismatch, add a `docs/failures/*.md` record unless the
+  failure is purely transient.
 - If you save the adoption report as a file, run
   `scripts/check_effectiveness_plan.py --require-report` when that script is
   present.
@@ -87,6 +90,7 @@ Finish by reporting:
 - files added or changed
 - checks I can run locally
 - effectiveness measurement plan
+- failure memory recorded or skipped with reason
 - assumptions you made
 - remaining manual steps
 - what to do with ./harness-starter-kit before committing
