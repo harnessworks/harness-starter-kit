@@ -162,6 +162,13 @@ class ApplyHarnessTests(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(0, result3.returncode)
+            result4 = subprocess.run(
+                [sys.executable, str(target / "scripts" / "check_encoding_hygiene.py")],
+                cwd=target,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(0, result4.returncode)
 
     def test_fastapi_profile_snippets_are_written_under_docs_harness(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -12,9 +12,10 @@ drift scripts, command documents, or README structure:
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_effectiveness_plan.py scripts/harness_doctor.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/harness_doctor.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
+python scripts/check_encoding_hygiene.py
 python scripts/check_effectiveness_plan.py
 python scripts/harness_doctor.py --target .
 ```

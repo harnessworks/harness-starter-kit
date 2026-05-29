@@ -11,6 +11,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Domain knowledge | `docs/domain/*.md` | `templates/generic/docs/domain/glossary.md` |
 | Document drift check | `scripts/check_docs_drift.py` | `templates/generic/scripts/check_docs_drift.py` |
 | Structure drift check | `scripts/check_structure.py` | `templates/generic/scripts/check_structure.py` |
+| Encoding hygiene check | `scripts/check_encoding_hygiene.py` | `templates/generic/scripts/check_encoding_hygiene.py` |
 | Effectiveness plan check | `scripts/check_effectiveness_plan.py` | `templates/generic/scripts/check_effectiveness_plan.py` |
 | Harness readiness diagnostic | `/harness doctor` report | `commands/harness-doctor.md`, `docs/scoring/harness-score-rubric.md` |
 | Harness source tracking | `.harness/source.json` | documented in `commands/harness-update.md` |
@@ -33,6 +34,7 @@ For a very small project, the agent should add or adapt only:
 - `docs/failures/000-template.md`
 - `scripts/check_docs_drift.py`
 - `scripts/check_structure.py`
+- `scripts/check_encoding_hygiene.py`
 - `scripts/check_effectiveness_plan.py`
 
 Then grow the harness as the project and agent usage mature.
