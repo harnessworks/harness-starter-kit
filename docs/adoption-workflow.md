@@ -27,6 +27,8 @@ Collect the current shape before changing anything:
 - CI provider
 - directory layout
 - monorepo layout, if present
+- local server, database seed, docker-compose, JAR, backend fixture, emulator,
+  device, or other runtime dependency needed by the app
 - existing docs and agent instruction files
 - existing architecture, domain, decision, and contribution docs
 
@@ -87,6 +89,11 @@ Match constraints to the stack:
 - Spring: Maven or Gradle wrapper checks, Spring Boot context tests, generated
   build output ignores, local config ignores, and migration review rules when
   Flyway or Liquibase is present
+- Android/Kotlin: Gradle wrapper checks such as `./gradlew test` and
+  `./gradlew assembleDebug`, `local.properties` and `ANDROID_HOME` handling,
+  generated Android build output ignores, emulator/device/manual test notes,
+  Retrofit endpoint boundary checks, and runtime permission, NFC, and Bluetooth
+  verification caveats
 - TypeScript: ESLint, TypeScript strictness, dependency boundary rules,
   unused-export checks
 - Next.js: `next build`, `tsc --noEmit --incremental false`, generated-file
@@ -112,9 +119,18 @@ snippets should become real commands, config, ignores, documentation, or checks.
 Make the common path fast:
 
 - local check command
+- local server or fixture verification plan when the app depends on a server
+  JAR, SQL seed file, docker-compose service, mock API, emulator, or device
 - pre-commit checks when the project already uses them
 - CI workflow only when it matches the target repository's CI provider
 - clear test names and error messages
+
+Before feature implementation, write a small scenario test plan or explicitly
+say why build-only validation is enough. The plan can be a compact matrix of
+user flows, setup data, server state, automated checks, and manual checks. For
+mobile or local-server projects, include endpoint readiness, seed data,
+emulator/device coverage, runtime permissions, and hardware-dependent flows such
+as NFC, Bluetooth, or beacons when relevant.
 
 Agents improve fastest when feedback is quick and concrete.
 
@@ -125,6 +141,8 @@ Install lightweight baseline drift checks:
 - missing files referenced by docs
 - broken local Markdown links
 - forbidden temporary filenames
+- invalid UTF-8 or common mojibake markers when the target has localized
+  comments, XML resources, PDF-derived instructions, or prior encoding drift
 - unused code checks for the chosen stack
 
 Then add target-specific drift checks only when they enforce real repository
@@ -155,6 +173,12 @@ The report should make clear what the agent observed, which existing structures
 were reused, which snippets were adopted or skipped, which checks were run, and
 whether the nested `harness-starter-kit/` clone should be removed, ignored, or
 kept intentionally before committing.
+
+If implementation changed behavior, added a new integration boundary, or chose
+a defensive fallback for permissions, hardware, networking, persistence, or
+state management, decide whether the change belongs in `docs/domain/` as domain
+language or in `docs/decisions/` as an architectural decision. Record the choice
+or explain why no decision record was needed.
 
 If adoption fixes a failed CI run, failed harness check, repeated agent mistake,
 or cross-environment mismatch, record it under `docs/failures/*.md` unless the

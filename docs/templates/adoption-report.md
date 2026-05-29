@@ -4,6 +4,7 @@
 
 - Stack and framework: TODO
 - Package manager and commands: TODO
+- Local server, fixture, seed data, emulator, or device dependencies: TODO
 - Existing docs or agent instructions: TODO
 - CI or verification path: TODO
 - Monorepo or special layout: TODO
@@ -27,6 +28,22 @@ TODO: command
 
 Result: TODO
 
+## Server Or Fixture Verification
+
+- Required: TODO: yes/no and why.
+- How to run: TODO: command, working directory, ports, seed data, or fixture
+  setup.
+- Verification performed: TODO: endpoint, log line, smoke test, emulator/device
+  check, or reason it was not run.
+
+## Feature Scenario Test Plan
+
+- Build-only validation is enough: TODO: yes/no and why.
+- Scenarios covered before implementation: TODO: list user flows, API/server
+  state, automated checks, and manual checks.
+- Manual or hardware-dependent checks: TODO: emulator/device, permissions, NFC,
+  Bluetooth, beacon, camera, location, or other caveats.
+
 ## Failure Memory
 
 - Recorded: TODO: list `docs/failures/...` records added while fixing failed
@@ -39,6 +56,8 @@ Result: TODO
 - `AGENTS.md`: TODO
 - `docs/conventions/coding.md`: TODO
 - `docs/decisions/`: TODO
+- Behavior or integration decisions considered: TODO: explain whether a domain
+  note or ADR was the right durable artifact.
 - Not updated: TODO: explain why if this adoption or change did not require a
   durable docs update.
 
@@ -52,6 +71,7 @@ Result: TODO
 ## Drift Checks Added
 
 - Baseline doc or structure hygiene checks: TODO
+- Encoding or localization hygiene checks: TODO
 - Target-specific architecture checks: TODO
 - Not added: TODO: explain why if no target-specific drift check was practical.
 

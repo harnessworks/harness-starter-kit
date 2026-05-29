@@ -9,6 +9,14 @@ Run this monthly or after repeated agent mistakes.
 - [ ] Are there temporary, duplicate, backup, or one-off files in source paths?
 - [ ] Are rejected approaches documented in `docs/failures/`?
 - [ ] Are new architecture decisions documented in `docs/decisions/`?
+- [ ] Did any behavior, integration boundary, permission fallback, hardware
+      dependency, or server fixture policy change without a decision record?
+- [ ] Do local servers, database seeds, JARs, docker-compose services, mock APIs,
+      emulators, or device prerequisites have a documented verification plan?
+- [ ] Is there a feature scenario test plan, or a written reason build-only
+      validation is enough?
+- [ ] If localized text is present, are UTF-8 and mojibake risks covered by a
+      check or manual audit note?
 - [ ] Are test failures and error messages specific enough for an agent to fix?
 - [ ] Are stack-specific snippets still aligned with the target toolchain?
 - [ ] If a new stack was introduced after generic adoption, was the profile

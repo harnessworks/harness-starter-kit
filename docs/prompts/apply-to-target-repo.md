@@ -38,6 +38,9 @@ Rules:
 - Inspect this repository before editing.
 - Identify the language, framework, package manager, test command, lint command,
   build command, CI provider, docs structure, and monorepo layout if present.
+- Identify local servers, database seeds, docker-compose files, JARs, backend
+  fixtures, emulator/device requirements, and PDF or localized instruction
+  sources if present.
 - Read existing AGENTS.md, CLAUDE.md, README, CONTRIBUTING, and CI configs if
   they exist.
 - Preserve existing architecture, tools, naming, package managers, and test
@@ -68,6 +71,13 @@ Expected work:
   explain the tradeoff first.
 - Add stack-specific lint/type/test recommendations based on the detected
   language.
+- If the repo includes a local server, database seed, docker-compose, JAR, mock
+  API, or backend fixture, document how to run and verify it or explain why it
+  was not run.
+- Before feature implementation, write a small scenario test plan or explicitly
+  say why build-only validation is enough.
+- If localized source, XML resources, PDF-derived instructions, or mojibake risk
+  exists, run or document an encoding audit before broad edits.
 - Fill the Effectiveness Measurement Plan in the adoption report. If baseline
   data does not exist, define the next comparable tasks, primary metric, review
   window, and results location instead of leaving TODOs.
@@ -85,11 +95,16 @@ Drift check examples:
   that fails when Redux dependencies are added.
 - If generated files must live under one directory, add a structure check that
   rejects generated files elsewhere.
+- If Korean, Japanese, Chinese, or other localized text has encoding risk, adapt
+  `scripts/check_encoding_hygiene.py` or add a manual audit note that checks for
+  invalid UTF-8 and common mojibake markers.
 
 Finish by reporting:
 - files added or changed
 - checks I can run locally
 - effectiveness measurement plan
+- server or fixture verification plan
+- scenario test plan, or the reason build-only validation is enough
 - failure memory recorded or skipped with reason
 - assumptions you made
 - remaining manual steps

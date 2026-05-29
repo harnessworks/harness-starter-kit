@@ -92,6 +92,11 @@ Prefer:
 - `docs/failures/*.md` only when an attempted approach failed and should not be
   repeated.
 
+If a feature change adds or changes a local server, database seed, external API,
+runtime permission, hardware-dependent behavior, or other integration boundary,
+decide whether the durable record belongs in `docs/domain/` or
+`docs/decisions/` before finishing.
+
 If no `docs/` file is updated for a non-trivial code change, explicitly explain
 why in the final report.
 
@@ -130,6 +135,8 @@ why in the final report.
 Before reporting completion:
 
 - Run the documented checks that are relevant to the change.
+- For local-server, emulator, device, or hardware-dependent work, document the
+  scenario test plan or explain why build-only validation is enough.
 - Confirm no temporary files were left behind.
 - Update docs when behavior, architecture, commands, or known failures changed.
 - Update the harness effectiveness measurement plan when the change affects
