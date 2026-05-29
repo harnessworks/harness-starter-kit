@@ -53,6 +53,11 @@ Requirements:
   ./harness-starter-kit/commands/harness-update.md to refresh the kit reference,
   record .harness/source.json, and selectively update target harness files
   without blindly overwriting existing files.
+- If I ask for /harness refresh after adoption, use
+  ./harness-starter-kit/commands/harness-refresh.md to review existing harness
+  docs, rules, knowledge records, and checks for stale or duplicated guidance.
+  Do not delete, archive, move, or rename files without my explicit approval for
+  the specific files.
 
 Expected result:
 - project-specific AGENTS.md or updated existing agent instructions
@@ -98,6 +103,18 @@ must not blindly overwrite target repository files.
 
 - Command workflow: [`commands/harness-update.md`](commands/harness-update.md)
 
+### `/harness refresh`
+
+After a repository has adopted the harness, use `/harness refresh` to review the
+existing target harness for stale docs, duplicated guidance, obsolete records,
+or unused checks.
+
+Harness Refresh classifies findings as keep, update, merge,
+archive/delete candidate, or manual review. It does not refresh the local kit
+reference and must not delete files without explicit approval.
+
+- Command workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
+
 ## How Adoption Works
 
 This is not primarily an automatic installer. The agent should inspect the
@@ -138,6 +155,7 @@ use [`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption
 
 - Overview: [`docs/overview.md`](docs/overview.md)
 - Adoption workflow: [`docs/adoption-workflow.md`](docs/adoption-workflow.md)
+- Harness refresh workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
 - Full adoption prompt: [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
 - Component map: [`docs/component-map.md`](docs/component-map.md)
 - Validation coverage: [`docs/validation.md`](docs/validation.md)

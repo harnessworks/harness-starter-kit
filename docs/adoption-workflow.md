@@ -16,6 +16,12 @@ that diagnostic flow, do not remove a target-local `./harness-starter-kit`
 directory. Only temporary clones created outside the target repository may be
 cleaned up without asking.
 
+If the user asks for `/harness refresh`, run the maintenance command in
+`commands/harness-refresh.md` instead of the adoption workflow. Harness Refresh
+reviews the target repository's existing harness for stale docs, duplicated
+guidance, obsolete records, and unused checks. It must not delete, archive,
+move, or rename files without explicit approval for the specific files.
+
 ## 1. Read The Target Repository
 
 Collect the current shape before changing anything:
@@ -226,3 +232,17 @@ target files with starter-kit templates. Patch only the pieces that fit the
 target repository's current architecture, tools, docs, and verification path.
 Finish with a Harness Update Report and update `.harness/source.json` when the
 kit source was successfully confirmed.
+
+## 10. Refresh An Existing Harness
+
+After adoption, use `/harness refresh` when the maintainer wants to reduce stale
+or duplicated target harness guidance without pulling new kit changes.
+
+Follow `commands/harness-refresh.md`. Review existing agent instructions,
+knowledge records, drift checks, CI wiring, and source tracking. Classify
+findings as keep, update, merge, archive/delete candidate, or manual review.
+
+Do not delete, archive, move, or rename files during refresh unless the user
+explicitly approves the specific files after seeing the candidates. Prefer
+marking decision and failure records as superseded or obsolete over deleting
+historical context.

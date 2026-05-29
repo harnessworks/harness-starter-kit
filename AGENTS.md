@@ -52,6 +52,12 @@ When the user asks for `/harness update`, run the update workflow in
 it must refresh the kit reference first, avoid blind overwrites, and finish with
 a Harness Update Report.
 
+When the user asks for `/harness refresh`, run the maintenance workflow in
+`commands/harness-refresh.md`. It reviews existing target harness docs, rules,
+knowledge records, and checks for stale or duplicated guidance. It must not
+delete, archive, move, or rename files without explicit approval for the
+specific files.
+
 Run these checks after changing installer behavior, templates, or drift scripts:
 
 ```powershell

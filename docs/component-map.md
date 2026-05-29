@@ -16,6 +16,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Harness readiness diagnostic | `/harness doctor` report | `commands/harness-doctor.md`, `docs/scoring/harness-score-rubric.md` |
 | Harness source tracking | `.harness/source.json` | documented in `commands/harness-update.md` |
 | Harness update workflow | `/harness update` report | `commands/harness-update.md` |
+| Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
 | Baseline harness score scan | preliminary file and directory scan | `scripts/harness_doctor.py` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
 | Stack-specific rules | lint/type/pre-commit/framework snippets | `templates/profiles/*` |
@@ -49,3 +50,9 @@ Use `/harness update` after adoption when the maintainer wants to refresh the
 local kit reference and selectively apply new harness guidance. The command
 records the current kit source in `.harness/source.json` and reports applied,
 skipped, and manual-review items.
+
+Use `/harness refresh` after adoption when the maintainer wants to clean up the
+target harness itself. The command reviews stale docs, duplicated guidance,
+obsolete records, and unused checks, then reports keep, update, merge,
+archive/delete candidate, and manual-review items without deleting files unless
+the user explicitly approves the specific files.

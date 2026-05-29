@@ -119,6 +119,31 @@ class RepositoryHygieneTests(unittest.TestCase):
             self.assertIn("/harness update", text)
             self.assertIn("commands/harness-update.md", text)
 
+    def test_harness_refresh_command_is_documented_and_linked(self) -> None:
+        refresh_command = (
+            REPO_ROOT / "commands" / "harness-refresh.md"
+        ).read_text(encoding="utf-8")
+        root_agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        adoption_workflow = (
+            REPO_ROOT / "docs" / "adoption-workflow.md"
+        ).read_text(encoding="utf-8")
+        component_map = (REPO_ROOT / "docs" / "component-map.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("Harness Refresh Report", refresh_command)
+        self.assertIn("keep", refresh_command)
+        self.assertIn("update", refresh_command)
+        self.assertIn("merge", refresh_command)
+        self.assertIn("archive/delete candidate", refresh_command)
+        self.assertIn("manual review", refresh_command)
+        self.assertIn("explicit user approval", refresh_command)
+
+        for text in (root_agents, readme, adoption_workflow, component_map):
+            self.assertIn("/harness refresh", text)
+            self.assertIn("commands/harness-refresh.md", text)
+
     def test_profile_reference_paths_distinguish_clone_from_installer_output(
         self,
     ) -> None:
@@ -171,6 +196,7 @@ class RepositoryHygieneTests(unittest.TestCase):
                 self.assertIn("docs/validation.md", text)
                 self.assertIn("docs/evaluation.md", text)
                 self.assertIn("/harness update", text)
+                self.assertIn("/harness refresh", text)
 
 
 if __name__ == "__main__":

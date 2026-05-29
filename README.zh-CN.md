@@ -57,6 +57,11 @@ Requirements:
   ./harness-starter-kit/commands/harness-update.md to refresh the kit reference,
   record .harness/source.json, and selectively update target harness files
   without blindly overwriting existing files.
+- If I ask for /harness refresh after adoption, use
+  ./harness-starter-kit/commands/harness-refresh.md to review existing harness
+  docs, rules, knowledge records, and checks for stale or duplicated guidance.
+  Do not delete, archive, move, or rename files without my explicit approval for
+  the specific files.
 
 Expected result:
 - project-specific AGENTS.md or updated existing agent instructions
