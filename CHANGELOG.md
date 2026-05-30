@@ -2,6 +2,34 @@
 
 Notable project changes should be recorded here before release tags are cut.
 
+## v0.1.1 - 2026-05-30
+
+Stabilization release for the initial harness workflow. This release strengthens
+the theory, evaluation, failure-memory, and contributor guidance added around
+the `v0.1.0` early release.
+
+### Added
+
+- Harness engineering theory document that separates repository harness health
+  from observed agent effectiveness.
+- Task outcome record template for comparable agent-work observations.
+- Roadmap and expanded contributor guidance for profiles, drift checks,
+  adoption examples, and release validation.
+- Regression coverage that keeps the static site copy prompt aligned with the
+  README adoption prompt.
+
+### Changed
+
+- Compact root and generic `AGENTS.md` guidance while preserving command
+  routing, analysis, validation, and commit rules.
+- Clarify `python3` validation commands for macOS/Linux environments where
+  `python` is unavailable.
+- Clarify Harness Doctor score scope and non-scored evaluation/governance
+  signals.
+- Strengthen adoption and update guidance around failure-memory records for
+  user-visible runtime failures, high-risk bug paths, failed checks, repeated
+  agent mistakes, and cross-environment mismatches.
+
 ## v0.1.0 - 2026-05-29
 
 Initial early release of `harness-starter-kit`.
