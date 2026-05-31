@@ -57,7 +57,7 @@ the starter kit into an automatic rewrite system.
 - Improve Harness Doctor evidence messages and scoring calibration.
 - Refine `/harness update` and `/harness refresh` workflows from real target
   repository use.
-- Add a `/harness review` command for critical review of the current turn's
+- Refine the `/harness review` command for critical review of the current turn's
   changes from an opposing harness-engineering perspective.
 
 The review command should use a separate reviewer perspective or subagent when

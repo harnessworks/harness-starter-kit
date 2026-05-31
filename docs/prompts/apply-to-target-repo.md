@@ -21,6 +21,18 @@ If I ask for /harness update after adoption, use
 selectively update target harness files, record .harness/source.json, and report
 what changed without blindly overwriting target files.
 
+If I ask for /harness refresh after adoption, use
+./harness-starter-kit/commands/harness-refresh.md to review existing harness
+docs, rules, knowledge records, and checks for stale or duplicated guidance.
+Do not delete, archive, move, or rename files without my explicit approval for
+the specific files.
+
+If I ask for /harness review, use
+./harness-starter-kit/commands/harness-review.md to review the current change
+set from an opposing harness-engineering perspective. Report findings, missing
+checks, overreach, durable memory gaps, and follow-up recommendations without
+modifying files unless I explicitly ask you to apply fixes after the review.
+
 Goal:
 Make this repository easier and safer for coding agents to work in by adding
 durable instructions, architecture constraints, feedback loops, knowledge

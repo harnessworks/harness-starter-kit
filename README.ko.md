@@ -62,6 +62,12 @@ Requirements:
   docs, rules, knowledge records, and checks for stale or duplicated guidance.
   Do not delete, archive, move, or rename files without my explicit approval for
   the specific files.
+- If I ask for /harness review, use
+  ./harness-starter-kit/commands/harness-review.md to review the current change
+  set from an opposing harness-engineering perspective. Report findings,
+  missing checks, overreach, durable memory gaps, and follow-up recommendations
+  without modifying files unless I explicitly ask you to apply fixes after the
+  review.
 
 Expected result:
 - project-specific AGENTS.md or updated existing agent instructions
@@ -109,6 +115,31 @@ Harness Update는 확인된 kit source를 `.harness/source.json`에 기록하고
 
 - 명령 workflow: [`commands/harness-update.md`](commands/harness-update.md)
 
+### `/harness refresh`
+
+저장소가 harness를 채택한 뒤에는 `/harness refresh`로 기존 target harness의
+오래된 문서, 중복 guidance, obsolete record, unused check를 검토할 수 있습니다.
+
+Harness Refresh는 keep, update, merge, archive/delete candidate, manual review로
+findings를 분류합니다. 로컬 kit reference를 갱신하지 않으며, 명시적 승인 없이
+파일을 삭제하면 안 됩니다.
+
+- 명령 workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
+
+### `/harness review`
+
+`/harness review`는 마무리 전에 현재 change set을 반대 harness-engineering
+관점으로 점검합니다.
+
+Harness Review는 기본적으로 diagnostic입니다. target source-of-truth 위반,
+불필요한 automation, 약한 validation, 누락된 durable memory, overreach, stale
+또는 duplicated guidance를 찾습니다. 사용자가 review 후 fix 적용을 명시적으로
+요청하기 전에는 파일을 수정하면 안 됩니다.
+
+- 명령 workflow: [`commands/harness-review.md`](commands/harness-review.md)
+- Report template: [`docs/templates/harness-review-report.md`](docs/templates/harness-review-report.md)
+- Example report: [`docs/examples/harness-review-report.md`](docs/examples/harness-review-report.md)
+
 ## 적용 방식
 
 이 kit은 주로 자동 installer가 아닙니다. 에이전트가 대상 저장소를 먼저 읽고,
@@ -146,6 +177,8 @@ Profile은 보수적인 참고 자료이며 자동 변환 규칙이 아닙니다
 - Overview: [`docs/overview.md`](docs/overview.md)
 - Theory: [`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)
 - Adoption workflow: [`docs/adoption-workflow.md`](docs/adoption-workflow.md)
+- Harness refresh workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
+- Harness review workflow: [`commands/harness-review.md`](commands/harness-review.md)
 - Full adoption prompt: [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
 - Component map: [`docs/component-map.md`](docs/component-map.md)
 - Validation coverage: [`docs/validation.md`](docs/validation.md)

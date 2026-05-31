@@ -1,6 +1,10 @@
-# Harness Review Checklist
+# Harness Maintenance Review Checklist
 
 Run this monthly or after repeated agent mistakes.
+
+This maintenance checklist is different from the `/harness review` command in
+`commands/harness-review.md`. Use `/harness review` for a diagnostic review of
+the current change set; use this checklist for periodic harness maintenance.
 
 - [ ] Did an agent repeat a mistake that should become a rule?
 - [ ] Does every important `AGENTS.md` rule have a test, lint, review, or CI

@@ -18,6 +18,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Harness source tracking | `.harness/source.json` | documented in `commands/harness-update.md` |
 | Harness update workflow | `/harness update` report | `commands/harness-update.md` |
 | Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
+| Harness change-set review | `/harness review` report | `commands/harness-review.md`, `docs/templates/harness-review-report.md` |
 | Baseline harness score scan | preliminary file and directory scan | `scripts/harness_doctor.py` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
 | Stack-specific rules | lint/type/pre-commit/framework snippets | `templates/profiles/*` |
@@ -58,3 +59,9 @@ target harness itself. The command reviews stale docs, duplicated guidance,
 obsolete records, and unused checks, then reports keep, update, merge,
 archive/delete candidate, and manual-review items without deleting files unless
 the user explicitly approves the specific files.
+
+Use `/harness review` before finishing a change when the maintainer wants an
+opposing harness-engineering review of the current diff. The command reports
+source-of-truth risks, unnecessary automation, missing checks, durable memory
+gaps, overreach, and follow-up recommendations without modifying files unless
+the user explicitly asks to apply fixes afterward.

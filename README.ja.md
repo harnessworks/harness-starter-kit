@@ -62,6 +62,12 @@ Requirements:
   docs, rules, knowledge records, and checks for stale or duplicated guidance.
   Do not delete, archive, move, or rename files without my explicit approval for
   the specific files.
+- If I ask for /harness review, use
+  ./harness-starter-kit/commands/harness-review.md to review the current change
+  set from an opposing harness-engineering perspective. Report findings,
+  missing checks, overreach, durable memory gaps, and follow-up recommendations
+  without modifying files unless I explicitly ask you to apply fixes after the
+  review.
 
 Expected result:
 - project-specific AGENTS.md or updated existing agent instructions
@@ -110,6 +116,32 @@ update 候補を分類して Harness Update Report で完了します。target r
 
 - Command workflow: [`commands/harness-update.md`](commands/harness-update.md)
 
+### `/harness refresh`
+
+リポジトリが harness を採用した後は、`/harness refresh` で既存の target
+harness にある stale docs、duplicated guidance、obsolete records、unused
+checks をレビューできます。
+
+Harness Refresh は findings を keep、update、merge、archive/delete
+candidate、manual review に分類します。ローカル kit reference は更新せず、
+明示的な承認なしにファイルを削除してはいけません。
+
+- Command workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
+
+### `/harness review`
+
+`/harness review` は、完了前に現在の change set を opposing
+harness-engineering perspective で点検します。
+
+Harness Review は diagnostic by default です。target source-of-truth
+violations、unnecessary automation、weak validation、missing durable memory、
+overreach、stale or duplicated guidance を確認します。ユーザーが review 後に
+fix 適用を明示的に依頼するまでは、ファイルを変更してはいけません。
+
+- Command workflow: [`commands/harness-review.md`](commands/harness-review.md)
+- Report template: [`docs/templates/harness-review-report.md`](docs/templates/harness-review-report.md)
+- Example report: [`docs/examples/harness-review-report.md`](docs/examples/harness-review-report.md)
+
 ## 導入の考え方
 
 この kit は主に自動 installer ではありません。エージェントは対象リポジトリを
@@ -149,6 +181,8 @@ Profile は保守的な参考資料であり、自動変換ルールではあり
 - Overview: [`docs/overview.md`](docs/overview.md)
 - Theory: [`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)
 - Adoption workflow: [`docs/adoption-workflow.md`](docs/adoption-workflow.md)
+- Harness refresh workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
+- Harness review workflow: [`commands/harness-review.md`](commands/harness-review.md)
 - Full adoption prompt: [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
 - Component map: [`docs/component-map.md`](docs/component-map.md)
 - Validation coverage: [`docs/validation.md`](docs/validation.md)

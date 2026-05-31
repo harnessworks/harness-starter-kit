@@ -43,6 +43,10 @@ conventions.
 - `/harness refresh`: use `commands/harness-refresh.md`. Review stale or
   duplicated target harness guidance. Do not delete, archive, move, or rename
   files without explicit approval for the specific files.
+- `/harness review`: use `commands/harness-review.md`. Review the current
+  change set from an opposing harness-engineering perspective. It is diagnostic
+  by default and must not modify files unless the user explicitly asks to apply
+  fixes after seeing the review.
 
 ## Project Analysis Rule
 
@@ -67,7 +71,7 @@ decisions, known failures, drift checks, and recommended next work.
 
 - Read the relevant workflow doc before changing command behavior:
   `commands/harness-doctor.md`, `commands/harness-update.md`, or
-  `commands/harness-refresh.md`.
+  `commands/harness-refresh.md`, or `commands/harness-review.md`.
 - For adoption behavior, keep `docs/adoption-workflow.md`,
   `docs/prompts/apply-to-target-repo.md`, `docs/templates/adoption-report.md`,
   and examples aligned.
@@ -151,3 +155,4 @@ python scripts/harness_doctor.py --target .
 - Validation coverage: `docs/validation.md`
 - Effectiveness evaluation: `docs/evaluation.md`
 - Profile absorption: `docs/checklists/profile-absorption.md`
+- Harness review workflow: `commands/harness-review.md`

@@ -64,6 +64,12 @@ Requirements:
   docs, rules, knowledge records, and checks for stale or duplicated guidance.
   Do not delete, archive, move, or rename files without my explicit approval for
   the specific files.
+- If I ask for /harness review, use
+  ./harness-starter-kit/commands/harness-review.md to review the current change
+  set from an opposing harness-engineering perspective. Report findings,
+  missing checks, overreach, durable memory gaps, and follow-up recommendations
+  without modifying files unless I explicitly ask you to apply fixes after the
+  review.
 
 Expected result:
 - project-specific AGENTS.md or updated existing agent instructions
@@ -139,6 +145,20 @@ reference and must not delete files without explicit approval.
 
 - Command workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
 
+### `/harness review`
+
+Use `/harness review` to challenge the current change set from an opposing
+harness-engineering perspective before finishing.
+
+Harness Review is diagnostic by default. It checks for target source-of-truth
+violations, unnecessary automation, weak validation, missing durable memory,
+overreach, and stale or duplicated guidance. It must not modify files unless the
+user explicitly asks to apply fixes after seeing the review.
+
+- Command workflow: [`commands/harness-review.md`](commands/harness-review.md)
+- Report template: [`docs/templates/harness-review-report.md`](docs/templates/harness-review-report.md)
+- Example report: [`docs/examples/harness-review-report.md`](docs/examples/harness-review-report.md)
+
 ## How Adoption Works
 
 This is not primarily an automatic installer. The agent should inspect the
@@ -182,6 +202,7 @@ use [`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption
 - Roadmap: [`ROADMAP.md`](ROADMAP.md)
 - Adoption workflow: [`docs/adoption-workflow.md`](docs/adoption-workflow.md)
 - Harness refresh workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
+- Harness review workflow: [`commands/harness-review.md`](commands/harness-review.md)
 - Full adoption prompt: [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
 - Component map: [`docs/component-map.md`](docs/component-map.md)
 - Validation coverage: [`docs/validation.md`](docs/validation.md)
