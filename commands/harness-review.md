@@ -15,7 +15,9 @@ needed, and runs the right validation before completion.
 
 Every review must check whether the current environment exposes a multi-agent
 or subagent review tool, record the reviewer mode, and report any fallback
-reason. Do not depend on any specific agent runtime.
+reason. The parent or orchestrator agent that runs this command owns the
+reviewer-mode and fallback decision. Do not depend on any specific agent
+runtime.
 
 ## Invocation Modes
 
@@ -77,7 +79,14 @@ automation.
      final report.
    - Limit the subagent prompt to: "Read the current diff, staged diff,
      AGENTS.md, docs/decisions, docs/failures, docs/conventions, and
-     docs/domain. Report findings only. Do not modify files."
+     docs/domain. You are the read-only reviewer subagent. Do not assess
+     reviewer mode, fallback reason, or subagent availability. Return only
+     review findings, missing checks, and risks. Do not produce a full Harness
+     Review Report. Do not modify files."
+   - The parent or orchestrator agent must determine `Reviewer mode` and
+     `Fallback reason` from the actual availability check and subagent
+     spawn/wait result. Do not trust or copy reviewer-mode, fallback-reason, or
+     subagent-availability claims from subagent output.
    - If no subagent tool is available, the tool is present but not permitted,
      the tool is blocked, or the subagent call fails, use a single-agent
      reviewer perspective and record the fallback reason in the report.
@@ -182,6 +191,11 @@ Recommended Follow-Up:
   constraints, or broader installer automation as part of the review.
 - Do not silently skip the multi-agent or subagent availability check. If the
   review falls back to a single-agent perspective, report why.
+- Do not ask the spawned reviewer subagent to assess reviewer mode, fallback
+  reason, or subagent availability. The spawned subagent should only report
+  findings, missing checks, and risks.
+- Do not copy reviewer-mode or fallback fields from subagent output. The parent
+  or orchestrator agent records those fields from the actual spawn/wait outcome.
 - Treat `/harness review sub-agent` only as explicit permission to request a
   read-only reviewer subagent. It is not approval to modify files or add
   runtime-specific subagent integration.

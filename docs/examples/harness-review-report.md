@@ -2,6 +2,9 @@
 
 This example shows the expected report shape for `/harness review` and
 `/harness review sub-agent`. It is diagnostic and does not apply fixes.
+When a subagent is used, the parent or orchestrator determines `Reviewer mode`
+and `Fallback reason` from the actual spawn/wait result, not from subagent
+output.
 
 ```text
 Harness Review Report

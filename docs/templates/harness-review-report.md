@@ -9,6 +9,10 @@
 - Reviewer mode: TODO: subagent used | single-agent fallback
 - Fallback reason: TODO: reason or none
 
+Reviewer mode and fallback reason are parent/orchestrator-owned. Fill them from
+the actual availability check and subagent spawn/wait result, not from subagent
+output.
+
 ## Findings
 
 - TODO: list findings with severity and file/path evidence, or state none.

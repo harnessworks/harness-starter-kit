@@ -288,7 +288,13 @@ class RepositoryHygieneTests(unittest.TestCase):
             "multi-agent or subagent tools are available",
             "available and permitted by the active runtime and tool instructions",
             "read-only reviewer subagent",
-            "Report findings only. Do not modify files.",
+            "parent or orchestrator agent",
+            "Do not assess reviewer mode, fallback reason, or subagent availability.",
+            "Return only review findings, missing checks, and risks.",
+            "Do not produce a full Harness Review Report.",
+            "Do not modify files.",
+            "actual availability check and subagent spawn/wait result",
+            "Do not trust or copy reviewer-mode, fallback-reason, or subagent-availability claims",
             "tool unavailable",
             "tool present but not permitted",
             "subagent call failed",
@@ -367,15 +373,42 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("Reviewer mode: TODO: subagent used | single-agent fallback", template_text)
         self.assertIn("Fallback reason: TODO: reason or none", template_text)
         self.assertIn("Invocation: TODO: /harness review | /harness review sub-agent", template_text)
+        normalized_template = " ".join(template_text.split())
+        self.assertIn("parent/orchestrator-owned", normalized_template)
+        self.assertIn(
+            "actual availability check and subagent spawn/wait result",
+            normalized_template,
+        )
+        self.assertIn("not from subagent output", normalized_template)
         self.assertIn("does not apply fixes", template_text)
 
         example_text = review_example.read_text(encoding="utf-8")
+        normalized_example = " ".join(example_text.split())
+        self.assertIn("actual spawn/wait result", normalized_example)
+        self.assertIn("not from subagent output", normalized_example)
         self.assertIn("Invocation: /harness review sub-agent", example_text)
         self.assertIn("Invocation: /harness review", example_text)
         self.assertIn("Reviewer mode: subagent used", example_text)
         self.assertIn("Fallback reason: none", example_text)
         self.assertIn("Reviewer mode: single-agent fallback", example_text)
         self.assertIn("tool present but not permitted", example_text)
+
+        failure_memory = (
+            REPO_ROOT
+            / "docs"
+            / "failures"
+            / "0002-subagent-reviewer-mode-ownership.md"
+        ).read_text(encoding="utf-8")
+        normalized_failure_memory = " ".join(failure_memory.split())
+        self.assertIn(
+            "Reviewer mode: single-agent fallback",
+            normalized_failure_memory,
+        )
+        self.assertIn("parent orchestrator", normalized_failure_memory)
+        self.assertIn(
+            "Do not copy those fields from subagent output",
+            normalized_failure_memory,
+        )
 
     def test_profile_reference_paths_distinguish_clone_from_installer_output(
         self,
