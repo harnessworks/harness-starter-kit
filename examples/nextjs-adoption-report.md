@@ -13,7 +13,8 @@
 - Added `docs/conventions/coding.md`, `docs/domain/glossary.md`, and
   `docs/decisions/001-adopt-next-agent-harness.md`.
 - Added Next.js profile snippets under `docs/harness/profiles/nextjs/`.
-- Added `typecheck` and `check:harness` scripts to `package.json`.
+- Added `typecheck`, `check:docs`, `check:structure`, and `check:harness`
+  scripts to `package.json`.
 - Added `.gitignore` entries for `.next/`, `node_modules/`,
   `tsconfig.tsbuildinfo`, and `harness-starter-kit/`.
 
@@ -23,14 +24,25 @@
 npm.cmd run check:harness
 ```
 
-The command ran:
+The command ran these named axes:
 
 - `npm run typecheck`
 - `npm run build`
-- `python scripts/check_docs_drift.py`
-- `python scripts/check_structure.py`
+- `npm run check:docs` (`python scripts/check_docs_drift.py`)
+- `npm run check:structure` (`python scripts/check_structure.py`)
 
 All checks passed.
+
+## External API Verification
+
+- Required: No. The sample app does not call an external API.
+- Live/mock mode: Not applicable.
+- Secret handling and redaction checked: Not applicable; no provider secrets or
+  server-only API boundary were introduced.
+- Empty or zero-result behavior: Not applicable.
+- Provider error handling: Not applicable.
+- Focused smoke command or fixture: Not added because typecheck, build, docs
+  drift, and structure drift covered the adoption scope.
 
 ## Findings
 

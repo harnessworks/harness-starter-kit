@@ -24,13 +24,20 @@ Expose a single local verification command in `package.json`:
 {
   "scripts": {
     "typecheck": "tsc --noEmit --incremental false",
-    "check:harness": "npm run typecheck && npm run build && python scripts/check_docs_drift.py && python scripts/check_structure.py"
+    "check:docs": "python scripts/check_docs_drift.py",
+    "check:structure": "python scripts/check_structure.py",
+    "check:harness": "npm run typecheck && npm run build && npm run check:docs && npm run check:structure"
   }
 }
 ```
 
 Use `npm.cmd` instead of `npm` when running commands from Windows PowerShell if
 script execution policy blocks `npm.ps1`.
+
+Keep live API smoke checks as separate scripts unless they are stable and safe
+in the target repository's normal environment. If a project adds a focused
+script such as `scripts/check_<api>.mjs`, document what it verifies and whether
+it belongs in `check:harness`.
 
 ## Profile Absorption Notes
 
@@ -55,6 +62,30 @@ When Next.js is introduced after generic adoption:
   check note is enough.
 - In the final report, list which snippets were adopted, adapted, skipped, or
   deferred.
+
+## App Router Checklist
+
+- Keep secrets and provider credentials in server-only code. Do not expose them
+  through client components, serialized props, screenshots, or logs.
+- Use `NEXT_PUBLIC_` variables only for values intentionally safe for the
+  browser. Server-only route handlers and server components should read private
+  env vars directly through the target's existing config pattern.
+- For `app/api/<route>/route.ts`, decide whether the route is a thin proxy, a
+  validation boundary, or a product endpoint. Record a decision only when that
+  boundary is new or changes integration policy.
+- Choose the runtime deliberately for route handlers that depend on Node APIs,
+  TLS behavior, certificates, streaming, or provider SDKs. Do not assume Edge
+  and Node runtimes handle external calls the same way.
+- In server components, keep data fetching close to the existing route,
+  service, or cache pattern. Avoid moving external API calls into client
+  components to work around env handling.
+- Model empty API results, provider errors, and malformed payloads as explicit
+  states. A zero-result response should not be treated as a parser failure.
+- For live/mock fallback, make the mode explicit and avoid silent production
+  fallback unless the target has already chosen that policy.
+- Add or adapt a focused smoke script when a route handler's external API,
+  redaction, empty-result, or provider-error behavior cannot be proven by
+  typecheck and build.
 
 ## Next.js Notes
 

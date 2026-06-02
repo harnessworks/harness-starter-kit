@@ -1,6 +1,13 @@
 {
   "scripts": {
     "typecheck": "tsc --noEmit --incremental false",
-    "check:harness": "npm run typecheck && npm run build && python scripts/check_docs_drift.py && python scripts/check_structure.py"
-  }
+    "check:docs": "python scripts/check_docs_drift.py",
+    "check:structure": "python scripts/check_structure.py",
+    "check:harness": "npm run typecheck && npm run build && npm run check:docs && npm run check:structure"
+  },
+  "_notes": [
+    "Merge only the scripts your project needs into package.json.",
+    "Keep live API smoke checks separate unless they are stable and safe by default.",
+    "Named subcommands make check:harness more transparent and allow focused reruns."
+  ]
 }
