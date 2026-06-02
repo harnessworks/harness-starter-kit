@@ -21,6 +21,9 @@ final report or check note for a narrow fix.
 
 Copy or adapt `check_harness.py` into the target repository's `scripts/`
 directory only when the target has no equivalent local verification command.
+When a harness command grows beyond a simple wrapper, make it print or document
+which axes it checks, such as lint, typecheck, build, docs drift, structure
+drift, server smoke, external API smoke, or route table validation.
 
 ## Profile Absorption Notes
 

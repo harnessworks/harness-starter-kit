@@ -57,9 +57,13 @@ governance. Do not add every artifact by default.
   document exact local checks, and protect generated files and local config.
 - When present: document how to run or verify local servers, database seeds,
   Docker services, JARs, emulators, devices, or backend fixtures.
+- When present: use `docs/checklists/external-api-work.md` for external API,
+  auth provider, webhook, public-data API, live/mock fallback, or secret
+  redaction work.
 - When touching that area: consider a decision record for auth, external APIs,
   permissions, hardware, persistence, state management, or networking boundary
-  changes.
+  changes. Use `docs/checklists/decision-failure-memory.md` to distinguish
+  ADRs, failure notes, domain docs, convention updates, and final-report notes.
 - Broad feature work: write a small scenario test note. For narrow fixes, name
   the relevant check or explain why build-only validation is enough.
 
@@ -150,6 +154,10 @@ Make the common path fast:
 - pre-commit checks when the project already uses them
 - CI workflow only when it matches the target repository's CI provider
 - clear test names and error messages
+- target-specific verification scripts when runtime behavior, external API
+  handling, route tables, or environment contracts cannot be proven by lint,
+  typecheck, tests, or build alone. See
+  `docs/checklists/verification-scripts.md`.
 
 Before broad feature implementation, write a small scenario test note or
 explicitly say why build-only validation is enough. The note can be a compact
@@ -157,6 +165,12 @@ matrix of user flows, setup data, server state, automated checks, and manual
 checks. For mobile or local-server projects, include endpoint readiness, seed
 data, emulator/device coverage, runtime permissions, and hardware-dependent
 flows such as NFC, Bluetooth, or beacons when relevant.
+
+For external API work, also name the live/mock mode, redaction behavior,
+zero-result behavior, provider error handling, and the smoke command or fixture
+used to verify the path. Keep live API checks separate from the default harness
+gate when credentials, quota, network access, or provider uptime make them
+unsafe as a normal command.
 
 Agents improve fastest when feedback is quick and concrete.
 
@@ -203,8 +217,9 @@ kept intentionally before committing.
 If implementation changed behavior, added a new integration boundary, or chose
 a defensive fallback for permissions, hardware, networking, persistence, or
 state management, decide whether the change belongs in `docs/domain/` as domain
-language or in `docs/decisions/` as an architectural decision. Record the choice
-or explain why no decision record was needed.
+language or in `docs/decisions/` as an architectural decision. Use
+`docs/checklists/decision-failure-memory.md` for boundary examples, then record
+the choice or explain why no decision record was needed.
 
 If adoption fixes a user-visible runtime failure or high-risk bug path that
 should not recur, including a 5xx error, crash, security or permission bug,

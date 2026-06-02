@@ -38,6 +38,21 @@ Result: TODO
 - Not applicable: TODO: explain when the target has no local server, fixture,
   seed, emulator, or device dependency.
 
+## External API Verification
+
+- Required: TODO: yes/no and why.
+- Boundary: TODO: server-only caller, route handler, service module, fixture, or
+  mock boundary reviewed.
+- Live/mock mode: TODO: live, mock, fixture, disabled, or not applicable.
+- Secret handling and redaction checked: TODO: env vars, request URL, headers,
+  logs, screenshots, and reports reviewed without exposing values.
+- Empty or zero-result behavior: TODO: verified, covered by fixture/test, not
+  applicable, or not run with reason.
+- Provider error handling: TODO: HTTP error, provider error envelope, mixed
+  JSON/XML/text response, or not applicable.
+- Focused smoke command or fixture: TODO: command, endpoint, fixture path, or
+  reason build/typecheck was enough.
+
 ## Feature Scenario Test Note
 
 - Broad feature work: TODO: yes/no and why.

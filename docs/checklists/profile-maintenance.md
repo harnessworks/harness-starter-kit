@@ -26,6 +26,10 @@ Use this checklist when adding or changing files under `templates/profiles/`.
 - [ ] Include `final report or check note`.
 - [ ] Include a final-report sentence that asks agents to list snippets adopted,
       adapted, skipped, or deferred.
+- [ ] When a profile suggests a `check_harness.py` or `check:harness` command,
+      keep the checked axes discoverable so it is clear whether the command is
+      validating lint, typecheck, build, docs drift, structure drift, server
+      smoke, or API smoke behavior.
 
 ## 4. Avoid Regressions
 

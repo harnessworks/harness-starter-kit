@@ -81,6 +81,16 @@ Rules:
   touching auth, external APIs, permissions, hardware, persistence, state, or
   network boundaries, consider whether a decision record is needed; for broad
   feature work, write a small scenario test note.
+- For external API, public-data API, auth provider, webhook, live/mock fallback,
+  or secret redaction work, use
+  ./harness-starter-kit/docs/checklists/external-api-work.md.
+- To avoid overdocumenting small changes, use
+  ./harness-starter-kit/docs/checklists/decision-failure-memory.md to decide
+  whether an ADR, failure note, domain doc, convention update, or final-report
+  note is the right artifact.
+- When local behavior cannot be proven by lint, typecheck, tests, or build,
+  use ./harness-starter-kit/docs/checklists/verification-scripts.md to decide
+  whether a target-specific smoke or drift check is useful.
 - During prompt-first adoption, read profile templates from
   ./harness-starter-kit/templates/profiles/<profile>/. If installer-generated
   snippets already exist in this target repository, review them under
@@ -102,6 +112,9 @@ Expected work:
 - If the repo includes a local server, database seed, docker-compose, JAR, mock
   API, or backend fixture, document how to run and verify it or explain why it
   was not run.
+- If the repo calls an external API, document server-only secret handling,
+  redaction, empty-result behavior, provider error handling, live/mock fallback,
+  and any focused smoke command that verifies the path.
 - Before broad feature implementation, write a small scenario test note or explicitly
   say why build-only validation is enough.
 - If localized source, XML resources, PDF-derived instructions, or mojibake risk
@@ -129,6 +142,9 @@ Drift check examples:
   that fails when Redux dependencies are added.
 - If generated files must live under one directory, add a structure check that
   rejects generated files elsewhere.
+- If an external API integration depends on redaction, zero-result handling, or
+  provider error envelopes, add a focused smoke script or fixture check when
+  existing tests do not cover that behavior.
 - If Korean, Japanese, Chinese, or other localized text has encoding risk, adapt
   `scripts/check_encoding_hygiene.py` or add a manual audit note that checks for
   invalid UTF-8 and common mojibake markers.

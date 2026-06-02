@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import unittest
@@ -501,6 +502,81 @@ class RepositoryHygieneTests(unittest.TestCase):
                 self.assertIn("/harness refresh", text)
                 self.assertIn("/harness review", text)
                 self.assertIn("commands/harness-review.md", text)
+
+    def test_feedback_driven_practical_checklists_are_linked(self) -> None:
+        checklist_paths = (
+            "docs/checklists/external-api-work.md",
+            "docs/checklists/decision-failure-memory.md",
+            "docs/checklists/verification-scripts.md",
+        )
+        for relative in checklist_paths:
+            with self.subTest(path=relative):
+                self.assertTrue((REPO_ROOT / relative).exists())
+
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        component_map = (REPO_ROOT / "docs" / "component-map.md").read_text(
+            encoding="utf-8"
+        )
+        adoption_workflow = (
+            REPO_ROOT / "docs" / "adoption-workflow.md"
+        ).read_text(encoding="utf-8")
+        adoption_prompt = (
+            REPO_ROOT / "docs" / "prompts" / "apply-to-target-repo.md"
+        ).read_text(encoding="utf-8")
+        adoption_report = (
+            REPO_ROOT / "docs" / "templates" / "adoption-report.md"
+        ).read_text(encoding="utf-8")
+        nextjs_example = (
+            REPO_ROOT / "examples" / "nextjs-adoption-report.md"
+        ).read_text(encoding="utf-8")
+        nextjs_profile = (
+            REPO_ROOT / "templates" / "profiles" / "nextjs" / "README.md"
+        ).read_text(encoding="utf-8")
+        nextjs_scripts = json.loads(
+            (
+                REPO_ROOT
+                / "templates"
+                / "profiles"
+                / "nextjs"
+                / "package-scripts.harness.json"
+            ).read_text(encoding="utf-8")
+        )["scripts"]
+
+        for text in (readme, component_map, adoption_workflow, adoption_prompt):
+            for relative in checklist_paths:
+                self.assertIn(relative, text)
+
+        external_api_report_fields = (
+            "## External API Verification",
+            "Required",
+            "Boundary",
+            "Live/mock mode",
+            "Secret handling and redaction checked",
+            "Empty or zero-result behavior",
+            "Provider error handling",
+            "Focused smoke command or fixture",
+        )
+        for phrase in external_api_report_fields:
+            self.assertIn(phrase, adoption_report)
+        for phrase in external_api_report_fields:
+            self.assertIn(phrase, nextjs_example)
+
+        normalized_nextjs = " ".join(nextjs_profile.split())
+        self.assertIn("App Router Checklist", nextjs_profile)
+        self.assertIn("route handlers", normalized_nextjs)
+        self.assertIn("server components", normalized_nextjs)
+        self.assertIn("env vars", normalized_nextjs)
+        self.assertIn("zero-result", normalized_nextjs)
+        self.assertIn("focused smoke script", normalized_nextjs)
+
+        for script_name, script_command in nextjs_scripts.items():
+            with self.subTest(script=script_name):
+                self.assertIn(f'"{script_name}"', nextjs_profile)
+                self.assertIn(script_command, nextjs_profile)
+
+        self.assertIn("check:docs", nextjs_example)
+        self.assertIn("check:structure", nextjs_example)
+        self.assertIn("named axes", nextjs_example)
 
 
 if __name__ == "__main__":

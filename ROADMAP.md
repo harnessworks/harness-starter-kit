@@ -49,6 +49,27 @@ Each example should document what was adopted, adapted, skipped, and verified.
 Add practical effectiveness measurement examples using the existing report
 template.
 
+## Practical Verification Patterns
+
+Recent adoption feedback says the kit is useful as a completion safety belt but
+less useful during hard implementation work. Near-term improvements should add
+more reusable, execution-oriented patterns without turning the kit into a
+framework-specific fixer.
+
+Useful additions include:
+
+- external API recipes for secret redaction, zero-result responses, mixed
+  JSON/XML envelopes, provider error formats, health endpoints, and live/mock
+  fallback policy
+- clearer ADR and failure-record boundary examples so small changes do not
+  create unnecessary documentation pressure
+- verification-script examples that summarize which axes were checked instead
+  of only returning pass/fail
+- Next.js App Router guidance for route handlers, server components, runtime
+  selection, and environment handling
+- examples where a target-specific smoke script catches a real backend or API
+  bug that lint, typecheck, and build could not prove
+
 ## Governance Commands
 
 Future command work should make the harness easier to maintain without turning
