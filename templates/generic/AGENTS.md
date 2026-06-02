@@ -74,6 +74,13 @@ Add or update durable docs when behavior, architecture, commands, conventions,
 or known failures change. If no `docs/` file is updated for a non-trivial code
 change, explain why in the final report.
 
+For non-trivial product or workflow structure, integration or mock
+external-behavior boundaries, major data models, state classifications, or UX
+principles that become code structure, handle decision memory explicitly: add
+or update `docs/decisions/*.md`, cite the existing ADR that covers the choice,
+or explain why the change is too narrow to need decision memory. A
+`docs/domain/` update does not replace a decision record.
+
 If you fix a user-visible runtime failure or high-risk bug path that should not
 recur, including a 5xx error, crash, security or permission bug, data-loss risk,
 failed CI run, failed harness check, repeated agent mistake, previously
@@ -123,4 +130,7 @@ Before reporting completion:
   enough.
 - Confirm no temporary files were left behind.
 - Update docs when behavior, architecture, commands, or known failures changed.
+- Decision docs: added or updated `docs/decisions/*.md`, cited an existing ADR,
+  or explained why no decision record was needed for structural behavior,
+  workflow, API/mock boundary, data model, state, or UX changes.
 - Summarize changed files, verification performed, and remaining risks.

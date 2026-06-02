@@ -25,6 +25,11 @@ output.
 ## Durable Memory Assessment
 
 - Decision records: TODO: needed, updated, or skipped with reason.
+- Decision-docs gate: TODO: if product or workflow structure, an integration or
+  mock external-behavior boundary, a major data model, a state classification,
+  or a product UX principle became code structure without a `docs/decisions/`
+  update, state whether an existing ADR covers it or why no decision memory is
+  needed.
 - Failure records: TODO: needed, updated, or skipped with reason.
 - Conventions/domain/effectiveness docs: TODO: needed, updated, or skipped with
   reason.

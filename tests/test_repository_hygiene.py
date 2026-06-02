@@ -202,6 +202,20 @@ class RepositoryHygieneTests(unittest.TestCase):
             self.assertIn("changed files", text)
             self.assertIn("remaining risks", text)
 
+    def test_decision_memory_gate_is_visible_in_generic_completion(self) -> None:
+        agent_template = (REPO_ROOT / "templates" / "generic" / "AGENTS.md").read_text(
+            encoding="utf-8"
+        )
+        normalized = " ".join(agent_template.split())
+
+        self.assertIn("handle decision memory explicitly", normalized)
+        self.assertIn("docs/decisions/*.md", normalized)
+        self.assertIn("existing ADR", normalized)
+        self.assertIn("docs/domain", normalized)
+        self.assertIn("does not replace a decision record", normalized)
+        self.assertIn("Decision docs:", normalized)
+        self.assertIn("API/mock boundary", normalized)
+
     def test_harness_update_command_is_documented_and_linked(self) -> None:
         update_command = (REPO_ROOT / "commands" / "harness-update.md").read_text(
             encoding="utf-8"
@@ -397,6 +411,10 @@ class RepositoryHygieneTests(unittest.TestCase):
         )
         self.assertIn("not from subagent output", normalized_template)
         self.assertIn("does not apply fixes", template_text)
+        self.assertIn("Decision-docs gate", template_text)
+        self.assertIn("mock external-behavior boundary", normalized_template)
+        self.assertIn("state classification", normalized_template)
+        self.assertIn("product UX principle", normalized_template)
 
         example_text = review_example.read_text(encoding="utf-8")
         normalized_example = " ".join(example_text.split())
