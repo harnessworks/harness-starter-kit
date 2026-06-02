@@ -230,6 +230,13 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn(".harness/source.json", update_command)
         self.assertIn("git -C harness-starter-kit pull --ff-only origin main", update_command)
         self.assertIn("dirty", update_command)
+        normalized_update = " ".join(update_command.lower().split())
+        self.assertIn("pre-existing target changes", normalized_update)
+        self.assertIn("latest confirmed kit commit", normalized_update)
+        self.assertIn("source tracking", normalized_update)
+        self.assertIn("separating source tracking from target file mutation", normalized_update)
+        self.assertIn("do not patch target files that were already dirty", normalized_update)
+        self.assertIn("Deferred target patches", update_command)
         self.assertIn("blindly overwrite", update_command)
         self.assertIn("Harness Update Report", update_command)
 
