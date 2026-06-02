@@ -21,6 +21,9 @@ This map connects harness engineering concepts to files in a target repository.
 | Harness change-set review | `/harness review` or `/harness review sub-agent` report | `commands/harness-review.md`, `docs/templates/harness-review-report.md` |
 | Baseline harness score scan | preliminary file and directory scan | `scripts/harness_doctor.py` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
+| External API work recipe | server-only API boundary, redaction, live/mock fallback, and smoke checks | `docs/checklists/external-api-work.md` |
+| Decision and failure memory guidance | examples for when to record ADRs, failure notes, domain docs, or final-report notes | `docs/checklists/decision-failure-memory.md` |
+| Verification script patterns | custom smoke checks and transparent `check:harness` composition | `docs/checklists/verification-scripts.md` |
 | Stack-specific rules | lint/type/pre-commit/framework snippets | `templates/profiles/*` |
 | Profile absorption | checklist for turning profile snippets into project rules | `docs/checklists/profile-absorption.md` |
 | Adoption report example | final adoption summary | `docs/templates/adoption-report.md`, `examples/*-adoption-report.md` |
