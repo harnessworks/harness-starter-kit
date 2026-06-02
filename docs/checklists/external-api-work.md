@@ -30,6 +30,7 @@ error:
 | Transport failure | Preserve a sanitized reason and fail health/smoke checks clearly. |
 | TLS or certificate failure | Record the runtime and endpoint involved; add failure memory if it should not recur. |
 | Provider error envelope | Parse provider error codes even when the HTTP status is 200. |
+| Provider text error | Treat responses such as `401 text/plain Unauthorized` as provider or transport errors, not as unsupported parser formats. |
 | Empty or zero-result response | Return a deliberate empty state, not a crash or fake success. |
 | Malformed JSON or XML | Report parser context without logging secrets or full personal data payloads. |
 | Schema drift | Keep a focused fixture or smoke check for the changed fields. |
@@ -59,7 +60,8 @@ Prefer checks that:
 
 - verify required environment variables are present without printing values
 - call a safe endpoint or fixture
-- assert success, zero-result, and provider-error handling where practical
+- assert success, zero-result, provider-error envelope, and provider text-error
+  handling where practical
 - print a short summary of the axis checked, such as env, transport, parser,
   empty-state, and redaction
 - exit nonzero on real failures
@@ -87,6 +89,7 @@ Before reporting completion for external API work, name:
 - the live/mock mode used
 - the redaction behavior checked
 - the empty-result behavior checked or why it was not applicable
+- the provider error envelope or provider text-error behavior checked
 - the command run for API smoke verification, if any
 - whether decision memory or failure memory was recorded or intentionally
   skipped

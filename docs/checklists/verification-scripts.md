@@ -39,6 +39,9 @@ A good script should:
 - exit with a nonzero status on real failures
 - support a focused mode or separate command when the full harness gate is too
   expensive
+- when output is JSON or structured text, include explicit axis fields such as
+  `redactionChecked`, `emptyStateChecked`, `providerErrorChecked`, and
+  `fallbackChecked`
 - avoid writing files unless the script is explicitly a generator
 
 ## Transparent Harness Commands
@@ -73,6 +76,7 @@ Harness smoke summary:
 - parser: JSON and XML envelopes handled
 - empty-state: zero-result fixture returns empty list
 - redaction: request URL logs hide service keys
+- flags: redactionChecked=true, emptyStateChecked=true, providerErrorChecked=true
 ```
 
 The summary should describe what was checked, not just that the command passed.

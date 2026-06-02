@@ -529,6 +529,15 @@ class RepositoryHygieneTests(unittest.TestCase):
         nextjs_example = (
             REPO_ROOT / "examples" / "nextjs-adoption-report.md"
         ).read_text(encoding="utf-8")
+        external_api_checklist = (
+            REPO_ROOT / "docs" / "checklists" / "external-api-work.md"
+        ).read_text(encoding="utf-8")
+        verification_scripts = (
+            REPO_ROOT / "docs" / "checklists" / "verification-scripts.md"
+        ).read_text(encoding="utf-8")
+        lifecycle_pilots = (
+            REPO_ROOT / "docs" / "examples" / "lifecycle-pilot-results.md"
+        ).read_text(encoding="utf-8")
         nextjs_profile = (
             REPO_ROOT / "templates" / "profiles" / "nextjs" / "README.md"
         ).read_text(encoding="utf-8")
@@ -577,6 +586,12 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("check:docs", nextjs_example)
         self.assertIn("check:structure", nextjs_example)
         self.assertIn("named axes", nextjs_example)
+        self.assertIn("401 text/plain Unauthorized", external_api_checklist)
+        self.assertIn("provider text-error", external_api_checklist)
+        self.assertIn("redactionChecked", verification_scripts)
+        self.assertIn("emptyStateChecked", verification_scripts)
+        self.assertIn("providerErrorChecked", verification_scripts)
+        self.assertIn("TodayBus External API Dogfood", lifecycle_pilots)
 
 
 if __name__ == "__main__":

@@ -76,6 +76,38 @@ Limitations:
 - the pilot still measured readiness, not actual reduction in repeated agent
   mistakes
 
+## TodayBus External API Dogfood
+
+After adding the practical verification checklists, a `today-bus` Next.js
+target was used as an external API dogfood case. The target exercised TAGO and
+Gumi BIS public-data paths, server-only secret handling, deterministic planner
+fallbacks, and live smoke scripts kept outside the default `check:harness` gate.
+
+Successful behaviors:
+
+- redacted raw, encoded, and error-message samples of `TAGO_SERVICE_KEY`
+- treated current TAGO arrival zero-result responses as a deliberate empty live
+  state instead of a crash or mock success
+- verified deterministic `tago`, `gumi_bis_timetable`, and `mock` fallback
+  planner paths
+- kept live smoke commands separate from `check:harness` because provider
+  credentials, network state, and public-data availability vary
+- used focused checks such as `npm run test:planner`,
+  `node scripts/check-tago-backend.mjs`, and
+  `node scripts/check-gumi-bis-offset.mjs`
+
+Finding:
+
+- Invalid TAGO credentials returned `401 text/plain Unauthorized`, not an XML
+  or JSON provider error envelope. The external API checklist should call out
+  provider text errors explicitly, and target smoke scripts should summarize
+  redaction, empty-state, provider-error, and fallback axes directly.
+
+Limitations:
+
+- This dogfood validated checklist usefulness for one external API target. It
+  did not prove broader agent effectiveness or reduced human rework.
+
 ## Starter Kit Findings
 
 The pilots found one documentation ambiguity:
