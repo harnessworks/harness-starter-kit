@@ -27,6 +27,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Decision and failure memory guidance | examples for when to record ADRs, failure notes, domain docs, or final-report notes | `docs/checklists/decision-failure-memory.md` |
 | Verification script patterns | custom smoke checks and transparent `check:harness` composition | `docs/checklists/verification-scripts.md` |
 | Stack-specific rules | lint/type/pre-commit/framework snippets | `templates/profiles/*` |
+| Stack profile guide | available profiles and how to treat snippets as reference material | `docs/profiles.md` |
 | Profile absorption | checklist for turning profile snippets into project rules | `docs/checklists/profile-absorption.md` |
 | Adoption report example | final adoption summary | `docs/templates/adoption-report.md`, `examples/*-adoption-report.md` |
 | Effectiveness evaluation | agent mistake reduction measurement | `docs/evaluation.md`, `docs/templates/effectiveness-report.md` |

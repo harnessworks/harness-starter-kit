@@ -213,73 +213,27 @@ provided. It copies stack profile snippets into `docs/harness/profiles/<profile>
 for review. During prompt-first adoption, agents read profile templates from the
 cloned kit under `harness-starter-kit/templates/profiles/<profile>`.
 
-## Profiles
+Profiles shown in the badges above are conservative reference snippets, not
+automatic migrations. See [`docs/profiles.md`](docs/profiles.md) and
+[`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption.md).
 
-Available profiles are `generic`, `python`, `typescript`, `nextjs`, `django`,
-`flask`, `fastapi`, `spring`, `android`, `react`, and `vue`.
+For the detailed documentation index, see
+[`docs/component-map.md`](docs/component-map.md). Common adoption references:
+[`docs/adoption-workflow.md`](docs/adoption-workflow.md),
+[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md),
+[`docs/checklists/external-api-work.md`](docs/checklists/external-api-work.md),
+[`docs/checklists/decision-failure-memory.md`](docs/checklists/decision-failure-memory.md),
+and [`docs/checklists/verification-scripts.md`](docs/checklists/verification-scripts.md).
 
-Profiles are conservative reference material, not automatic transformations.
-Adopt only the snippets that fit the target repository's current tools and
-maintenance expectations. For profile absorption after a stack is introduced,
-use [`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption.md).
-
-## Documentation Map
-
-- Overview: [`docs/overview.md`](docs/overview.md)
-- Theory: [`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)
-- Roadmap: [`ROADMAP.md`](ROADMAP.md)
-- Adoption workflow: [`docs/adoption-workflow.md`](docs/adoption-workflow.md)
-- External API work checklist: [`docs/checklists/external-api-work.md`](docs/checklists/external-api-work.md)
-- Decision and failure memory checklist: [`docs/checklists/decision-failure-memory.md`](docs/checklists/decision-failure-memory.md)
-- Verification script patterns: [`docs/checklists/verification-scripts.md`](docs/checklists/verification-scripts.md)
-- Harness refresh workflow: [`commands/harness-refresh.md`](commands/harness-refresh.md)
-- Harness review workflow: [`commands/harness-review.md`](commands/harness-review.md)
-- Full adoption prompt: [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
-- Component map: [`docs/component-map.md`](docs/component-map.md)
-- Validation coverage: [`docs/validation.md`](docs/validation.md)
-- Effectiveness evaluation: [`docs/evaluation.md`](docs/evaluation.md)
-- Lifecycle pilot details: [`docs/examples/lifecycle-pilot-results.md`](docs/examples/lifecycle-pilot-results.md)
-
-## Validation And Measurement
-
-Automated fixture tests cover installation and runnable drift checks across
-Node.js, Next.js, Django, FastAPI, Flask, React, Spring Boot, Android, Vue,
-Python, and TypeScript-oriented profiles. See
-[`docs/validation.md`](docs/validation.md) for coverage details and opt-in E2E
-checks.
-
-Live dogfooding targets include
-[baskduf/harness_starter_kit_django](https://github.com/baskduf/harness_starter_kit_django),
-a small Django project used to test prompt-first adoption, `/harness update`,
-failure memory, and effectiveness tracking, and
-[baskduf/today-bus](https://github.com/baskduf/today-bus), a Next.js target
-used to exercise external API work, deterministic behavior checks, and
-dogfood review gates in a real repository.
-
+Validation coverage and local checks live in
+[`docs/validation.md`](docs/validation.md). Lifecycle pilot details live in
+[`docs/examples/lifecycle-pilot-results.md`](docs/examples/lifecycle-pilot-results.md).
 They do not prove that harness adoption reduces repeated agent mistakes. Use
-[`docs/evaluation.md`](docs/evaluation.md) and
-[`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md)
-or [`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml) to
+[`docs/evaluation.md`](docs/evaluation.md),
+[`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md),
+and [`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml) to
 measure comparable tasks, wrong-file edits, first-pass verification, and human
 rework.
-
-## Local Checks
-
-Run these checks before changing starter-kit templates, command workflows,
-installer behavior, or drift scripts. Use `python3` instead of `python` on
-macOS/Linux when `python` is unavailable:
-
-```powershell
-python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
-python scripts/check_docs_drift.py
-python scripts/check_structure.py
-python scripts/check_encoding_hygiene.py
-python scripts/check_effectiveness_plan.py
-python scripts/check_failure_memory.py
-python scripts/check_decision_memory.py
-python scripts/harness_doctor.py --target .
-```
 
 ## Contributors
 
