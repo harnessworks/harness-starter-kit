@@ -1,8 +1,12 @@
 # 0002. Subagent Report Misstated Harness Review Reviewer Mode
 
-## Date Tried
+## Date Observed
 
 2026-05-31
+
+## Failure Type
+
+Harness review reporting bug and reviewer-mode ownership mismatch.
 
 ## Goal
 
@@ -10,7 +14,7 @@ Use `/harness review sub-agent` so the parent agent can request an independent,
 read-only reviewer subagent and then report whether a subagent was actually
 used.
 
-## What Was Tried
+## What Happened Or Was Tried
 
 The parent agent successfully discovered, spawned, waited for, and closed a
 reviewer subagent. The reviewer subagent received forked context that included
@@ -36,6 +40,13 @@ availability, and to return only findings, missing checks, and risks.
 
 Regression coverage in `tests/test_repository_hygiene.py` checks for this
 ownership rule and the restricted subagent prompt language.
+
+## Detection Or Prevention Check
+
+`tests/test_repository_hygiene.py` verifies that reviewer mode and fallback
+reason remain parent-orchestrator owned, and that reviewer subagent prompts do
+not ask subagents to assess reviewer mode, fallback reason, or subagent
+availability.
 
 ## Agent Guidance
 

@@ -7,6 +7,11 @@ The default is not "write an ADR for every change." The default is: record
 durable memory when a future agent would otherwise repeat the same decision,
 mistake, or investigation.
 
+Durable memory should not stop at documentation. When a failure record is added,
+tie it to a regression test, fixture, smoke check, lint rule, drift check, CI
+gate, or explicit manual review point. If no check is practical, record the
+reason so future agents do not treat the note as verified prevention.
+
 ## Choose The Right Artifact
 
 | Situation | Prefer | Examples | Usually skip when |
@@ -70,6 +75,22 @@ No failure record is usually needed when:
 | Add `scripts/check_<area>.mjs` for a repeated backend smoke check | README or `AGENTS.md` if it becomes normal verification |
 | Add one response field and update tests | Final report or check note, unless it changes the domain model |
 
+## Failure Record Verification
+
+Before finishing a fix that creates or updates `docs/failures/*.md`, answer:
+
+- Which automated or manual check would fail if this bug path came back?
+- Is that check part of the normal completion gate, a focused command, CI, or a
+  documented manual review point?
+- If the only evidence is a live smoke check, is there a fixture or unit test
+  that can cover provider-specific parsing, parameter shape, or fallback logic
+  without credentials, quota, or provider uptime?
+- If no check is practical yet, what concrete limitation blocks it and what
+  future event should revisit the gap?
+
+Do not use a failure record as a substitute for a regression check when the bug
+path is mechanically testable.
+
 ## Final Report Language
 
 When no durable memory is added for a non-trivial change, report the reason
@@ -80,4 +101,9 @@ Decision docs: skipped because this follows ADR 0002 and does not introduce a
 new boundary.
 Failure memory: skipped because the failing request was transient and no
 reproducible bug path or prevention rule changed.
+Failure memory: recorded in docs/failures/001-provider-casing.md and covered by
+tests/provider-contract.test.ts.
+Failure memory: recorded, but regression automation is skipped because the
+provider has no stable fixture format yet; manual review checks endpoint
+parameter casing before live smoke runs.
 ```

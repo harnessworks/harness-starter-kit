@@ -37,6 +37,12 @@ that exposed the failure.
 Describe the fix, accepted alternative, regression test, or review rule now in
 place.
 
+## Detection Or Prevention Check
+
+Name the regression test, fixture, smoke check, lint rule, drift check, CI
+gate, or manual review point that prevents or detects recurrence. If no check
+is practical, explain why and say what future signal should trigger review.
+
 ## Agent Guidance
 
 Tell agents what not to retry, which bug path to preserve, or which check to

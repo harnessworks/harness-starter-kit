@@ -6,6 +6,7 @@
 - Branch/status: TODO
 - Changed files reviewed: TODO
 - Review scope: TODO: current diff, staged diff, PR diff, or described change
+- Review timing: TODO: pre-commit, pre-push, post-push, or unknown
 - Reviewer mode: TODO: subagent used | single-agent fallback
 - Fallback reason: TODO: reason or none
 
@@ -39,7 +40,11 @@ output.
   boundary, a major data model, a state classification, or a product UX
   principle became code structure without a `docs/decisions/` update, state
   whether an existing ADR covers it or why no decision memory is needed.
-- Failure records: TODO: needed, updated, or skipped with reason.
+- Failure records: TODO: needed, updated, or skipped with reason. For each new
+  or updated failure record, name the detection/prevention check: regression
+  test, fixture, smoke check, lint rule, drift check, CI gate, or manual review
+  point that prevents or detects recurrence, or explain why no check is
+  practical.
 - Conventions/domain/effectiveness docs: TODO: needed, updated, or skipped with
   reason.
 

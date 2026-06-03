@@ -31,6 +31,9 @@ conventions.
   mistakes, previously identified bug paths, or cross-environment mismatches in
   `docs/failures/*.md` unless the issue was purely transient or already covered
   by an existing failure note. If skipped, explain why in the final report.
+- When adding or updating a failure note, name the regression test, fixture,
+  smoke check, lint rule, drift check, CI gate, or manual review point that
+  prevents or detects recurrence. If no check is practical, record why.
 
 ## Command Routing
 
@@ -114,11 +117,12 @@ macOS/Linux:
 
 ```bash
 python3 -m unittest discover -s tests
-python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_decision_memory.py scripts/harness_doctor.py
+python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
 python3 scripts/check_docs_drift.py
 python3 scripts/check_structure.py
 python3 scripts/check_encoding_hygiene.py
 python3 scripts/check_effectiveness_plan.py
+python3 scripts/check_failure_memory.py
 python3 scripts/check_decision_memory.py
 python3 scripts/harness_doctor.py --target .
 ```
@@ -127,11 +131,12 @@ Windows PowerShell, or any environment where `python` is configured:
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_decision_memory.py scripts/harness_doctor.py
+python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
 python scripts/check_encoding_hygiene.py
 python scripts/check_effectiveness_plan.py
+python scripts/check_failure_memory.py
 python scripts/check_decision_memory.py
 python scripts/harness_doctor.py --target .
 ```
@@ -147,6 +152,8 @@ python scripts/harness_doctor.py --target .
   config.
 - Run the relevant documented checks before committing. If a check cannot be
   run, record why in the final report or PR notes.
+- Before pushing substantial harness changes, run `/harness review` when
+  available, or record why review happened after push or was skipped.
 - Follow the target repository's existing commit convention first. If it uses
   Conventional Commits, use prefixes such as `feat:`, `fix:`, `docs:`, `test:`,
   `refactor:`, or `chore:`. If no convention exists, use a clear imperative

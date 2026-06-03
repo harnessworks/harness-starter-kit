@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 import unittest
@@ -50,6 +51,20 @@ class RepositoryHygieneTests(unittest.TestCase):
             / "generic"
             / "scripts"
             / "check_effectiveness_plan.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertEqual(root_script, generic_script)
+
+    def test_failure_memory_check_matches_generic_template(self) -> None:
+        root_script = (
+            REPO_ROOT / "scripts" / "check_failure_memory.py"
+        ).read_text(encoding="utf-8")
+        generic_script = (
+            REPO_ROOT
+            / "templates"
+            / "generic"
+            / "scripts"
+            / "check_failure_memory.py"
         ).read_text(encoding="utf-8")
 
         self.assertEqual(root_script, generic_script)
@@ -195,10 +210,170 @@ class RepositoryHygieneTests(unittest.TestCase):
             self.assertIn("## Date Observed", text)
             self.assertIn("## Failure Type", text)
             self.assertIn("## What Happened Or Was Tried", text)
+            self.assertIn("## Detection Or Prevention Check", text)
             self.assertIn("Runtime failure", text)
             self.assertIn("5xx response", text)
             self.assertIn("Security, permission, or data-loss risk", text)
             self.assertIn("regression test", text)
+            self.assertIn("fixture", text)
+            self.assertIn("smoke check", text)
+            self.assertIn("drift check", text)
+
+        for text in (root_agents, agent_template, adoption_workflow, adoption_prompt):
+            normalized = " ".join(text.split())
+            self.assertIn("regression test", normalized)
+            self.assertIn("fixture", normalized)
+            self.assertIn("smoke check", normalized)
+            self.assertIn("manual review point", normalized)
+
+        self.assertIn("Detection or prevention check", adoption_report)
+        self.assertIn("Detection/prevention check", update_command)
+        self.assertIn("check_failure_memory.py", agent_template)
+        self.assertIn("check_failure_memory.py", adoption_prompt)
+
+    def test_failure_records_name_detection_or_prevention_check(self) -> None:
+        failure_records = sorted((REPO_ROOT / "docs" / "failures").glob("*.md"))
+        checked_records: list[str] = []
+        required_sections = (
+            "## Date Observed",
+            "## Failure Type",
+            "## Goal",
+            "## What Happened Or Was Tried",
+            "## Why It Failed",
+            "## Current Replacement",
+            "## Detection Or Prevention Check",
+            "## Agent Guidance",
+        )
+        concrete_check_patterns = (
+            r"\b(?:tests?|specs?|fixtures?|scripts?)/[^\s,.;)]+",
+            r"`?\.github/workflows/[^\s,.;)`]+`?",
+            r"\b(?:npm|pnpm|yarn|bun)\s+run\s+[\w:./-]+",
+            r"\b(?:make|just)\s+[\w:./-]+",
+            r"\bpython3?\s+(?:-m\s+[\w.:-]+|scripts?/[^\s,.;)]+)",
+            r"\bpytest\s+(?:-[\w-]+|tests?/[^\s,.;)]+|[\w/.-]+)",
+            r"\b(?:vitest|jest|ruff|mypy|eslint)\s+[\w/.:@-]+",
+            r"\blint rule\s+`?[\w@./]+[-:/][\w@./:-]+`?",
+            r"\bci gate\s+`?\.github/workflows/[^\s,.;)`]+`?",
+            r"\bmanual review point\s+`?docs/checklists/[^\s,.;)`]+",
+            r"\bfixture\s+`?(?:tests?|fixtures?)/[^\s,.;)`]+`?",
+        )
+        no_check_blocker_patterns = (
+            (
+                r"\bbecause\b.{8,}\b(?:blocked|cannot|requires|depends on|"
+                r"no stable|not available|impractical|credential|quota|"
+                r"network|hardware|permission|sandbox|fixture|manual-only|"
+                r"nondeterministic)\b"
+            ),
+        )
+        no_check_future_signal_patterns = (
+            (
+                r"\brevisit\s+when\s+.{0,80}\b(?:stable sandbox|sandbox|"
+                r"fixture|provider contract|api contract|schema|endpoint|"
+                r"mock|emulator|credential|quota|permission|hardware|ci|"
+                r"workflow|tooling)\b"
+            ),
+            (
+                r"\breview\s+when\s+.{0,80}\b(?:stable sandbox|sandbox|"
+                r"fixture|provider contract|api contract|schema|endpoint|"
+                r"mock|emulator|credential|quota|permission|hardware|ci|"
+                r"workflow|tooling)\b"
+            ),
+            (
+                r"\btrigger\s+review\s+when\s+.{0,80}\b(?:stable sandbox|"
+                r"sandbox|fixture|provider contract|api contract|schema|"
+                r"endpoint|mock|emulator|credential|quota|permission|"
+                r"hardware|ci|workflow|tooling)\b"
+            ),
+            (
+                r"\badd\s+(?:a\s+)?check\s+when\s+.{0,80}\b(?:stable "
+                r"sandbox|sandbox|fixture|provider contract|api contract|"
+                r"schema|endpoint|mock|emulator|credential|quota|permission|"
+                r"hardware|ci|workflow|tooling)\b"
+            ),
+            (
+                r"\bwhen\s+.{0,80}\b(?:stable sandbox|sandbox|fixture|"
+                r"provider contract|api contract|schema|endpoint|mock|"
+                r"emulator|credential|quota|permission|hardware|ci|workflow|"
+                r"tooling)\b.{0,40}\s+(?:is|are|becomes|become)\s+"
+                r"(?:available|stable|supported)"
+            ),
+        )
+        rejected_phrases = (
+            "no test has been added",
+            "no regression test",
+            "no fixture",
+            "not added yet",
+            "todo",
+        )
+
+        for path in failure_records:
+            if path.name == "000-template.md":
+                continue
+
+            text = path.read_text(encoding="utf-8")
+            for section_name in required_sections:
+                self.assertIn(section_name, text, path.name)
+
+            section = text.split("## Detection Or Prevention Check", 1)[1].split(
+                "\n## ",
+                1,
+            )[0]
+            normalized = " ".join(section.lower().split())
+            self.assertFalse(
+                any(phrase in normalized for phrase in rejected_phrases),
+                f"{path.name} uses non-committal detection/prevention prose",
+            )
+            self.assertTrue(
+                any(
+                    re.search(pattern, normalized)
+                    for pattern in concrete_check_patterns
+                )
+                or (
+                    "no check is practical" in normalized
+                    and any(
+                        re.search(pattern, normalized)
+                        for pattern in no_check_blocker_patterns
+                    )
+                    and any(
+                        re.search(pattern, normalized)
+                        for pattern in no_check_future_signal_patterns
+                    )
+                ),
+                f"{path.name} does not name a detection/prevention check",
+            )
+            checked_records.append(path.name)
+
+        malformed_section = "No test has been added yet for tests/provider-contract.test.ts."
+        self.assertFalse(
+            any(
+                re.search(pattern, malformed_section.lower())
+                for pattern in concrete_check_patterns
+            )
+            and not any(phrase in malformed_section.lower() for phrase in rejected_phrases)
+        )
+        for bare_section in (
+            "A lint rule fails when the bug returns.",
+            "A smoke check covers the provider boundary.",
+            "A smoke check `provider boundary` covers the provider boundary.",
+            "A drift check rejects stale docs.",
+            "A drift check `generated docs` rejects stale docs.",
+            "A CI gate catches the failure.",
+            "A CI gate `main` catches the failure.",
+            "A manual review point checks the contract.",
+            "A manual review point `provider contract` checks the contract.",
+        ):
+            self.assertFalse(
+                any(
+                    re.search(pattern, bare_section.lower())
+                    for pattern in concrete_check_patterns
+                ),
+                bare_section,
+            )
+
+        self.assertIn(
+            "0005-failure-memory-was-not-linked-to-regression-checks.md",
+            checked_records,
+        )
 
     def test_commit_and_pr_rules_are_wired_into_agent_instructions(self) -> None:
         root_agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
@@ -298,11 +473,29 @@ class RepositoryHygieneTests(unittest.TestCase):
         for text in (component_map, validation, agent_template, adoption_prompt):
             self.assertIn("check_decision_memory.py", text)
 
+        failure_script = REPO_ROOT / "scripts" / "check_failure_memory.py"
+        generic_failure_script = (
+            REPO_ROOT
+            / "templates"
+            / "generic"
+            / "scripts"
+            / "check_failure_memory.py"
+        )
+        self.assertTrue(failure_script.exists())
+        self.assertTrue(generic_failure_script.exists())
+        self.assertEqual(
+            failure_script.read_text(encoding="utf-8"),
+            generic_failure_script.read_text(encoding="utf-8"),
+        )
+        for text in (component_map, validation, agent_template, adoption_prompt):
+            self.assertIn("check_failure_memory.py", text)
+
         for text in (root_workflow, generic_workflow):
             self.assertIn("fetch-depth: 0", text)
             self.assertIn("github.event.pull_request.base.sha", text)
             self.assertIn("--base", text)
             self.assertIn("local smoke", text)
+            self.assertIn("check_failure_memory.py", text)
 
     def test_ui_profiles_call_out_decision_memory_triggers(self) -> None:
         for relative in (
@@ -519,16 +712,21 @@ class RepositoryHygieneTests(unittest.TestCase):
             normalized_template,
         )
         self.assertIn("not from subagent output", normalized_template)
+        self.assertIn("Review timing", template_text)
+        self.assertIn("pre-push", template_text)
         self.assertIn("does not apply fixes", template_text)
         self.assertIn("Decision-docs gate", template_text)
         self.assertIn("mock external-behavior boundary", normalized_template)
         self.assertIn("state classification", normalized_template)
         self.assertIn("product UX principle", normalized_template)
+        self.assertIn("detection/prevention check", normalized_template)
 
         example_text = review_example.read_text(encoding="utf-8")
         normalized_example = " ".join(example_text.split())
         self.assertIn("actual spawn/wait result", normalized_example)
         self.assertIn("not from subagent output", normalized_example)
+        self.assertIn("Review timing: pre-push", example_text)
+        self.assertIn("Review timing: pre-commit", example_text)
         self.assertIn("Invocation: /harness review sub-agent", example_text)
         self.assertIn("Invocation: /harness review", example_text)
         self.assertIn("Reviewer mode: subagent used", example_text)
@@ -696,10 +894,85 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("named axes", nextjs_example)
         self.assertIn("401 text/plain Unauthorized", external_api_checklist)
         self.assertIn("provider text-error", external_api_checklist)
+        self.assertIn("Provider Boundary Fixtures", external_api_checklist)
+        self.assertIn("Endpoint parameter contract", external_api_checklist)
+        self.assertIn("nodeId", external_api_checklist)
+        self.assertIn("nodeid", external_api_checklist)
+        self.assertIn("service-key placement", external_api_checklist)
+        self.assertIn("Endpoint parameter contract", adoption_report)
+        self.assertIn("Provider boundary fixture", adoption_report)
+        self.assertIn("Endpoint parameter contract", nextjs_example)
+        self.assertIn("Provider boundary fixture", nextjs_example)
         self.assertIn("redactionChecked", verification_scripts)
         self.assertIn("emptyStateChecked", verification_scripts)
         self.assertIn("providerErrorChecked", verification_scripts)
+        self.assertIn("parameter names", verification_scripts)
         self.assertIn("TodayBus External API Dogfood", lifecycle_pilots)
+
+    def test_p1_feedback_requires_regression_links_and_pre_push_review(self) -> None:
+        feedback_failure = (
+            REPO_ROOT
+            / "docs"
+            / "failures"
+            / "0005-failure-memory-was-not-linked-to-regression-checks.md"
+        ).read_text(encoding="utf-8")
+        feedback_decision = (
+            REPO_ROOT
+            / "docs"
+            / "decisions"
+            / "0004-link-failure-memory-to-regression-checks.md"
+        ).read_text(encoding="utf-8")
+        review_command = (
+            REPO_ROOT / "commands" / "harness-review.md"
+        ).read_text(encoding="utf-8")
+        pr_template = (
+            REPO_ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md"
+        ).read_text(encoding="utf-8")
+        maintenance_checklist = (
+            REPO_ROOT / "docs" / "checklists" / "harness-review.md"
+        ).read_text(encoding="utf-8")
+        decision_failure_checklist = (
+            REPO_ROOT / "docs" / "checklists" / "decision-failure-memory.md"
+        ).read_text(encoding="utf-8")
+        verification_scripts = (
+            REPO_ROOT / "docs" / "checklists" / "verification-scripts.md"
+        ).read_text(encoding="utf-8")
+
+        normalized_failure = " ".join(feedback_failure.split())
+        self.assertIn(
+            "Failure Memory Was Not Linked To Regression Checks",
+            feedback_failure,
+        )
+        self.assertIn("provider boundary fixtures", normalized_failure)
+        self.assertIn("pre-push review", normalized_failure)
+        self.assertIn("Regression coverage lives in `tests/test_repository_hygiene.py`", feedback_failure)
+
+        normalized_decision = " ".join(feedback_decision.split())
+        self.assertIn("Link Failure Memory To Regression Checks", feedback_decision)
+        self.assertIn("Accepted", feedback_decision)
+        self.assertIn("Failure memory must be linked to detection or prevention", normalized_decision)
+        self.assertIn("provider boundary fixtures", normalized_decision)
+        self.assertIn("review timing was pre-commit, pre-push, post-push, or unknown", normalized_decision)
+
+        for text in (
+            review_command,
+            pr_template,
+            maintenance_checklist,
+            decision_failure_checklist,
+            verification_scripts,
+        ):
+            with self.subTest(text=text[:40]):
+                normalized = " ".join(text.split())
+                self.assertIn("regression test", normalized)
+                self.assertIn("fixture", normalized)
+                self.assertIn("smoke check", normalized)
+                self.assertIn("lint rule", normalized)
+
+        self.assertIn("Run this review before commit or push", review_command)
+        self.assertIn("Review timing", review_command)
+        self.assertIn("post-push", review_command)
+        self.assertIn("Pre-Push Review", pr_template)
+        self.assertIn("/harness review", pr_template)
 
     def test_gate_placement_guidance_is_wired_into_harness_workflows(self) -> None:
         workflow_paths = (

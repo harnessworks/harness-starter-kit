@@ -52,6 +52,15 @@ All checks passed.
 - Flyway or Liquibase migrations should be treated as source and reviewed
   carefully when model or schema behavior changes.
 
+## Failure Memory
+
+- Recorded: none; adoption did not fix a user-visible runtime failure,
+  high-risk bug path, failed check, CI failure, repeated agent mistake, or
+  cross-environment mismatch.
+- Detection or prevention check: not applicable because no failure record was
+  added.
+- Skipped: no recurring failure was fixed during this sample adoption.
+
 ## Effectiveness Measurement Plan
 
 - Baseline available: No historical agent PR data was available for this sample

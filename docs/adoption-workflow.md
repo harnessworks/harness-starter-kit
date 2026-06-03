@@ -193,6 +193,8 @@ Install lightweight baseline drift checks:
 - missing files referenced by docs
 - broken local Markdown links
 - forbidden temporary filenames
+- failure records without a concrete detection or prevention check, fixture,
+  CI gate, or no-check-practical reason
 - watched implementation diffs without a decision-record change, reported as a
   warning that asks the final report to add an ADR, cite an existing ADR, or
   explain why no decision memory is needed
@@ -254,8 +256,10 @@ should not recur, including a 5xx error, crash, security or permission bug,
 data-loss risk, failed CI run, failed harness check, repeated agent mistake,
 previously identified bug path, or cross-environment mismatch, record it under
 `docs/failures/*.md` unless the issue was purely transient or already covered by
-an existing failure note. If no failure note is added, explain why in the
-adoption report.
+an existing failure note. The failure record should name the regression test,
+fixture, smoke check, lint rule, drift check, CI gate, or manual review point
+that prevents or detects recurrence. If no check is practical, explain why in
+the record and adoption report.
 
 The report should also include an effectiveness measurement plan. Use
 `docs/evaluation.md` to choose the evaluation mode and metrics. If no baseline

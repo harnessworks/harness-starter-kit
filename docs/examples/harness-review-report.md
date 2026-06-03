@@ -15,6 +15,7 @@ Reviewed Changes:
 - Changed files reviewed: AGENTS.md, docs/adoption-workflow.md,
   scripts/check_structure.py, templates/generic/AGENTS.md
 - Review scope: current diff
+- Review timing: pre-push
 - Reviewer mode: subagent used
 - Fallback reason: none
 
@@ -43,7 +44,7 @@ Durable Memory Assessment:
   architecture, framework, or integration boundary.
 - Failure records: skipped; no user-visible runtime failure, failed CI run,
   failed harness check, repeated agent mistake, or cross-environment mismatch
-  was fixed.
+  was fixed. No detection/prevention check was needed.
 - Conventions/domain/effectiveness docs: update docs/conventions/coding.md if
   the new architecture check becomes a standing review rule.
 
@@ -75,6 +76,7 @@ Reviewed Changes:
 - Changed files reviewed: commands/harness-review.md,
   docs/templates/harness-review-report.md
 - Review scope: current diff
+- Review timing: pre-commit
 - Reviewer mode: single-agent fallback
 - Fallback reason: tool present but not permitted by active runtime/tool
   instructions
@@ -97,7 +99,7 @@ Durable Memory Assessment:
   new architecture or integration boundary.
 - Failure records: skipped; no user-visible runtime failure, failed CI run,
   failed harness check, repeated agent mistake, or cross-environment mismatch
-  was fixed.
+  was fixed. No detection/prevention check was needed.
 - Conventions/domain/effectiveness docs: skipped; no durable convention or
   effectiveness measurement changed.
 

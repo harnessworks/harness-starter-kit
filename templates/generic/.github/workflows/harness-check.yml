@@ -27,6 +27,9 @@ jobs:
       - name: Check effectiveness measurement reports
         run: python scripts/check_effectiveness_plan.py
 
+      - name: Check failure memory records
+        run: python scripts/check_failure_memory.py
+
       - name: Check decision memory review
         if: ${{ github.event_name == 'pull_request' }}
         run: python scripts/check_decision_memory.py --base "${{ github.event.pull_request.base.sha }}"

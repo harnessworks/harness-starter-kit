@@ -54,6 +54,14 @@ ADR, cite an existing ADR, or explain why no decision memory is needed. The
 script warns by default and can be promoted with `--fail-on-warning` after a
 target repository tunes `.harness/decision-memory-rules.json`.
 
+## Detection Or Prevention Check
+
+`tests/test_repository_hygiene.py` verifies that the decision-memory review gate
+is wired into review guidance, generic agent instructions, adoption prompts,
+workflow docs, and validation references. `tests/test_check_decision_memory.py`
+exercises the configurable diff warning for watched implementation paths
+changed without a matching `docs/decisions/` change.
+
 ## Agent Guidance
 
 Do not treat domain glossary updates as a substitute for decision records. For

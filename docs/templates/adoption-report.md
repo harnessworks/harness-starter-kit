@@ -56,6 +56,11 @@ Result: TODO
 - Required: TODO: yes/no and why.
 - Boundary: TODO: server-only caller, route handler, service module, fixture, or
   mock boundary reviewed.
+- Provider boundary fixture: TODO: fixture/test path, provider contract axes
+  covered, or reason no fixture was practical.
+- Endpoint parameter contract: TODO: required query parameters, casing,
+  date/time format, coordinate fields, service-key placement, or not
+  applicable.
 - Live/mock mode: TODO: live, mock, fixture, disabled, or not applicable.
 - Secret handling and redaction checked: TODO: env vars, request URL, headers,
   logs, screenshots, and reports reviewed without exposing values.
@@ -81,6 +86,9 @@ Result: TODO
 - Recorded: TODO: list `docs/failures/...` records added while fixing
   user-visible runtime failures, high-risk bug paths, failed checks, CI
   failures, repeated agent mistakes, or cross-environment mismatches.
+- Detection or prevention check: TODO: regression test, fixture, smoke check,
+  lint rule, drift check, CI gate, manual review point, or reason no check is
+  practical.
 - Skipped: TODO: explain why no failure note was needed, such as purely
   transient behavior or coverage by an existing failure note.
 

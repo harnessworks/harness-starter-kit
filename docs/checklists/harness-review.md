@@ -12,6 +12,9 @@ the current change set; use this checklist for periodic harness maintenance.
 - [ ] Do docs reference files or commands that no longer exist?
 - [ ] Are there temporary, duplicate, backup, or one-off files in source paths?
 - [ ] Are rejected approaches documented in `docs/failures/`?
+- [ ] Does each new or updated failure record name a regression test, fixture,
+      smoke check, lint rule, drift check, CI gate, or manual review point, or
+      explain why no check is practical?
 - [ ] Are new architecture decisions documented in `docs/decisions/`?
 - [ ] Did any behavior, integration boundary, permission fallback, hardware
       dependency, or server fixture policy change without a decision record?
@@ -29,6 +32,8 @@ the current change set; use this checklist for periodic harness maintenance.
 - [ ] If localized text is present, are UTF-8 and mojibake risks covered by a
       check or manual audit note?
 - [ ] Are test failures and error messages specific enough for an agent to fix?
+- [ ] Did `/harness review` run before push for substantial harness or
+      integration-boundary changes, or is the post-push/skipped reason recorded?
 - [ ] Are stack-specific snippets still aligned with the target toolchain?
 - [ ] If a new stack was introduced after generic adoption, was the profile
       absorption checklist completed?

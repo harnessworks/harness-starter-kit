@@ -91,8 +91,10 @@ fallback evidence before updating.
    data-loss risk, failed CI run, failed harness check, repeated agent mistake,
    previously identified bug path, or cross-environment mismatch, add a
    `docs/failures/*.md` record unless the issue was purely transient or already
-   covered by an existing failure note. If no failure note is added, explain why
-   in the update report.
+   covered by an existing failure note. Name the regression test, fixture, smoke
+   check, lint rule, drift check, CI gate, or manual review point that prevents
+   or detects recurrence. If no failure note or check is added, explain why in
+   the update report.
 11. Run relevant local checks, such as docs drift, structure drift, effectiveness
    plan checks, project tests, linting, type checks, or `/harness doctor`.
 
@@ -127,6 +129,8 @@ Checks Run:
 
 Failure Memory:
 - Recorded: <docs/failures/... or none>
+- Detection/prevention check: <test, fixture, smoke check, lint rule, drift
+  check, CI gate, manual review point, or reason none is practical>
 - Skipped: <reason if no failure note was added>
 
 Source Tracking:

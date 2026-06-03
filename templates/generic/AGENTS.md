@@ -92,7 +92,10 @@ recur, including a 5xx error, crash, security or permission bug, data-loss risk,
 failed CI run, failed harness check, repeated agent mistake, previously
 identified bug path, or cross-environment mismatch, add a `docs/failures/*.md`
 record unless the issue was purely transient or already covered by an existing
-failure note. If skipped, explain why in the final report.
+failure note. The failure note must name the regression test, fixture, smoke
+check, lint rule, drift check, CI gate, or manual review point that prevents or
+detects recurrence. If no check is practical, explain why in the note and final
+report.
 
 When harness rules, checks, CI, architecture boundaries, or agent-facing docs
 change, update the effectiveness measurement plan in the adoption report or the
@@ -119,6 +122,9 @@ tools and maintenance expectations, then report those choices.
   files, secrets, credentials, or local reference clones.
 - Run the relevant documented checks before committing. If a check cannot be
   run, explain why in the final report or PR notes.
+- Before pushing substantial harness, external API, integration-boundary, or
+  agent-facing workflow changes, run `/harness review` when available, or
+  record why review happened after push or was skipped.
 - If this repository uses Conventional Commits, use prefixes such as `feat:`,
   `fix:`, `docs:`, `test:`, `refactor:`, or `chore:`. If no convention exists,
   use a clear imperative commit subject.
@@ -142,10 +148,16 @@ Before reporting completion:
   document the scenario test note or explain why build-only validation is
   enough.
 - Confirm no temporary files were left behind.
+- If `scripts/check_failure_memory.py` exists, run it after adding or updating
+  `docs/failures/*.md`.
 - If `scripts/check_decision_memory.py` exists, run it for implementation diffs
   before the final report. Treat warnings as a prompt to add or update an ADR,
   cite an existing ADR, or explain why no decision memory is needed.
 - Update docs when behavior, architecture, commands, or known failures changed.
+- Failure docs: for each new or updated `docs/failures/*.md`, named the
+  regression test, fixture, smoke check, lint rule, drift check, CI gate, or
+  manual review point that prevents or detects recurrence, or explained why
+  none is practical.
 - Decision docs: added or updated `docs/decisions/*.md`, cited an existing ADR,
   or explained why no decision record was needed for structural behavior,
   workflow, input contract or semantics, API/mock boundary, data model, state,

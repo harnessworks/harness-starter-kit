@@ -1,15 +1,19 @@
 # 0001. Docs Drift Treated Venv Python Commands As Missing Paths
 
-## Date Tried
+## Date Observed
 
 2026-05-27
+
+## Failure Type
+
+Failed harness check and cross-environment false positive.
 
 ## Goal
 
 Document local verification commands for target repositories without making
 cross-platform docs drift checks fail.
 
-## What Was Tried
+## What Happened Or Was Tried
 
 Target repositories documented virtual-environment commands as inline code, for
 example:
@@ -40,6 +44,12 @@ without requiring those paths to exist.
 
 Regression coverage lives in `tests/test_check_docs_drift.py` and includes both
 Windows-style and POSIX-style venv Python command examples.
+
+## Detection Or Prevention Check
+
+`tests/test_check_docs_drift.py` includes Windows-style and POSIX-style virtual
+environment command examples. The docs drift checker must pass those examples
+without treating local venv Python command paths as missing repository files.
 
 ## Agent Guidance
 

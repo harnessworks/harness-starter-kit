@@ -97,6 +97,15 @@ automatically.
 - The local `harness-starter-kit/` clone is adoption reference material, not
   target project source.
 
+## Failure Memory
+
+- Recorded: none; adoption smoke probes intentionally triggered checks but did
+  not fix a user-visible runtime failure, high-risk bug path, failed CI run,
+  repeated agent mistake, or cross-environment mismatch.
+- Detection or prevention check: not applicable because no failure record was
+  added.
+- Skipped: no recurring failure was fixed during this sample adoption.
+
 ## Effectiveness Measurement Plan
 
 - Baseline available: No historical agent PR data was available for this sample

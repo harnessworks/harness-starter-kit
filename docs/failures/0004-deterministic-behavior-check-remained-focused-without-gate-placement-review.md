@@ -57,6 +57,13 @@ gate-placement review:
 
 Regression coverage lives in `tests/test_repository_hygiene.py`.
 
+## Detection Or Prevention Check
+
+`tests/test_repository_hygiene.py` verifies that adoption, review, refresh,
+generic agent instructions, verification checklist, adoption reports, examples,
+and lifecycle documentation all require gate-placement review for deterministic,
+local, non-network, reasonably fast product-behavior checks.
+
 ## Agent Guidance
 
 Do not treat all focused checks alike. When a new check is deterministic, local,

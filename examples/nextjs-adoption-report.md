@@ -49,6 +49,9 @@ All checks passed.
 - Required: No. The sample app does not call an external API.
 - Boundary: Not applicable; no route handler, server-only caller, fixture, or
   mock API boundary was introduced.
+- Provider boundary fixture: Not applicable; no provider contract was introduced.
+- Endpoint parameter contract: Not applicable; no provider request parameters
+  or casing-sensitive fields were introduced.
 - Live/mock mode: Not applicable.
 - Secret handling and redaction checked: Not applicable; no provider secrets or
   server-only API boundary were introduced.
@@ -68,6 +71,15 @@ All checks passed.
 - `npm audit --audit-level=high` passed. Moderate advisories may still appear
   through Next.js transitive dependencies; do not apply breaking audit fixes
   blindly.
+
+## Failure Memory
+
+- Recorded: none; adoption did not fix a user-visible runtime failure,
+  high-risk bug path, failed check, CI failure, repeated agent mistake, or
+  cross-environment mismatch.
+- Detection or prevention check: not applicable because no failure record was
+  added.
+- Skipped: no recurring failure was fixed during this sample adoption.
 
 ## Effectiveness Measurement Plan
 

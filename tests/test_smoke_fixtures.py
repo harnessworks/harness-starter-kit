@@ -91,6 +91,9 @@ class FixtureSmokeTests(unittest.TestCase):
                         (target / "scripts" / "check_decision_memory.py").exists()
                     )
                     self.assertTrue(
+                        (target / "scripts" / "check_failure_memory.py").exists()
+                    )
+                    self.assertTrue(
                         (target / ".harness" / "decision-memory-rules.json").exists()
                     )
                     self.assertFalse(
@@ -104,6 +107,7 @@ class FixtureSmokeTests(unittest.TestCase):
                     self.run_generated_check(target, "check_docs_drift.py")
                     self.run_generated_check(target, "check_structure.py")
                     self.run_generated_check(target, "check_effectiveness_plan.py")
+                    self.run_generated_check(target, "check_failure_memory.py")
                     self.run_generated_check(target, "check_decision_memory.py")
 
 

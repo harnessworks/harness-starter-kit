@@ -6,6 +6,10 @@ Harness Review is diagnostic by default. Do not create, edit, delete, move,
 format, or stage files while running this command unless the user explicitly
 asks you to apply fixes after seeing the review.
 
+Run this review before commit or push when practical. If it runs after commit or
+push, record that timing so maintainers know whether it acted as a safety gate
+or as a post-hoc diagnostic.
+
 ## Goal
 
 Challenge whether the current work preserves the target repository as the
@@ -100,6 +104,8 @@ automation.
    - `git diff --check`
    - `git diff --cached --stat` and `git diff --cached --check` when staged
      changes exist
+   - whether the review is pre-commit, pre-push, post-push, or unknown based on
+     the current branch and user-provided context
 4. Review changed files and nearby harness context:
    - changed `AGENTS.md`, `CLAUDE.md`, README files, contribution docs, and CI
      configs
@@ -134,6 +140,9 @@ automation.
      unsafe as default verification?
    - Were the right local checks run for the files changed?
    - Are missing checks or unverified assumptions named clearly?
+   - Does each new or updated failure record name the regression test, fixture,
+     smoke check, lint rule, drift check, CI gate, or manual review point that
+     prevents or detects recurrence, or explain why no check is practical?
 8. Challenge durable memory:
    - Does the change require a decision record, failure note, convention update,
      domain note, adoption report update, or effectiveness measurement update?
@@ -151,7 +160,7 @@ automation.
    - If the work fixed a user-visible runtime failure, high-risk bug path,
      failed CI run, failed harness check, repeated agent mistake, or
      cross-environment mismatch, was `docs/failures/*.md` updated or explicitly
-     skipped with a reason?
+     skipped with a reason, and was the detection or prevention check named?
 9. Check for stale or duplicated guidance:
    - Are new command docs, templates, examples, README links, component maps, and
      tests aligned?
@@ -170,6 +179,7 @@ Reviewed Changes:
 - Branch/status: <summary>
 - Changed files reviewed: <files>
 - Review scope: <current diff, staged diff, PR diff, or described change>
+- Review timing: <pre-commit, pre-push, post-push, or unknown>
 - Reviewer mode: <subagent used | single-agent fallback>
 - Fallback reason: <reason or none>
 
@@ -185,7 +195,8 @@ Gate Placement:
 
 Durable Memory Assessment:
 - Decision records: <needed, updated, skipped with reason>
-- Failure records: <needed, updated, skipped with reason>
+- Failure records: <needed, updated, skipped with reason; include
+  detection/prevention check or reason none is practical>
 - Conventions/domain/effectiveness docs: <needed, updated, skipped with reason>
 
 Overreach Risk:

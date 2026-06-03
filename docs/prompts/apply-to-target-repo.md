@@ -120,7 +120,8 @@ Expected work:
   was not run.
 - If the repo calls an external API, document server-only secret handling,
   redaction, empty-result behavior, provider error handling, live/mock fallback,
-  and any focused smoke command that verifies the path.
+  provider boundary fixtures for endpoint-specific request and response
+  contracts, and any focused smoke command that verifies the path.
 - Before broad feature implementation, write a small scenario test note or explicitly
   say why build-only validation is enough.
 - Before finishing implementation work, ask whether the diff changed user
@@ -141,10 +142,16 @@ Expected work:
   data-loss risk, failed CI run, failed harness check, repeated agent mistake,
   previously identified bug path, or cross-environment mismatch, add a
   `docs/failures/*.md` record unless the issue was purely transient or already
-  covered by an existing failure note.
+  covered by an existing failure note. Name the regression test, fixture, smoke
+  check, lint rule, drift check, CI gate, or manual review point that prevents
+  or detects recurrence, or explain why no check is practical.
 - If you save the adoption report as a file, run
   `scripts/check_effectiveness_plan.py --require-report` when that script is
   present.
+- If `scripts/check_failure_memory.py` exists, run it after adding or updating
+  `docs/failures/*.md` so failure records name a concrete detection or
+  prevention check, or a no-check-practical reason with blocker and future
+  review signal.
 
 Drift check examples:
 - If AGENTS.md says routes must not access the database directly, add a check
@@ -164,6 +171,10 @@ Drift check examples:
 - If an external API integration depends on redaction, zero-result handling, or
   provider error envelopes, add a focused smoke script or fixture check when
   existing tests do not cover that behavior.
+- If an external API bug depends on provider-specific request shape, add or
+  name a provider boundary fixture that checks endpoint parameter names,
+  casing, date/time format, coordinate fields, and service-key placement, or
+  explain why the fixture is not practical yet.
 - If Korean, Japanese, Chinese, or other localized text has encoding risk, adapt
   `scripts/check_encoding_hygiene.py` or add a manual audit note that checks for
   invalid UTF-8 and common mojibake markers.
@@ -178,6 +189,8 @@ Finish by reporting:
 - scenario test note for broad feature work, or the reason build-only validation
   is enough
 - failure memory recorded or skipped with reason
+- regression test, fixture, smoke check, lint rule, drift check, CI gate, or
+  manual review point linked to each new failure record
 - assumptions you made
 - remaining manual steps
 - what to do with ./harness-starter-kit before committing

@@ -14,6 +14,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Structure drift check | `scripts/check_structure.py` | `templates/generic/scripts/check_structure.py` |
 | Encoding hygiene check | `scripts/check_encoding_hygiene.py` | `templates/generic/scripts/check_encoding_hygiene.py` |
 | Effectiveness plan check | `scripts/check_effectiveness_plan.py` | `templates/generic/scripts/check_effectiveness_plan.py` |
+| Failure-memory check | `scripts/check_failure_memory.py` | `templates/generic/scripts/check_failure_memory.py` |
 | Decision-memory diff warning | `scripts/check_decision_memory.py`, `.harness/decision-memory-rules.json` | `templates/generic/scripts/check_decision_memory.py`, `templates/generic/.harness/decision-memory-rules.json` |
 | Harness readiness diagnostic | `/harness doctor` report | `commands/harness-doctor.md`, `docs/scoring/harness-score-rubric.md` |
 | Harness source tracking | `.harness/source.json` | documented in `commands/harness-update.md` |
@@ -44,6 +45,7 @@ For a very small project, the agent should add or adapt only:
 - `scripts/check_structure.py`
 - `scripts/check_encoding_hygiene.py`
 - `scripts/check_effectiveness_plan.py`
+- `scripts/check_failure_memory.py`
 
 Then grow the harness as the project and agent usage mature.
 Use the optional GitHub Actions workflow skeleton with `--with-ci` only after

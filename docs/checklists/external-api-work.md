@@ -49,6 +49,29 @@ alone tells the full story.
 - Keep fixtures small and representative: success, zero-result, provider error,
   and malformed response are usually more useful than a large golden payload.
 
+## Provider Boundary Fixtures
+
+For public-data and provider APIs, prefer a provider boundary fixture or
+contract test before adding more prose. This is especially important when the
+provider has endpoint-specific parameter names, casing rules, mixed response
+formats, or text errors.
+
+Cover these fixture axes when they matter to the target:
+
+| Axis | Fixture or assertion |
+| --- | --- |
+| Endpoint parameter contract | Required query parameters, casing such as `nodeId` versus `nodeid`, date/time format, coordinate fields, and service-key placement. |
+| Success response | Minimal valid payload parsed into the target domain model. |
+| Empty or zero-result response | Deliberate empty state without mock-success fallback. |
+| Provider error envelope | Provider error code parsed even when HTTP status is 200. |
+| Provider text error | Text responses such as `401 text/plain Unauthorized` classified as provider or transport errors. |
+| Malformed or schema-drift response | Parser fails with sanitized context and no secret leakage. |
+| Redaction | Logged request URLs, headers, errors, screenshots, and reports hide service keys and personal data. |
+
+If the bug was caused by an endpoint-specific provider contract, such as
+parameter casing or response shape, add a regression test or fixture for that
+contract unless the final report explains why it is not practical.
+
 ## Health And Smoke Checks
 
 Add a target-specific verification script when repeated API work depends on
@@ -60,6 +83,7 @@ Prefer checks that:
 
 - verify required environment variables are present without printing values
 - call a safe endpoint or fixture
+- assert endpoint-specific parameter casing and request shape before live calls
 - assert success, zero-result, provider-error envelope, and provider text-error
   handling where practical
 - print a short summary of the axis checked, such as env, transport, parser,
@@ -86,10 +110,13 @@ belongs:
 Before reporting completion for external API work, name:
 
 - the endpoint or fixture path verified
+- the endpoint parameter contract checked, including casing-sensitive provider
+  fields when relevant
 - the live/mock mode used
 - the redaction behavior checked
 - the empty-result behavior checked or why it was not applicable
 - the provider error envelope or provider text-error behavior checked
 - the command run for API smoke verification, if any
+- the regression fixture or skip reason for any fixed provider bug path
 - whether decision memory or failure memory was recorded or intentionally
   skipped

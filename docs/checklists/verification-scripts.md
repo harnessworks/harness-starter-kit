@@ -14,6 +14,8 @@ Add or adapt a script when:
 - a live or mocked backend path must be exercised repeatedly
 - an external API can return provider-specific envelopes, zero results, or mixed
   JSON/XML responses
+- a provider bug path was recorded in `docs/failures/*.md` and needs a
+  regression test, fixture, smoke check, or documented manual review point
 - a route table, generated output location, import boundary, or env contract is
   important enough to enforce
 - the same manual smoke check has been run more than once
@@ -36,6 +38,8 @@ A good script should:
 - redact secrets and personal data
 - use stable fixtures for provider errors and zero-result cases when live calls
   are not safe
+- assert provider request contracts such as required parameter names, casing,
+  date/time format, coordinate fields, and redaction before making live calls
 - exit with a nonzero status on real failures
 - support a focused mode or separate command when the full harness gate is too
   expensive
