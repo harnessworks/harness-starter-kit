@@ -28,7 +28,7 @@ jobs:
         run: python -m unittest discover -s tests
 
       - name: Compile Python scripts
-        run: python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_decision_memory.py scripts/harness_doctor.py
+        run: python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
 
       - name: Check document drift
         run: python scripts/check_docs_drift.py
@@ -41,6 +41,9 @@ jobs:
 
       - name: Check effectiveness measurement reports
         run: python scripts/check_effectiveness_plan.py
+
+      - name: Check failure memory records
+        run: python scripts/check_failure_memory.py
 
       - name: Check decision memory review
         if: ${{ github.event_name == 'pull_request' }}

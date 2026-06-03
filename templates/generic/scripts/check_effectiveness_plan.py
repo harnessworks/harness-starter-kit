@@ -47,6 +47,99 @@ GATE_PLACEMENT_FIELDS = (
     "Reasons for focused/manual placement",
 )
 
+FAILURE_MEMORY_FIELDS = (
+    "Recorded",
+    "Detection or prevention check",
+    "Skipped",
+)
+
+NO_FAILURE_RECORD_PHRASES = (
+    "no failure record",
+    "no failure note",
+    "no recurring failure",
+    "no user-visible runtime failure",
+)
+
+REJECTED_DETECTION_PHRASES = (
+    "no test has been added",
+    "no regression test",
+    "no fixture",
+    "not added yet",
+    "should be added",
+    "will be added",
+    "to be added",
+    "todo",
+)
+
+REJECTED_DETECTION_PROSE_PATTERNS = (
+    re.compile(r"\b(?:is|are|was|were|only)\s+planned\b"),
+    re.compile(r"\bplanned\s+(?:but|for|later|when|after)\b"),
+)
+
+CONCRETE_CHECK_PATTERNS = (
+    re.compile(r"\b(?:tests?|specs?|fixtures?|scripts?)/[^\s,.;)]+"),
+    re.compile(r"`?\.github/workflows/[^\s,.;)`]+`?"),
+    re.compile(r"\b(?:npm|pnpm|yarn|bun)\s+run\s+[\w:./-]+"),
+    re.compile(r"\b(?:make|just)\s+[\w:./-]+"),
+    re.compile(r"\bpython3?\s+(?:-m\s+[\w.:-]+|scripts?/[^\s,.;)]+)"),
+    re.compile(r"\bpytest\s+(?:-[\w-]+|tests?/[^\s,.;)]+|[\w/.-]+)"),
+    re.compile(r"\b(?:vitest|jest|ruff|mypy|eslint)\s+[\w/.:@-]+"),
+    re.compile(r"\blint rule\s+`?[\w@./]+[-:/][\w@./:-]+`?"),
+    re.compile(r"\bci gate\s+`?\.github/workflows/[^\s,.;)`]+`?"),
+    re.compile(r"\bmanual review point\s+`?docs/checklists/[^\s,.;)`]+"),
+    re.compile(r"\bfixture\s+`?(?:tests?|fixtures?)/[^\s,.;)`]+`?"),
+)
+
+PATH_REFERENCE_RE = re.compile(
+    r"`?((?:tests?|specs?|fixtures?|scripts?|docs/checklists)/[^\s,;)`]+"
+    r"|\.github/workflows/[^\s,;)`]+)`?",
+    flags=re.IGNORECASE,
+)
+
+FAILURE_RECORD_RE = re.compile(
+    r"`?(docs/failures/[^\s,;)`]+)`?",
+    flags=re.IGNORECASE,
+)
+
+NO_CHECK_BLOCKER_PATTERNS = (
+    re.compile(
+        r"\bbecause\b.{8,}\b(?:blocked|cannot|requires|depends on|no stable|"
+        r"not available|impractical|credential|quota|network|hardware|"
+        r"permission|sandbox|fixture|manual-only|nondeterministic)\b"
+    ),
+)
+
+NO_CHECK_FUTURE_SIGNAL_PATTERNS = (
+    re.compile(
+        r"\brevisit\s+when\s+.{0,80}\b(?:stable sandbox|sandbox|fixture|"
+        r"provider contract|api contract|schema|endpoint|mock|emulator|"
+        r"credential|quota|permission|hardware|ci|workflow|tooling)\b"
+    ),
+    re.compile(
+        r"\breview\s+when\s+.{0,80}\b(?:stable sandbox|sandbox|fixture|"
+        r"provider contract|api contract|schema|endpoint|mock|emulator|"
+        r"credential|quota|permission|hardware|ci|workflow|tooling)\b"
+    ),
+    re.compile(
+        r"\btrigger\s+review\s+when\s+.{0,80}\b(?:stable sandbox|sandbox|"
+        r"fixture|provider contract|api contract|schema|endpoint|mock|"
+        r"emulator|credential|quota|permission|hardware|ci|workflow|tooling)\b"
+    ),
+    re.compile(
+        r"\badd\s+(?:a\s+)?check\s+when\s+.{0,80}\b(?:stable sandbox|"
+        r"sandbox|fixture|provider contract|api contract|schema|endpoint|"
+        r"mock|emulator|credential|quota|permission|hardware|ci|workflow|"
+        r"tooling)\b"
+    ),
+    re.compile(
+        r"\bwhen\s+.{0,80}\b(?:stable sandbox|sandbox|fixture|"
+        r"provider contract|api contract|schema|endpoint|mock|emulator|"
+        r"credential|quota|permission|hardware|ci|workflow|tooling)\b"
+        r".{0,40}\s+(?:is|are|becomes|become)\s+"
+        r"(?:available|stable|supported)"
+    ),
+)
+
 EFFECTIVENESS_SECTIONS = (
     "## Target",
     "## Task Set",
@@ -68,8 +161,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Validate that adoption reports contain gate-placement and "
-            "measurement details, and effectiveness reports contain required "
-            "sections instead of placeholders."
+            "measurement details, failure-memory linkage, and effectiveness "
+            "reports contain required sections instead of placeholders."
         )
     )
     parser.add_argument(
@@ -152,7 +245,65 @@ def is_placeholder(value: str | None) -> bool:
     return value is None or not value or bool(TODO_RE.search(value))
 
 
-def validate_adoption_report(path: Path, text: str) -> list[Finding]:
+def recorded_failure_exists(value: str | None) -> bool:
+    if value is None:
+        return False
+    normalized = value.strip().lower()
+    return "docs/failures/" in normalized and not normalized.startswith("none")
+
+
+def records_no_failure(value: str | None) -> bool:
+    if value is None:
+        return False
+    return value.strip().lower().startswith("none")
+
+
+def failure_record_references(value: str | None) -> list[str]:
+    if value is None:
+        return []
+    return sorted(
+        {match.group(1).rstrip(".") for match in FAILURE_RECORD_RE.finditer(value)}
+    )
+
+
+def references_missing_local_paths(root: Path, value: str | None) -> list[str]:
+    if value is None:
+        return []
+    return [
+        reference
+        for reference in sorted(
+            {match.group(1).rstrip(".") for match in PATH_REFERENCE_RE.finditer(value)}
+        )
+        if not (root / reference).exists()
+    ]
+
+
+def says_no_failure_record(value: str | None) -> bool:
+    if value is None:
+        return False
+    normalized = " ".join(value.lower().split())
+    return any(phrase in normalized for phrase in NO_FAILURE_RECORD_PHRASES)
+
+
+def has_no_check_reason(value: str | None) -> bool:
+    if value is None:
+        return False
+    normalized = " ".join(value.lower().split())
+    if "no check is practical" not in normalized:
+        return False
+    return any(
+        pattern.search(normalized) for pattern in NO_CHECK_BLOCKER_PATTERNS
+    ) and any(pattern.search(normalized) for pattern in NO_CHECK_FUTURE_SIGNAL_PATTERNS)
+
+
+def has_concrete_check(value: str | None) -> bool:
+    if value is None:
+        return False
+    normalized = " ".join(value.lower().split())
+    return any(pattern.search(normalized) for pattern in CONCRETE_CHECK_PATTERNS)
+
+
+def validate_adoption_report(root: Path, path: Path, text: str) -> list[Finding]:
     findings: list[Finding] = []
     effectiveness_section = section_text(text, "## Effectiveness Measurement Plan")
     if effectiveness_section is None:
@@ -174,6 +325,111 @@ def validate_adoption_report(path: Path, text: str) -> list[Finding]:
             if is_placeholder(value):
                 findings.append(
                     Finding(path, f"incomplete gate-placement field: {field}")
+                )
+
+    failure_section = section_text(text, "## Failure Memory")
+    if failure_section is None:
+        findings.append(Finding(path, "missing ## Failure Memory section"))
+    else:
+        values: dict[str, str | None] = {}
+        for field in FAILURE_MEMORY_FIELDS:
+            value = field_value(failure_section, field)
+            values[field] = value
+            if is_placeholder(value):
+                findings.append(
+                    Finding(path, f"incomplete failure-memory field: {field}")
+                )
+        recorded_value = values.get("Recorded")
+        detection_value = values.get("Detection or prevention check")
+        failure_references = failure_record_references(recorded_value)
+        if records_no_failure(recorded_value) and failure_references:
+            findings.append(
+                Finding(
+                    path,
+                    "contradictory failure-memory Recorded: none with docs/failures reference",
+                )
+            )
+            for reference in failure_references:
+                if not (root / reference).exists():
+                    findings.append(
+                        Finding(
+                            path,
+                            f"failure-memory Recorded references missing record: {reference}",
+                        )
+                    )
+        if recorded_value is not None and not records_no_failure(recorded_value):
+            if not failure_references:
+                findings.append(
+                    Finding(
+                        path,
+                        "failure-memory Recorded must list docs/failures/... or none",
+                    )
+                )
+            for reference in failure_references:
+                if not (root / reference).exists():
+                    findings.append(
+                        Finding(
+                            path,
+                            f"failure-memory Recorded references missing record: {reference}",
+                        )
+                    )
+
+        if recorded_failure_exists(recorded_value):
+            if says_no_failure_record(values.get("Detection or prevention check")):
+                findings.append(
+                    Finding(
+                        path,
+                        (
+                            "contradictory failure-memory field: "
+                            "Detection or prevention check"
+                        ),
+                    )
+                )
+            if says_no_failure_record(values.get("Skipped")):
+                findings.append(
+                    Finding(path, "contradictory failure-memory field: Skipped")
+                )
+            normalized_detection = " ".join((detection_value or "").lower().split())
+            for phrase in REJECTED_DETECTION_PHRASES:
+                if phrase in normalized_detection:
+                    findings.append(
+                        Finding(
+                            path,
+                            (
+                                "non-committal failure-memory detection prose: "
+                                f"{phrase}"
+                            ),
+                        )
+                    )
+            for pattern in REJECTED_DETECTION_PROSE_PATTERNS:
+                if pattern.search(normalized_detection):
+                    findings.append(
+                        Finding(
+                            path,
+                            "non-committal failure-memory detection prose: planned",
+                        )
+                    )
+            if not has_concrete_check(detection_value) and not has_no_check_reason(
+                detection_value
+            ):
+                findings.append(
+                    Finding(
+                        path,
+                        (
+                            "incomplete failure-memory detection link: "
+                            "Detection or prevention check"
+                        ),
+                    )
+                )
+            for reference in references_missing_local_paths(root, detection_value):
+                findings.append(
+                    Finding(
+                        path,
+                        (
+                            "failure-memory detection references missing local path: "
+                            f"{reference}"
+                        ),
+                    )
                 )
 
     return findings
@@ -201,7 +457,7 @@ def check_effectiveness_plan(root: Path, require_report: bool) -> int:
         text = path.read_text(encoding="utf-8")
         name = path.name.lower()
         if "adoption-report" in name:
-            findings.extend(validate_adoption_report(path, text))
+            findings.extend(validate_adoption_report(root, path, text))
         if "effectiveness-report" in name:
             findings.extend(validate_effectiveness_report(path, text))
 
