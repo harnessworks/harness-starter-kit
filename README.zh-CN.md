@@ -37,6 +37,9 @@
   </a>
 </p>
 
+一个 prompt-first starter kit，用于把反复出现的 coding-agent mistakes 转化为
+durable repository instructions、checks、memory 和 evaluation。
+
 ## 快速开始
 
 用代码代理打开目标仓库，然后发送下面的 prompt。

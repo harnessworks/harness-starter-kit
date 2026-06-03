@@ -37,6 +37,9 @@
   </a>
 </p>
 
+繰り返される coding-agent mistakes を durable repository instructions, checks,
+memory, evaluation に変えるための prompt-first starter kit です。
+
 ## クイックスタート
 
 対象リポジトリをコーディングエージェントで開き、次の prompt を渡します。

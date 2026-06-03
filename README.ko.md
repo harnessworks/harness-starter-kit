@@ -37,6 +37,9 @@
   </a>
 </p>
 
+반복되는 coding-agent 실수를 durable repository instructions, checks, memory,
+evaluation으로 바꾸기 위한 prompt-first starter kit입니다.
+
 ## 빠른 시작
 
 대상 저장소를 코딩 에이전트로 열고 아래 prompt를 전달하세요.

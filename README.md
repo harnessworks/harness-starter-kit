@@ -37,6 +37,9 @@
   </a>
 </p>
 
+A prompt-first starter kit for turning repeated coding-agent mistakes into
+durable repository instructions, checks, memory, and evaluation.
+
 ## Quick Start
 
 Open the target repository with your coding agent and give it this prompt.
