@@ -5,7 +5,4 @@ preserve_hierarchy: true
 
 files:
   - source: README.md
-    translation: README.%two_letters_code%.md
-    languages_mapping:
-      two_letters_code:
-        zh-CN: zh-CN
+    translation: README.%locale%.md
