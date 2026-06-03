@@ -18,6 +18,7 @@ Available profiles:
 - `android`
 - `react`
 - `vue`
+- `go`
 
 ## How Agents Use Profiles
 

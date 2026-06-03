@@ -44,6 +44,7 @@ Automated fixture smoke tests cover harness installation for:
 - Spring Boot
 - Android / Kotlin Gradle
 - Vue
+- Go
 
 These tests verify that the installer preserves existing files, writes expected
 profile snippets, and produces runnable generic drift checks.

@@ -1,0 +1,15 @@
+# Go build outputs
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+
+# Dependency vendor directory (omit this line if the project vendors intentionally)
+vendor/
+
+# Test cache
+/tmp/
+
+# Harness kit reference clone
+harness-starter-kit/
