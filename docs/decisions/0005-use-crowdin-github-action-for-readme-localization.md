@@ -27,6 +27,14 @@ and opens a pull request from a dedicated localization branch. It runs on
 `main` pushes that affect README localization setup and on manual
 `workflow_dispatch`. It does not run on pull request events.
 
+The Crowdin config uses the `two_letters_code` placeholder and maps Chinese
+Simplified to `zh-CN` so downloaded files match the repository's existing
+localized README names:
+
+- `README.ko.md`
+- `README.ja.md`
+- `README.zh-CN.md`
+
 Crowdin credentials are provided through repository secrets:
 
 - `CROWDIN_PROJECT_ID`

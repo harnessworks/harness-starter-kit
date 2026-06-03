@@ -93,7 +93,10 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("project_id_env: CROWDIN_PROJECT_ID", crowdin_config)
         self.assertIn("api_token_env: CROWDIN_PERSONAL_TOKEN", crowdin_config)
         self.assertIn("source: README.md", crowdin_config)
-        self.assertIn("translation: README.%locale%.md", crowdin_config)
+        self.assertIn("translation: README.%two_letters_code%.md", crowdin_config)
+        self.assertIn("languages_mapping:", crowdin_config)
+        self.assertIn("two_letters_code:", crowdin_config)
+        self.assertIn("zh-CN: zh-CN", crowdin_config)
         self.assertNotIn("api_token:", crowdin_config)
 
         self.assertIn("uses: crowdin/github-action@v2", workflow)
@@ -117,8 +120,12 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("README or localized docs changed", pr_template)
         self.assertIn("Crowdin sync needed or run", pr_template)
         self.assertIn("crowdin-sync.yml", validation)
+        self.assertIn("README.ko.md", validation)
+        self.assertIn("README.ja.md", validation)
+        self.assertIn("README.zh-CN.md", validation)
         self.assertIn("crowdin.yml", component_map)
         self.assertIn("does not run on pull request events", decision)
+        self.assertIn("two_letters_code", decision)
 
     def test_effectiveness_measurement_is_wired_into_adoption_flow(self) -> None:
         adoption_report = (
