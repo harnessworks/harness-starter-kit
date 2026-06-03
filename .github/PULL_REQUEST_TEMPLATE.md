@@ -17,6 +17,9 @@
 - Templates or profiles:
 - Drift checks or CI:
 - Documentation or examples:
+- Localization:
+  - README or localized docs changed:
+  - Crowdin sync needed or run:
 - Failure records and linked regression test, fixture, smoke check, lint rule,
   drift check, CI gate, or manual review point:
 

@@ -69,6 +69,57 @@ class RepositoryHygieneTests(unittest.TestCase):
 
         self.assertEqual(root_script, generic_script)
 
+    def test_crowdin_action_is_wired_for_readme_localization(self) -> None:
+        crowdin_config = (REPO_ROOT / "crowdin.yml").read_text(encoding="utf-8")
+        workflow = (
+            REPO_ROOT / ".github" / "workflows" / "crowdin-sync.yml"
+        ).read_text(encoding="utf-8")
+        pr_template = (
+            REPO_ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md"
+        ).read_text(encoding="utf-8")
+        validation = (REPO_ROOT / "docs" / "validation.md").read_text(
+            encoding="utf-8"
+        )
+        component_map = (REPO_ROOT / "docs" / "component-map.md").read_text(
+            encoding="utf-8"
+        )
+        decision = (
+            REPO_ROOT
+            / "docs"
+            / "decisions"
+            / "0005-use-crowdin-github-action-for-readme-localization.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("project_id_env: CROWDIN_PROJECT_ID", crowdin_config)
+        self.assertIn("api_token_env: CROWDIN_PERSONAL_TOKEN", crowdin_config)
+        self.assertIn("source: README.md", crowdin_config)
+        self.assertIn("translation: README.%locale%.md", crowdin_config)
+        self.assertNotIn("api_token:", crowdin_config)
+
+        self.assertIn("uses: crowdin/github-action@v2", workflow)
+        self.assertIn("config: crowdin.yml", workflow)
+        self.assertIn("upload_sources: true", workflow)
+        self.assertIn("download_translations: true", workflow)
+        self.assertIn("create_pull_request: true", workflow)
+        self.assertIn("contents: write", workflow)
+        self.assertIn("pull-requests: write", workflow)
+        self.assertIn("CROWDIN_PROJECT_ID", workflow)
+        self.assertIn("CROWDIN_PERSONAL_TOKEN", workflow)
+        self.assertIn("github.token", workflow)
+        self.assertIn("Crowdin secrets are not configured", workflow)
+        self.assertIn("workflow_dispatch", workflow)
+        self.assertIn("README.md", workflow)
+        self.assertIsNone(re.search(r"(?m)^  pull_request:\s*$", workflow))
+        self.assertIsNone(re.search(r"(?m)^  pull_request_target:\s*$", workflow))
+
+        for text in (pr_template, validation, component_map, decision):
+            self.assertIn("Crowdin", text)
+        self.assertIn("README or localized docs changed", pr_template)
+        self.assertIn("Crowdin sync needed or run", pr_template)
+        self.assertIn("crowdin-sync.yml", validation)
+        self.assertIn("crowdin.yml", component_map)
+        self.assertIn("does not run on pull request events", decision)
+
     def test_effectiveness_measurement_is_wired_into_adoption_flow(self) -> None:
         adoption_report = (
             REPO_ROOT / "docs" / "templates" / "adoption-report.md"

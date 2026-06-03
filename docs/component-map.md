@@ -13,6 +13,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Document drift check | `scripts/check_docs_drift.py` | `templates/generic/scripts/check_docs_drift.py` |
 | Structure drift check | `scripts/check_structure.py` | `templates/generic/scripts/check_structure.py` |
 | Encoding hygiene check | `scripts/check_encoding_hygiene.py` | `templates/generic/scripts/check_encoding_hygiene.py` |
+| README localization sync | `crowdin.yml`, `.github/workflows/crowdin-sync.yml` | project-specific Crowdin setup |
 | Effectiveness plan check | `scripts/check_effectiveness_plan.py` | `templates/generic/scripts/check_effectiveness_plan.py` |
 | Failure-memory check | `scripts/check_failure_memory.py` | `templates/generic/scripts/check_failure_memory.py` |
 | Decision-memory diff warning | `scripts/check_decision_memory.py`, `.harness/decision-memory-rules.json` | `templates/generic/scripts/check_decision_memory.py`, `templates/generic/.harness/decision-memory-rules.json` |

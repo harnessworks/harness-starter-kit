@@ -1,0 +1,67 @@
+name: Crowdin Localization Sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - README.md
+      - crowdin.yml
+      - .github/workflows/crowdin-sync.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: crowdin-localization
+  cancel-in-progress: false
+
+jobs:
+  synchronize-with-crowdin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Crowdin secrets
+        id: crowdin-secrets
+        shell: bash
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        run: |
+          if [[ -z "${CROWDIN_PROJECT_ID}" || -z "${CROWDIN_PERSONAL_TOKEN}" ]]; then
+            echo "::notice::Crowdin secrets are not configured; skipping localization sync."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.crowdin-secrets.outputs.configured == 'true'
+        uses: actions/checkout@v4
+
+      - name: Synchronize README translations
+        if: steps.crowdin-secrets.outputs.configured == 'true'
+        uses: crowdin/github-action@v2
+        with:
+          config: crowdin.yml
+          upload_sources: true
+          upload_translations: false
+          download_translations: true
+          localization_branch_name: l10n_crowdin_readme
+          create_pull_request: true
+          pull_request_title: Update README translations from Crowdin
+          pull_request_body: |
+            Synchronizes localized README files from Crowdin.
+
+            Checks to run before merge:
+
+            ```powershell
+            python -m unittest discover -s tests
+            python scripts/check_encoding_hygiene.py
+            ```
+          pull_request_base_branch_name: main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

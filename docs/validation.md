@@ -68,6 +68,23 @@ python -m unittest tests.test_fastapi_profile_e2e
 In GitHub Actions, run the `Harness Check` workflow manually and enable
 `run_fastapi_e2e` to execute the dependency-installing test.
 
+## Crowdin Localization
+
+README localization is synchronized through
+`.github/workflows/crowdin-sync.yml` and `crowdin.yml`. The workflow uses the
+official Crowdin GitHub Action v2, uploads `README.md` as the source, downloads
+translated README files, and opens a translation pull request.
+
+The workflow intentionally runs only on `main` pushes that affect localization
+setup or through manual `workflow_dispatch`. It does not run on pull requests.
+Configure repository secrets `CROWDIN_PROJECT_ID` and
+`CROWDIN_PERSONAL_TOKEN` before expecting synchronization; without them the
+workflow exits successfully after a notice.
+
+`tests/test_repository_hygiene.py` checks that the Crowdin action remains wired
+to the README localization files, is secret-gated, and is not attached to PR
+events.
+
 ## Lifecycle Pilots
 
 Pilot lifecycle tests have validated prompt-first adoption from blank
