@@ -20,10 +20,9 @@
   <img alt="Contributors" src="https://img.shields.io/github/contributors/baskduf/harness-starter-kit?style=flat-square" />
 </p>
 
-[English](README.md) | [한국어](README.ko.md) | **日本語** | [简体中文](README.zh-CN.md)
+**English** | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-CN.md)
 
-<p align="center">
-  <a href="https://baskduf.github.io/harness-starter-kit/">
+<p align="center"><a href="https://baskduf.github.io/harness-starter-kit/">
     <img alt="Launch site" src="https://img.shields.io/badge/Launch-Agent_Session_Demo-0077ff?style=for-the-badge" />
   </a>
   <a href="https://dev.to/baskduf/i-stopped-prompt-engineering-my-ai-coding-agent-i-started-engineering-the-repo-instead-1i3e">
@@ -37,15 +36,14 @@
   </a>
 </p>
 
-繰り返される coding-agent mistakes を durable repository instructions, checks,
-memory, evaluation に変えるための prompt-first starter kit です。
+A prompt-first starter kit for turning repeated coding-agent mistakes into
+durable repository instructions, checks, memory, and evaluation.
 
-## クイックスタート
+## Quick Start
 
-対象リポジトリをコーディングエージェントで開き、次の prompt を渡します。
+Open the target repository with your coding agent and give it this prompt.
 
-<details>
-<summary>完全な導入プロンプトを表示</summary>
+<details><summary>Show full adoption prompt</summary>
 
 ```text
 Use this kit to apply harness engineering to this repository:
@@ -101,111 +99,109 @@ Expected result:
 
 </details>
 
-完全な prompt と workflow は
-[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md) と
-[`docs/adoption-workflow.md`](docs/adoption-workflow.md) を参照してください。
+For the full prompt and workflow details, see
+[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
+and [`docs/adoption-workflow.md`](docs/adoption-workflow.md).
 
 <p align="center">
 <img width="939" height="783" alt="제목 없는 디자인" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
 
 > 💫 If this kit helps you, a GitHub star would be appreciated. 💫
+
 </p>
 
+## Harness Theory
 
-## ハーネス理論
-
-Harness engineering は、リポジトリを coding agent の durable operating
-environment として扱います。
+Harness engineering treats the repository as the durable operating environment
+for coding agents:
 
 ```text
 Harness = Instructions + Constraints + Feedback + Memory + Evaluation + Governance
 ```
 
-Harness health は agent effectiveness とは別です。Harness Doctor は durable
-repository evidence をスキャンできますが、agent が mistakes を減らすことは
-証明できません。task outcomes と effectiveness reports で別に測定してください。
-モデルは [`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)
-を参照してください。
+Harness health is different from agent effectiveness. Harness Doctor can scan
+for durable repository evidence, but it cannot prove that agents make fewer
+mistakes. Measure that separately with task outcomes and effectiveness reports.
+See [`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)
+for the model.
 
-繰り返される agent failure は、より明確な instruction、automated constraint、
-test または CI check、decision/failure record、drift check の少なくとも一つの
-durable artifact に変換します。
+Every recurring agent failure should be converted into at least one durable
+artifact: a clearer instruction, an automated constraint, a test or CI check, a
+decision or failure record, or a drift check.
 
-## コマンド
+## Commands
 
-以下の `/harness ...` 名は、デフォルトでは組み込み editor command ではなく
-prompt convention です。coding agent chat に直接入力または貼り付けてください。
-Cursor などの editor では、対応する custom slash command を別途追加しない限り
-command palette には表示されません。
+The `/harness ...` names below are prompt conventions by default, not built-in
+editor commands. Type or paste them into your coding agent chat. In editors such
+as Cursor, they will not appear in the command palette unless you separately add
+matching custom slash commands.
 
-| Command | Use when |
-| --- | --- |
-| `/harness doctor` | ファイルを変更せずに baseline harness evidence を採点するとき。 |
-| `/harness update` | 導入後にローカル `./harness-starter-kit` reference を更新するとき。 |
-| `/harness refresh` | stale、duplicated、obsolete、unused target harness guidance をレビューするとき。 |
-| `/harness review` | 完了前に現在の change set を批判的に確認するとき。 |
-| `/harness review sub-agent` | runtime が許可する場合に read-only reviewer subagent を明示的に依頼するとき。 |
+| Command                     | Use when                                                                                      |
+| --------------------------- | --------------------------------------------------------------------------------------------- |
+| `/harness doctor`           | Score baseline harness evidence without modifying files.                      |
+| `/harness update`           | Refresh the local `./harness-starter-kit` reference after adoption.           |
+| `/harness refresh`          | Review stale, duplicated, obsolete, or unused target harness guidance.        |
+| `/harness review`           | Challenge the current change set before finishing.                            |
+| `/harness review sub-agent` | Explicitly request a read-only reviewer subagent when the runtime permits it. |
 
-完全な workflow は [`commands/`](commands/) を参照してください:
+See [`commands/`](commands/) for full workflows:
 [`doctor`](commands/harness-doctor.md),
 [`update`](commands/harness-update.md),
 [`refresh`](commands/harness-refresh.md),
-[`review`](commands/harness-review.md).
+and [`review`](commands/harness-review.md).
 
-## 導入の仕組み
+## How Adoption Works
 
-<details>
-<summary>導入の詳細を表示</summary>
+<details><summary>Show adoption details</summary>
 
-この kit は主に自動 installer ではありません。エージェントは対象リポジトリを
-先に読み、instructions、enforceable constraints、feedback loops、durable
-memory、drift checks、adoption report のうち最小限で有用なものだけを適用します。
-[`docs/adoption-workflow.md`](docs/adoption-workflow.md) と
-[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md) に
-従ってください。
+This is not primarily an automatic installer. The agent should inspect the
+target repository first, then adapt the smallest useful set of harness
+artifacts: instructions, enforceable constraints, feedback loops, durable
+memory, drift checks, and an adoption report. Follow
+[`docs/adoption-workflow.md`](docs/adoption-workflow.md) and the prompt in
+[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md).
 
-optional installer は、agent-driven adaptation の前に skeleton が必要な場合だけ
-使います。レビュー用の profile snippets を
-`docs/harness/profiles/<profile>` にコピーします。Prompt-first adoption では
-cloned kit の `harness-starter-kit/templates/profiles/<profile>` を参照します。
+Use the optional installer only when you want a skeleton before agent-driven
+adaptation. It copies profile snippets into
+`docs/harness/profiles/<profile>` for review; prompt-first adoption reads
+profiles from the cloned kit at
+`harness-starter-kit/templates/profiles/<profile>`.
 
 ```powershell
 python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --dry-run
 ```
 
-上の badges に表示される profiles は保守的な reference snippets であり、
-automatic migrations ではありません。
-[`docs/profiles.md`](docs/profiles.md) と
-[`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption.md) を
-参照してください。
+Profiles shown in the badges above are conservative reference snippets, not
+automatic migrations. See [`docs/profiles.md`](docs/profiles.md) and
+[`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption.md).
 
-詳細な documentation index は [`docs/component-map.md`](docs/component-map.md) に
-あります。主な adoption references:
+For the detailed documentation index, see
+[`docs/component-map.md`](docs/component-map.md). Common adoption references:
 [`docs/checklists/external-api-work.md`](docs/checklists/external-api-work.md),
 [`docs/checklists/decision-failure-memory.md`](docs/checklists/decision-failure-memory.md),
-[`docs/checklists/verification-scripts.md`](docs/checklists/verification-scripts.md).
+and [`docs/checklists/verification-scripts.md`](docs/checklists/verification-scripts.md).
 
-Validation coverage と local checks は
-[`docs/validation.md`](docs/validation.md) にあります。Lifecycle pilot details は
-[`docs/examples/lifecycle-pilot-results.md`](docs/examples/lifecycle-pilot-results.md)
-を参照してください。これらは harness adoption が repeated agent mistakes を
-減らすことを証明しません。comparable tasks、wrong-file edits、first-pass
-verification、human rework の測定には
+Validation coverage and local checks live in
+[`docs/validation.md`](docs/validation.md). Lifecycle pilot details live in
+[`docs/examples/lifecycle-pilot-results.md`](docs/examples/lifecycle-pilot-results.md).
+They do not prove that harness adoption reduces repeated agent mistakes. Use
 [`docs/evaluation.md`](docs/evaluation.md),
 [`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md),
-[`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml) を使います。
+and [`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml) to
+measure comparable tasks, wrong-file edits, first-pass verification, and human
+rework.
 
 </details>
 
-## コントリビューター
+## Contributors
 
-code、docs、reviews、examples、translations、dogfooding を通じてこの kit を
-形づくってくれたすべての方に感謝します。
+Thanks to everyone who has helped shape this kit through code, docs, reviews,
+examples, translations, and dogfooding.
 
 <a href="https://github.com/baskduf/harness-starter-kit/graphs/contributors">
   <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit" alt="Contributors" />
 </a>
 
-## ライセンス
+## License
 
-このプロジェクトは [MIT License](LICENSE) の下で公開されています。
+This project is licensed under the [MIT License](LICENSE).
