@@ -39,7 +39,10 @@
 
 ## Quick Start
 
-Open the target repository with your coding agent and give it this prompt:
+Open the target repository with your coding agent and give it this prompt.
+
+<details>
+<summary>Show full adoption prompt</summary>
 
 ```text
 Use this kit to apply harness engineering to this repository:
@@ -92,6 +95,8 @@ Expected result:
   normal/focused/manual gate placement, and whether
   ./harness-starter-kit should be removed, ignored, or kept before commit
 ```
+
+</details>
 
 For the full prompt and workflow details, see
 [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
@@ -189,6 +194,9 @@ the active runtime cannot call one.
 
 ## How Adoption Works
 
+<details>
+<summary>Show adoption details</summary>
+
 This is not primarily an automatic installer. The agent should inspect the
 target repository first, then adapt the smallest useful set of harness
 artifacts:
@@ -235,6 +243,8 @@ and [`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml) to
 measure comparable tasks, wrong-file edits, first-pass verification, and human
 rework.
 
+</details>
+
 ## Contributors
 
 Thanks to everyone who has helped shape this kit through code, docs, reviews,
@@ -244,12 +254,12 @@ examples, translations, and dogfooding.
   <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit" alt="Contributors" />
 </a>
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
 ## Core Principle
 
 Every recurring agent failure should be converted into at least one durable
 artifact: a clearer instruction, an automated constraint, a test or CI check, a
 decision or failure record, or a drift check.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
