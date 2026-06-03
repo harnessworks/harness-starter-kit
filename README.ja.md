@@ -3,7 +3,9 @@
 **[English](README.md)** | [한국어](README.ko.md) | **日本語** | [简体中文](README.zh-CN.md)
 
 <p align="center">
-  <img alt="harness-starter-kit agent session demo" src="site/assets/banner.gif" />
+  <img width="2172" height="724" alt="06d3c515-5fd8-4942-95e0-50ae2a2c5456" src="https://github.com/user-attachments/assets/4ba0bcf8-7500-49bd-a0fd-b8666807df39" />
+<img width="1672" height="941" alt="ChatGPT Image 2026년 5월 31일 오후 03_58_36" src="https://github.com/user-attachments/assets/e9edcba6-4cf1-43e5-8fbb-6d4d6426d0c3" />
+
 </p>
 
 <p align="center">
@@ -24,6 +26,15 @@
 <p align="center">
   <a href="https://baskduf.github.io/harness-starter-kit/">
     <img alt="Launch site" src="https://img.shields.io/badge/Launch-Agent_Session_Demo-0077ff?style=for-the-badge" />
+  </a>
+  <a href="https://dev.to/baskduf/i-stopped-prompt-engineering-my-ai-coding-agent-i-started-engineering-the-repo-instead-1i3e">
+    <img alt="Read the launch essay" src="https://img.shields.io/badge/Read-Launch_Essay-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white" />
+  </a>
+  <a href="https://github.com/baskduf/harness_starter_kit_django/tree/main">
+    <img alt="View Django dogfood repo" src="https://img.shields.io/badge/View-Django_Dogfood-092E20?style=for-the-badge&logo=django&logoColor=white" />
+  </a>
+  <a href="https://github.com/baskduf/today-bus">
+    <img alt="View Next.js dogfood repo" src="https://img.shields.io/badge/View-Next.js_Dogfood-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
   </a>
 </p>
 
@@ -88,6 +99,13 @@ Expected result:
 完全な prompt と workflow は
 [`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md) と
 [`docs/adoption-workflow.md`](docs/adoption-workflow.md) を参照してください。
+
+<p align="center">
+<img width="939" height="783" alt="제목 없는 디자인" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+
+> 💫 If this kit helps you, a GitHub star would be appreciated. 💫
+</p>
+
 
 ## コマンド
 
