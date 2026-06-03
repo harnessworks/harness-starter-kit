@@ -307,7 +307,7 @@ class RepositoryHygieneTests(unittest.TestCase):
         )
 
         for path in failure_records:
-            if path.name == "000-template.md":
+            if path.name in ("000-template.md", "README.md"):
                 continue
 
             text = path.read_text(encoding="utf-8")

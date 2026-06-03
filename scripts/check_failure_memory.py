@@ -107,7 +107,7 @@ class Finding:
 
 
 def is_template(path: Path) -> bool:
-    return path.name == "000-template.md"
+    return path.name in ("000-template.md", "README.md")
 
 
 def section_text(text: str, heading: str) -> str | None:
