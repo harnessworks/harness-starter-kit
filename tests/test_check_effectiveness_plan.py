@@ -21,6 +21,14 @@ COMPLETE_ADOPTION_REPORT = """# Adoption Report
 - Reasons for focused/manual placement: live API smoke requires credentials and
   provider uptime.
 
+## Failure Memory
+
+- Recorded: none; no recurring failure was fixed.
+- Detection or prevention check: not applicable because no failure record was
+  added.
+- Skipped: no user-visible runtime failure, high-risk bug path, failed check,
+  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.
+
 ## Effectiveness Measurement Plan
 
 - Baseline available: No historical agent PR data available.
@@ -66,6 +74,20 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
             capture_output=True,
             text=True,
         )
+
+    def write_failure_record(
+        self,
+        root: Path,
+        relative: str = "docs/failures/0001-provider-casing.md",
+    ) -> None:
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("# Failure\n", encoding="utf-8")
+
+    def touch_local_path(self, root: Path, relative: str) -> None:
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("", encoding="utf-8")
 
     def test_no_report_passes_unless_report_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -123,6 +145,341 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
             result = self.run_checker(root)
 
             self.assertIn("missing ## Verification Gate Placement", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_missing_failure_memory_section_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            failure_section = (
+                "## Failure Memory\n\n"
+                "- Recorded: none; no recurring failure was fixed.\n"
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.\n"
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.\n\n"
+            )
+            (root / "adoption-report.md").write_text(
+                COMPLETE_ADOPTION_REPORT.replace(failure_section, ""),
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn("missing ## Failure Memory", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_todo_failure_memory_field_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "adoption-report.md").write_text(
+                COMPLETE_ADOPTION_REPORT.replace(
+                    "not applicable because no failure record was\n  added.",
+                    "TODO",
+                ),
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "incomplete failure-memory field: Detection or prevention check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_no_record_detection_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "adoption-report.md").write_text(
+                COMPLETE_ADOPTION_REPORT.replace(
+                    "- Recorded: none; no recurring failure was fixed.",
+                    "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                ),
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "contradictory failure-memory field: Detection or prevention check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_vague_detection_fails(self) -> None:
+        examples = (
+            "smoke check.",
+            "Smoke check `provider boundary`.",
+            "Drift check `generated docs`.",
+            "CI gate `main`.",
+            "Manual review point `provider contract`.",
+        )
+        for example in examples:
+            with self.subTest(example=example):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: {example}",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "incomplete failure-memory detection link",
+                        result.stdout,
+                    )
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_vague_no_check_reason_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                (
+                    "- Detection or prevention check: No check is practical because "
+                    "this is external behavior; revisit when some process is "
+                    "available."
+                ),
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn("incomplete failure-memory detection link", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_field_must_name_failure_record_path(self) -> None:
+        examples = (
+            "yes",
+            "0001-provider-casing.md",
+        )
+        for example in examples:
+            with self.subTest(example=example):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        f"- Recorded: {example}.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        "- Detection or prevention check: `npm run test:planner`.",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "Recorded must list docs/failures/... or none",
+                        result.stdout,
+                    )
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_path_must_exist(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/missing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `npm run test:planner`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "Recorded references missing record: docs/failures/missing.md",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_non_committal_detection_fails(self) -> None:
+        examples = (
+            (
+                "No regression test exists yet, but "
+                "tests/provider-contract.test.ts should be added."
+            ),
+            "tests/provider-contract.test.ts should be added later.",
+            "tests/provider-contract.test.ts is planned.",
+            "tests/provider-contract.test.ts will be added.",
+        )
+        for example in examples:
+            with self.subTest(example=example):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    self.touch_local_path(root, "tests/provider-contract.test.ts")
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: {example}",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "non-committal failure-memory detection prose",
+                        result.stdout,
+                    )
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_none_with_failure_reference_fails(self) -> None:
+        examples = (
+            "none; docs/failures/missing.md was not added.",
+            "none; covered by docs/failures/0001-provider-casing.md.",
+        )
+        for example in examples:
+            with self.subTest(example=example):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        f"- Recorded: {example}",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "contradictory failure-memory Recorded",
+                        result.stdout,
+                    )
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_missing_detection_path_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `tests/provider-contract.test.ts`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "detection references missing local path: tests/provider-contract.test.ts",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_existing_detection_path_may_include_planned_word(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            self.touch_local_path(root, "tests/planned-route.test.ts")
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `tests/planned-route.test.ts`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertEqual("", result.stdout)
+            self.assertEqual(0, result.returncode)
+
+    def test_recorded_failure_with_concrete_command_detection_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `npm run test:planner`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertEqual("", result.stdout)
+            self.assertEqual(0, result.returncode)
+
+    def test_recorded_failure_with_skipped_no_failure_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `tests/provider-contract.test.ts`.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "contradictory failure-memory field: Skipped",
+                result.stdout,
+            )
             self.assertEqual(1, result.returncode)
 
     def test_similar_gate_placement_heading_does_not_satisfy_section(
