@@ -45,6 +45,12 @@ Use one of these modes:
 Record the mode in the effectiveness report. Do not infer improvement from
 harnessed-only tracking until there is a later comparison point.
 
+Separate non-comparable setup runs from product-task outcomes. Adoption,
+template setup, placeholder-prompt, or other workflow-preparation records can be
+useful operational evidence, but they should not enter comparable product-task
+counts unless they had a concrete task, expected boundary, known failure mode,
+and verification command.
+
 ## Metrics
 
 | Metric | Definition | Example observation |
@@ -74,6 +80,10 @@ harnessed-only tracking until there is a later comparison point.
 7. For each task outcome record, include the repository ref, prompt reference,
    run id, reviewer, harness source, and verification command so later reviewers
    can tell whether two runs are actually comparable.
+8. In aggregate reports, compare expected boundaries with actual changed files,
+   distinguish unknown human rework from 0 minutes, and treat
+   `include_in_effectiveness_report` as separate from inclusion in comparable
+   product-task counts.
 
 ## Minimum Adoption-Time Plan
 
