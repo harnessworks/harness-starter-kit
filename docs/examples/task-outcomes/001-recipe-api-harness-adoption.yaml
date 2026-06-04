@@ -1,8 +1,8 @@
 schema_version: 1
 
 target:
-  repository: recipe-api harness practice target
-  repository_ref: local practice branch
+  repository: jihwan4155/recipe-api
+  repository_ref: jihwan4155/recipe-api@99af81bf0da4a8bfecb19e5ca0af817b276f49b6
   stack_or_framework: Django REST Framework
   date: 2026-06-03
   agent_or_model: AI coding agent
@@ -29,8 +29,8 @@ harness_context:
   harness_doctor_score: recorded locally but not treated as effectiveness proof
   harness_source:
     kit_url: https://github.com/baskduf/harness-starter-kit
-    kit_commit: not recorded
-    source_tracking_ref: none
+    kit_commit: baskduf/harness-starter-kit@94e416b354facffafead6bbb9691af1598139389
+    source_tracking_ref: recipe-api/harness-starter-kit
   relevant_instructions:
     - AGENTS.md
     - docs/conventions/coding.md
@@ -57,9 +57,11 @@ outcome:
   first_pass_verification:
     result: failed_then_passed_after_review
   drift_violations_detected:
-    - README existed but was not useful project documentation.
     - docs/domain/glossary.md used an API route string that docs-drift treated as a missing path.
+  review_gaps_detected:
+    - README existed but was not useful project documentation.
     - Django tests initially found zero tests.
+    - Some generated harness guidance remained too generic for the Django REST Framework target.
   human_rework_minutes: 35
   reverted_files: []
   notes: Review surfaced weak tests, generic scaffold text, and docs drift. The harness made those gaps explicit but did not prevent all first-pass issues.
