@@ -196,7 +196,7 @@ comparable tasks、wrong-file edits、first-pass verification 和 human rework�
 这个 kit 的人。
 
 <a href="https://github.com/baskduf/harness-starter-kit/graphs/contributors">
-  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260603" alt="Contributors" />
+  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260604" alt="Contributors" />
 </a>
 
 ## 许可证

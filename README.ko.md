@@ -199,7 +199,7 @@ human rework 측정에는 [`docs/evaluation.md`](docs/evaluation.md),
 감사합니다.
 
 <a href="https://github.com/baskduf/harness-starter-kit/graphs/contributors">
-  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260603" alt="Contributors" />
+  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260604" alt="Contributors" />
 </a>
 
 ## 라이선스
