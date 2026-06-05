@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baskduf.github.io/harness-starter-kit/sitemap.xml
