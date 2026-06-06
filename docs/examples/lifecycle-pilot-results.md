@@ -117,12 +117,13 @@ Limitations:
 
 ## Harness ERP Spring/Maven Dogfood
 
-A `harness-erp` Spring Boot target was used as a backend dogfood case after the
-Spring profile and effectiveness tracking workflow were in place. The target
-exercised source tracking, local Maven verification, service-layer business
-rules, decision memory, failure memory, and task outcome aggregation across
-five initial comparable product tasks and four follow-up comparable product
-tasks.
+A `harness-erp` Spring Boot target was used as a backend and vanilla frontend
+dogfood case after the Spring profile and effectiveness tracking workflow were
+in place. The target exercised source tracking, local Maven verification,
+service-layer business rules, legacy ERP UI conventions, decision memory,
+failure memory, browser smoke, and task outcome aggregation across five initial
+backend product tasks, four backend follow-up product tasks, and five frontend
+follow-up product tasks.
 
 Successful behaviors:
 
@@ -141,6 +142,16 @@ Successful behaviors:
   successes with no wrong-file edits or repeated known mistakes observed
 - added a non-comparable MAINT-001 CI verification record and kept it out of
   comparable product-task counts
+- added a non-comparable MAINT-002 frontend design-baseline record before
+  measurable frontend implementation and kept it out of comparable
+  product-task counts
+- tracked FE-001 through FE-005 as a separate frontend follow-up benchmark group
+  instead of merging frontend tasks into backend aggregates
+- recorded frontend first-pass verification honestly: FE-001 and FE-003 failed
+  first verification, then passed final verification after static-resource test
+  fixes
+- browser-smoke verified the static ERP shell and frontend API coverage for
+  employee, purchase request, approval, and approval-history workflows
 - verified the target GitHub Actions workflow runs the local harness gate with
   Java 21 and Python
 - recorded the Spring Boot `4.0.6.RELEASE` coordinate failure in the target
@@ -157,9 +168,9 @@ Finding:
 
 Limitations:
 
-- This dogfood is harnessed-only backend evidence split into initial and
-  follow-up groups. It does not prove broader agent effectiveness or reduced
-  human rework.
+- This dogfood is harnessed-only backend and frontend evidence split into
+  separate task groups. It does not prove broader agent effectiveness or
+  reduced human rework.
 - Prompt hashes are preserved in task outcome records, but prompt text was local
   to the dogfood environment rather than stored in this kit.
 

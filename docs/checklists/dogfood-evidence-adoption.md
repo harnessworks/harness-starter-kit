@@ -30,6 +30,9 @@ single target run into an unsupported effectiveness claim.
 - Each failure record names a regression test, fixture, smoke check, lint rule,
   drift check, CI gate, or manual review point that detects or prevents
   recurrence, or explains why no check is practical.
+- Every failed first-pass or final verification is linked to a target failure
+  record, or the report explicitly states why the failure was not promoted and
+  names the check that detects recurrence.
 - Aggregate reports state clearly whether the evidence is baseline-vs-harnessed
   or harnessed-only tracking.
 - Harnessed-only reports explicitly say they do not prove effectiveness
@@ -57,6 +60,9 @@ another local command.
   prompt hashes.
 - Setup failures are excluded from metrics but not evaluated for failure
   memory.
+- Failed first-pass or final verification is recorded as a metric but has no
+  linked target failure record, no skip rationale, and no recurrence-detection
+  check.
 - A template or placeholder task outcome is included in the effectiveness report
   or comparable product-task count.
 - The aggregate report says product tasks are complete while also saying no
@@ -89,6 +95,8 @@ Use the smallest durable placement that fits the evidence:
 - Does it name the target's real normal gate and gate-placement decisions?
 - Does it record misses honestly, including wrong-file edits and failed first
   verification?
+- Does each failed first-pass or final verification have failure memory or an
+  explicit skip rationale with a recurrence-detection check?
 - Does it link failure memory to detection or prevention?
 - Does it avoid claiming improvement unless there is a comparable baseline or
   later comparison window?

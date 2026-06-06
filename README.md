@@ -202,8 +202,8 @@ Dogfood reports include
 [`TodayBus`](docs/examples/effectiveness-report-todaybus-dogfood.md) for a
 Next.js public-data target and
 [`Harness ERP`](docs/examples/effectiveness-report-harness-erp-dogfood.md) for
-a Spring/Maven backend target. Both are harnessed-only benchmarks, not proof of
-effectiveness improvement.
+a Spring/Maven backend and vanilla frontend target. Both are harnessed-only
+benchmarks, not proof of effectiveness improvement.
 
 </details>
 
