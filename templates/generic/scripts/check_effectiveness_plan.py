@@ -59,6 +59,17 @@ TASK_OUTCOME_INCLUDE_FIELDS = (
     "include_in_comparable_product_task_count",
 )
 
+REQUIRED_INCLUDED_TASK_OUTCOME_FIELDS = (
+    "repository_ref",
+    "run_id",
+    "reviewer",
+    "verification_command",
+)
+
+REQUIRED_INCLUDED_TASK_OUTCOME_BLOCKS = (
+    "expected_boundary",
+)
+
 NO_FAILURE_RECORD_PHRASES = (
     "no failure record",
     "no failure note",
@@ -310,6 +321,59 @@ def yaml_field_value(text: str, field: str) -> str | None:
     return match.group(1).split("#", 1)[0].strip()
 
 
+def yaml_block_value(text: str, field: str) -> str | None:
+    pattern = re.compile(
+        rf"^(?P<indent>[ \t]*){re.escape(field)}:[ \t]*(?P<value>.*?)[ \t]*$",
+        flags=re.MULTILINE,
+    )
+    match = pattern.search(text)
+    if match is None:
+        return None
+
+    value = match.group("value").split("#", 1)[0].strip()
+    if value:
+        return value
+
+    base_indent = len(match.group("indent"))
+    lines = text[match.end() :].splitlines()
+    parts: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        indent = len(line) - len(line.lstrip())
+        if indent <= base_indent:
+            break
+        parts.append(stripped.split("#", 1)[0].strip())
+
+    return " ".join(part for part in parts if part).strip() or None
+
+
+def yaml_nested_field_value(text: str, parent: str, field: str) -> str | None:
+    parent_pattern = re.compile(
+        rf"^(?P<indent>[ \t]*){re.escape(parent)}:[ \t]*$",
+        flags=re.MULTILINE,
+    )
+    parent_match = parent_pattern.search(text)
+    if parent_match is None:
+        return None
+
+    base_indent = len(parent_match.group("indent"))
+    lines = text[parent_match.end() :].splitlines()
+    nested_lines: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            nested_lines.append(line)
+            continue
+        indent = len(line) - len(line.lstrip())
+        if indent <= base_indent:
+            break
+        nested_lines.append(line)
+
+    return yaml_field_value("\n".join(nested_lines), field)
+
+
 def is_truthy_yaml_value(value: str | None) -> bool:
     if value is None:
         return False
@@ -321,8 +385,10 @@ def is_missing_or_placeholder_yaml_value(value: str | None) -> bool:
     if value is None:
         return True
     normalized = value.strip().strip("\"'`").lower()
-    return not normalized or normalized in {"todo", "unknown"} or bool(
-        TODO_RE.search(value)
+    return (
+        not normalized
+        or normalized in {"todo", "unknown", "not recorded", "[]", "{}", "- []", "- {}"}
+        or bool(TODO_RE.search(value))
     )
 
 
@@ -633,6 +699,60 @@ def validate_task_outcome(path: Path, text: str) -> list[Finding]:
             )
         )
         return findings
+
+    missing_required_fields = [
+        field
+        for field in REQUIRED_INCLUDED_TASK_OUTCOME_FIELDS
+        if is_missing_or_placeholder_yaml_value(yaml_field_value(text, field))
+    ]
+    missing_required_blocks = [
+        field
+        for field in REQUIRED_INCLUDED_TASK_OUTCOME_BLOCKS
+        if is_missing_or_placeholder_yaml_value(yaml_block_value(text, field))
+    ]
+    if missing_required_fields or missing_required_blocks:
+        missing_fields = ", ".join(
+            [*missing_required_fields, *missing_required_blocks]
+        )
+        findings.append(
+            Finding(
+                path,
+                (
+                    "included task outcome is missing required evidence field(s): "
+                    f"{missing_fields}"
+                ),
+            )
+        )
+
+    prompt_ref = yaml_field_value(text, "prompt_ref")
+    prompt_hash = yaml_field_value(text, "prompt_hash")
+    if is_missing_or_placeholder_yaml_value(prompt_ref) and (
+        is_missing_or_placeholder_yaml_value(prompt_hash)
+    ):
+        findings.append(
+            Finding(
+                path,
+                (
+                    "included task outcome must include prompt_ref or prompt_hash"
+                ),
+            )
+        )
+
+    first_pass_result = yaml_nested_field_value(
+        text,
+        "first_pass_verification",
+        "result",
+    )
+    if is_missing_or_placeholder_yaml_value(first_pass_result):
+        findings.append(
+            Finding(
+                path,
+                (
+                    "included task outcome is missing "
+                    "first_pass_verification.result"
+                ),
+            )
+        )
 
     placeholder_fields = [
         field

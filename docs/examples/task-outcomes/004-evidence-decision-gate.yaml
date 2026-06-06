@@ -1,0 +1,76 @@
+schema_version: 1
+
+target:
+  repository: baskduf/harness-starter-kit
+  repository_ref: codex/evidence-decision-gate working tree based on 13fa9d822b1627243d91a50700c188ff4d32470d
+  stack_or_framework: Python and Markdown harness kit
+  date: 2026-06-06
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only subagent reviewer
+
+task:
+  id: evidence-decision-gate
+  run_id: harness-starter-kit-004
+  prompt_summary: Add a lightweight task outcome evidence decision gate for substantial harness work.
+  prompt_ref: current Codex thread request for branch, implementation, and no-findings subagent review loop
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - AGENTS.md
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/evaluation.md
+    - docs/examples/task-outcomes/**
+    - scripts/check_effectiveness_plan.py
+    - templates/generic/AGENTS.md
+    - templates/generic/scripts/check_effectiveness_plan.py
+    - tests/test_check_effectiveness_plan.py
+    - tests/test_repository_hygiene.py
+  known_failure_mode: Evidence guidance becomes mandatory paperwork, task outcome records lack comparable fields, or harness-maintenance outcomes contaminate product-task counts.
+
+harness_context:
+  harness_doctor_score: previously 98/100, not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_commit: 13fa9d822b1627243d91a50700c188ff4d32470d
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - templates/generic/AGENTS.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_check_effectiveness_plan
+    - python3 -m unittest tests.test_repository_hygiene
+    - python3 scripts/check_effectiveness_plan.py
+  relevant_memory_records:
+    - docs/decisions/0005-validate-dogfood-evidence-consistency.md
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/failures/0006-dogfood-evidence-consistency-gaps-were-not-checked.md
+    - docs/failures/0007-dogfood-first-pass-failures-lacked-memory-decision.md
+
+outcome:
+  files_changed:
+    - AGENTS.md
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/evaluation.md
+    - docs/examples/task-outcomes/004-evidence-decision-gate.yaml
+    - scripts/check_effectiveness_plan.py
+    - templates/generic/AGENTS.md
+    - templates/generic/scripts/check_effectiveness_plan.py
+    - tests/test_check_effectiveness_plan.py
+    - tests/test_repository_hygiene.py
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_check_effectiveness_plan && python3 -m unittest tests.test_repository_hygiene && python3 scripts/check_effectiveness_plan.py
+  first_pass_verification:
+    result: passed
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The change keeps task outcome recording trigger-based and keeps harness-maintenance work out of comparable product-task counts.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md; no failure record because no recurring failed check was fixed.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

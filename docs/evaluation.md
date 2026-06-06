@@ -85,6 +85,43 @@ and verification command.
    `include_in_effectiveness_report` as separate from inclusion in comparable
    product-task counts.
 
+## Operational Evidence Loop
+
+Use task outcome records as a lightweight operational loop, not as mandatory
+paperwork for every agent turn.
+
+Before the final report for substantial harness work, decide whether a task
+outcome record is needed. Record one when the work changes profiles, check
+scripts, command workflows, adoption workflow, dogfood evidence, effectiveness
+evidence, first-pass verification results, known failure paths, failed CI or
+harness checks, cross-environment mismatches, or high-risk integration behavior
+such as external APIs, secrets, permissions, command gates, or runtime
+verification.
+
+Skip task outcome records for trivial docs-only wording, typo, link-label, or
+formatting changes. The final report should still say whether evidence was
+recorded or skipped and why.
+
+When a recorded outcome shows a miss, convert the observation into the smallest
+durable harness improvement that fits:
+
+| Observation | Durable follow-up |
+| --- | --- |
+| Wrong-file edit | Directory rule, structure check, or clearer agent instruction |
+| Repeated known mistake | Failure record, stronger regression check, or cited existing failure note |
+| First-pass verification failure | Test, smoke check, gate-placement update, or validation-command fix |
+| Missing decision-memory review | Decision record, existing ADR citation, or tuned decision-memory rule |
+| Stale or duplicated guidance | `/harness refresh` candidate |
+| Live or fragile check confusion | Focused/manual gate-placement reason |
+| Command mismatch | Docs drift fix, command validator coverage, or normal-gate update |
+
+For harness-maintenance work, default
+`include_in_comparable_product_task_count` to false. Set it to true only for
+comparable product-task runs that are intended to be counted in an effectiveness
+report. Once several comparable outcomes exist, aggregate them with
+`docs/templates/effectiveness-report.md` and keep setup or maintenance runs
+separate from product-task counts.
+
 ## Minimum Adoption-Time Plan
 
 When adopting the harness into a new target repository, the agent should fill an

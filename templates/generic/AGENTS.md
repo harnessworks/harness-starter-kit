@@ -162,4 +162,15 @@ Before reporting completion:
   or explained why no decision record was needed for structural behavior,
   workflow, input contract or semantics, API/mock boundary, data model, state,
   fallback policy, displayed decision criteria, or UX changes.
+- Task outcome evidence: before the final report for substantial harness work,
+  decide whether a task outcome record is needed. Record one when the work
+  changes profiles, check scripts, command workflows, adoption workflow,
+  dogfood or effectiveness evidence, first-pass verification results, known
+  failure paths, failed CI or harness checks, cross-environment mismatches, or
+  high-risk integration behavior such as external APIs, secrets, permissions,
+  command gates, or runtime verification. Skip records for trivial docs-only
+  wording, typo, link-label, or formatting changes, and state the skip reason
+  in the final report. For harness-maintenance work, default
+  `include_in_comparable_product_task_count` to false unless it is a comparable
+  product-task run.
 - Summarize changed files, verification performed, and remaining risks.

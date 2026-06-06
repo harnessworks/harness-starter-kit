@@ -152,6 +152,33 @@ class RepositoryHygieneTests(unittest.TestCase):
         self.assertIn("not effectiveness proof", task_outcome)
         self.assertIn("docs/effectiveness/task-outcomes", task_outcome)
 
+    def test_operational_evidence_loop_is_wired_into_agent_guidance(self) -> None:
+        root_agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        agent_template = (REPO_ROOT / "templates" / "generic" / "AGENTS.md").read_text(
+            encoding="utf-8"
+        )
+        evaluation = (REPO_ROOT / "docs" / "evaluation.md").read_text(
+            encoding="utf-8"
+        )
+        checker = (
+            REPO_ROOT / "scripts" / "check_effectiveness_plan.py"
+        ).read_text(encoding="utf-8")
+
+        for text in (root_agents, agent_template, evaluation):
+            normalized = " ".join(text.split())
+            self.assertIn("task outcome", normalized)
+            self.assertIn("first-pass verification", normalized)
+            self.assertIn("known failure paths", normalized)
+            self.assertIn("cross-environment mismatches", normalized)
+            self.assertIn("trivial docs-only", normalized)
+            self.assertIn("include_in_comparable_product_task_count", normalized)
+
+        self.assertIn("## Operational Evidence Loop", evaluation)
+        self.assertIn("Wrong-file edit", evaluation)
+        self.assertIn("Durable follow-up", evaluation)
+        self.assertIn("REQUIRED_INCLUDED_TASK_OUTCOME_FIELDS", checker)
+        self.assertIn("first_pass_verification.result", checker)
+
     def test_failure_memory_is_required_for_fixed_harness_failures(self) -> None:
         root_agents = (REPO_ROOT / "AGENTS.md").read_text(encoding="utf-8")
         agent_template = (REPO_ROOT / "templates" / "generic" / "AGENTS.md").read_text(
