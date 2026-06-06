@@ -121,7 +121,8 @@ A `harness-erp` Spring Boot target was used as a backend dogfood case after the
 Spring profile and effectiveness tracking workflow were in place. The target
 exercised source tracking, local Maven verification, service-layer business
 rules, decision memory, failure memory, and task outcome aggregation across
-five comparable product tasks.
+five initial comparable product tasks and four follow-up comparable product
+tasks.
 
 Successful behaviors:
 
@@ -134,6 +135,14 @@ Successful behaviors:
   file boundaries
 - counted ERP-004 fixture-only edits outside the strict expected boundary as a
   wrong-file edit instead of hiding the boundary miss
+- tracked ERP-006 through ERP-009 as a separate follow-up benchmark group
+  instead of merging it into the initial aggregate
+- recorded all four follow-up product tasks as first-pass verification
+  successes with no wrong-file edits or repeated known mistakes observed
+- added a non-comparable MAINT-001 CI verification record and kept it out of
+  comparable product-task counts
+- verified the target GitHub Actions workflow runs the local harness gate with
+  Java 21 and Python
 - recorded the Spring Boot `4.0.6.RELEASE` coordinate failure in the target
   failure memory and linked it to `python scripts/check_harness.py` /
   `./mvnw test`
@@ -148,8 +157,9 @@ Finding:
 
 Limitations:
 
-- This dogfood is a harnessed-only initial backend benchmark. It does not prove
-  broader agent effectiveness or reduced human rework.
+- This dogfood is harnessed-only backend evidence split into initial and
+  follow-up groups. It does not prove broader agent effectiveness or reduced
+  human rework.
 - Prompt hashes are preserved in task outcome records, but prompt text was local
   to the dogfood environment rather than stored in this kit.
 

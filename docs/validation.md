@@ -97,7 +97,8 @@ claiming effectiveness improvement:
 - [TodayBus harnessed-only dogfood benchmark](examples/effectiveness-report-todaybus-dogfood.md)
   for a Next.js public-data target
 - [Harness ERP Spring/Maven dogfood benchmark](examples/effectiveness-report-harness-erp-dogfood.md)
-  for a Spring Boot backend target
+  for a Spring Boot backend target with initial and follow-up comparable task
+  groups plus non-comparable CI maintenance evidence
 
 Use the
 [dogfood evidence adoption checklist](checklists/dogfood-evidence-adoption.md)
