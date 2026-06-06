@@ -99,22 +99,58 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
         task_id: str = "T1",
         run_id: str = "T1-001",
         prompt_summary: str = "Add route",
+        prompt_ref: str = "local test prompt",
+        prompt_hash: str = "not recorded",
         start_ref: str = "abc123",
+        reviewer: str = "human reviewer",
+        expected_boundary: tuple[str, ...] = ("src/app.py", "tests/test_app.py"),
+        verification_command: str = "python -m unittest",
+        first_pass_result: str = "passed",
     ) -> None:
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
+        boundary_lines = tuple(f"    - {item}" for item in expected_boundary)
         path.write_text(
             "\n".join(
                 (
                     "schema_version: 1",
                     "",
+                    "target:",
+                    "  repository: example/repo",
+                    f"  repository_ref: {start_ref}",
+                    "  stack_or_framework: Python",
+                    "  date: 2026-06-06",
+                    "  agent_or_model: test-agent",
+                    f"  reviewer: {reviewer}",
+                    "",
                     "task:",
                     f"  id: {task_id}",
                     f"  run_id: {run_id}",
                     f"  prompt_summary: {prompt_summary}",
-                    f"  start_ref: {start_ref}",
+                    f"  prompt_ref: {prompt_ref}",
+                    f"  prompt_hash: {prompt_hash}",
+                    "  comparable_task_group: test-group",
+                    "  condition: harnessed-only",
+                    "  expected_boundary:",
+                    *boundary_lines,
+                    "  known_failure_mode: wrong-file edit",
+                    "",
+                    "outcome:",
+                    "  files_changed:",
+                    "    - src/app.py",
+                    "  wrong_file_edits: 0",
+                    "  repeated_known_mistake: false",
+                    f"  verification_command: {verification_command}",
+                    "  first_pass_verification:",
+                    f"    result: {first_pass_result}",
+                    "  drift_violations_detected: []",
+                    "  human_rework_minutes: 0",
+                    "  reverted_files: []",
+                    "  notes: test fixture outcome",
                     "",
                     "follow_up:",
+                    "  harness_change_needed: false",
+                    "  decision_or_failure_record: none",
                     f"  include_in_effectiveness_report: {include_in_report}",
                     f"  include_in_comparable_product_task_count: {include_in_count}",
                     "",
@@ -946,6 +982,98 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
 
             self.assertEqual("", result.stdout)
             self.assertEqual(0, result.returncode)
+
+    def test_included_task_outcome_requires_core_evidence_fields(self) -> None:
+        cases = (
+            ("missing-ref", {"start_ref": ""}, "repository_ref"),
+            ("missing-run", {"run_id": ""}, "run_id"),
+            ("missing-reviewer", {"reviewer": ""}, "reviewer"),
+            ("missing-boundary", {"expected_boundary": ()}, "expected_boundary"),
+            (
+                "empty-inline-boundary",
+                {"expected_boundary": ("[]",)},
+                "expected_boundary",
+            ),
+            (
+                "missing-verification",
+                {"verification_command": ""},
+                "verification_command",
+            ),
+        )
+        for name, kwargs, missing_field in cases:
+            with self.subTest(case=name):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        **kwargs,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "included task outcome is missing required evidence field(s)",
+                        result.stdout,
+                    )
+                    self.assertIn(missing_field, result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_included_task_outcome_rejects_empty_inline_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            path = root / "docs/effectiveness/task-outcomes/001-route.yaml"
+            self.write_task_outcome(root, str(path.relative_to(root)))
+            text = path.read_text(encoding="utf-8")
+            text = text.replace(
+                "  expected_boundary:\n    - src/app.py\n    - tests/test_app.py",
+                "  expected_boundary: []",
+            )
+            path.write_text(text, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "included task outcome is missing required evidence field(s)",
+                result.stdout,
+            )
+            self.assertIn("expected_boundary", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_included_task_outcome_requires_prompt_ref_or_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                prompt_ref="",
+                prompt_hash="not recorded",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "must include prompt_ref or prompt_hash",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_included_task_outcome_requires_first_pass_result(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                first_pass_result="",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "missing first_pass_verification.result",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
 
     def test_task_outcome_template_with_false_inclusion_passes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

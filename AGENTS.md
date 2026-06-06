@@ -107,6 +107,22 @@ Use `docs/adoption-workflow.md` for the full procedure. The short version:
   nested `harness-starter-kit/` clone should be removed, ignored, or kept
   intentionally as a submodule/reference.
 
+## Task Outcome Evidence
+
+Before the final report for substantial harness work, decide whether task
+outcome evidence is needed. Record a task outcome when the work changes
+profiles, check scripts, command workflows, adoption workflow, dogfood or
+effectiveness evidence, first-pass verification results, known failure paths,
+failed CI or harness checks, cross-environment mismatches, or high-risk
+integration behavior such as external APIs, secrets, permissions, command
+gates, or runtime verification.
+
+Skip task outcome records for trivial docs-only wording, typo, link-label, or
+formatting changes. In the final report, say either `Task outcome evidence:
+recorded in <path>` or `Task outcome evidence: skipped because <reason>`. For
+harness-maintenance work, default `include_in_comparable_product_task_count` to
+false unless it is a comparable product-task run.
+
 ## Validation
 
 Run these checks after changing installer behavior, templates, command
