@@ -83,6 +83,12 @@ class CheckFailureMemoryTests(unittest.TestCase):
             encoding="utf-8",
         )
 
+    def write_makefile(self, root: Path, text: str) -> None:
+        (root / "Makefile").write_text(text, encoding="utf-8")
+
+    def write_justfile(self, root: Path, text: str) -> None:
+        (root / "justfile").write_text(text, encoding="utf-8")
+
     def test_no_failure_records_passes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             result = self.run_checker(Path(tmp))
@@ -259,6 +265,10 @@ class CheckFailureMemoryTests(unittest.TestCase):
                             root,
                             {"test:planner": "node --test planner.test.mjs"},
                         )
+                    if "make check" in example:
+                        self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+                    if "just verify" in example:
+                        self.write_justfile(root, "verify:\n    python3 -m unittest\n")
                     self.write_record(
                         root,
                         VALID_RECORD.replace(
@@ -266,6 +276,42 @@ class CheckFailureMemoryTests(unittest.TestCase):
                             example,
                         ),
                         f"000{index}-example.md",
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
+    def test_make_and_just_commands_allow_terminal_punctuation(self) -> None:
+        examples = (
+            ("make check.", "Makefile", "check:\n\tpython3 -m unittest\n"),
+            ("just verify.", "justfile", "@verify:\n    python3 -m unittest\n"),
+            (
+                "just ci.",
+                "justfile",
+                "alias ci := verify\nverify:\n    python3 -m unittest\n",
+            ),
+            (
+                "just deploy.",
+                "justfile",
+                "deploy env='prod':\n    python3 -m unittest\n",
+            ),
+        )
+        for command, command_file, command_file_text in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    (root / command_file).write_text(
+                        command_file_text,
+                        encoding="utf-8",
+                    )
+                    self.write_record(
+                        root,
+                        VALID_RECORD.replace(
+                            "`tests/test_example.py` fails if the bug path returns.",
+                            command,
+                        ),
                     )
 
                     result = self.run_checker(root)
@@ -364,6 +410,110 @@ class CheckFailureMemoryTests(unittest.TestCase):
             self.assertIn(
                 "package-manager command references missing package.json script: "
                 "npm run test:planner",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_make_command_target_must_exist(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_makefile(root, "other:\n\tpython3 -m unittest\n")
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`make check` runs the regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "make command references missing Makefile target: make check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_make_command_allows_leading_variable_assignments(self) -> None:
+        examples = (
+            "make ENV=ci check",
+            "make PYTHON=python3.11 check",
+        )
+        for command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+                    self.write_record(
+                        root,
+                        VALID_RECORD.replace(
+                            "`tests/test_example.py` fails if the bug path returns.",
+                            f"`{command}` runs the regression suite.",
+                        ),
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
+    def test_make_variable_assignment_without_target_is_not_concrete(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`make ENV=ci` does not name a check target.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn("detection/prevention section must name", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_make_command_uses_gnu_makefile_precedence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "GNUmakefile").write_text(
+                "other:\n\tpython3 -m unittest\n",
+                encoding="utf-8",
+            )
+            self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`make check` runs the regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "make command references missing Makefile target: make check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_just_command_recipe_must_exist(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_justfile(root, "other:\n    python3 -m unittest\n")
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`just verify` runs the harness gate.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "just command references missing justfile recipe: just verify",
                 result.stdout,
             )
             self.assertEqual(1, result.returncode)

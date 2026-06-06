@@ -1,0 +1,78 @@
+schema_version: 1
+
+target:
+  repository: baskduf/harness-starter-kit
+  repository_ref: codex/make-just-command-validation working tree based on e98b6f40f134bcacbab0bb9cb12178f1e071bb63
+  stack_or_framework: Python and Markdown harness kit
+  date: 2026-06-06
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only subagent reviewer
+
+task:
+  id: make-just-command-validation
+  run_id: harness-starter-kit-005
+  prompt_summary: Extend command existence validation for root make targets and just recipes.
+  prompt_ref: current Codex thread request to proceed with option 1 and review findings until resolved
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - ROADMAP.md
+    - docs/decisions/0004-link-failure-memory-to-regression-checks.md
+    - docs/examples/task-outcomes/**
+    - scripts/check_effectiveness_plan.py
+    - scripts/check_failure_memory.py
+    - templates/generic/scripts/check_effectiveness_plan.py
+    - templates/generic/scripts/check_failure_memory.py
+    - tests/test_check_effectiveness_plan.py
+    - tests/test_check_failure_memory.py
+    - tests/test_repository_hygiene.py
+  known_failure_mode: Failure memory or task outcome evidence can cite fake make or just commands that look concrete but are not declared in the target repository.
+
+harness_context:
+  harness_doctor_score: previously 98/100, not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_commit: e98b6f40f134bcacbab0bb9cb12178f1e071bb63
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/decisions/0004-link-failure-memory-to-regression-checks.md
+    - ROADMAP.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_check_failure_memory tests.test_check_effectiveness_plan tests.test_repository_hygiene
+    - python3 -m py_compile scripts/check_failure_memory.py scripts/check_effectiveness_plan.py templates/generic/scripts/check_failure_memory.py templates/generic/scripts/check_effectiveness_plan.py
+    - python3 scripts/check_effectiveness_plan.py
+    - python3 scripts/check_failure_memory.py
+  relevant_memory_records:
+    - docs/decisions/0004-link-failure-memory-to-regression-checks.md
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/failures/0005-failure-memory-was-not-linked-to-regression-checks.md
+    - docs/failures/0007-dogfood-first-pass-failures-lacked-memory-decision.md
+
+outcome:
+  files_changed:
+    - ROADMAP.md
+    - docs/decisions/0004-link-failure-memory-to-regression-checks.md
+    - docs/examples/task-outcomes/005-make-just-command-validation.yaml
+    - scripts/check_effectiveness_plan.py
+    - scripts/check_failure_memory.py
+    - templates/generic/scripts/check_effectiveness_plan.py
+    - templates/generic/scripts/check_failure_memory.py
+    - tests/test_check_effectiveness_plan.py
+    - tests/test_check_failure_memory.py
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_check_failure_memory tests.test_check_effectiveness_plan tests.test_repository_hygiene && python3 -m py_compile scripts/check_failure_memory.py scripts/check_effectiveness_plan.py templates/generic/scripts/check_failure_memory.py templates/generic/scripts/check_effectiveness_plan.py
+  first_pass_verification:
+    result: failed_then_passed
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The validation is intentionally scoped to root Makefile and justfile variants; option-heavy or included-file task runners remain follow-up scope. Primary-agent review fixed a test assertion indentation issue; subagent review found and the final loop fixed task-outcome false-inclusion validation, GNU makefile precedence, make variable assignments including dotted values, just default-parameter parsing, and an inline-code backtick regex miss before final validation.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: docs/decisions/0004-link-failure-memory-to-regression-checks.md; no failure record because this closed a known validation gap rather than fixing a recurring failed check from this run.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

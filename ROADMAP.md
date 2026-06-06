@@ -106,9 +106,9 @@ guidance, Next.js App Router notes, failure-memory verification, decision-memory
 warnings, deterministic behavior gate placement, and trigger-based task outcome
 evidence. Useful next additions include:
 
-- command existence validation for `make`, `just`, Maven, Gradle, Go, and other
-  profile-relevant task runners referenced by failure-memory or effectiveness
-  records
+- command existence validation beyond package scripts, root `make` targets, and
+  root `just` recipes for Maven, Gradle, Go, and other profile-relevant task
+  runners referenced by failure-memory or effectiveness records
 - more fixture-backed examples for provider-specific request shape, response
   envelopes, redaction, zero-result behavior, and provider errors
 - clearer ADR and failure-record boundary examples for small changes so

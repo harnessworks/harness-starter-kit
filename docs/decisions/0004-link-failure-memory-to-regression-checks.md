@@ -78,17 +78,21 @@ post-push, or unknown.
   JavaScript package scripts and avoids passing a root command only because a
   nested workspace package has the same script, but it still does not prove that
   the script asserts the specific failure axis.
+- Root `make target` and `just recipe` checks are verified against checked-in
+  root Makefile variants and justfile variants. This closes the same
+  fake-command gap for common task-runner commands, but it still does not parse
+  included makefiles, option-heavy invocations such as `make -C app check`, or
+  prove that the target asserts the specific failure axis.
 - Other command-shaped checks are still recognized mostly by shape. The checker
-  does not yet verify that `make`, `just`, Python module commands, Gradle,
-  Maven, Go, Rust, .NET, or other task-runner commands exist in the target
-  configuration.
+  does not yet verify that Python module commands, Gradle, Maven, Go, Rust,
+  .NET, or other task-runner commands exist in the target configuration.
 - Monorepo and workspace-specific commands need explicit target adaptation when
   the intended command is not runnable from the repository root.
 - Detection-link validation is regex-based. It blocks known non-committal
   phrases, but future wording may require additional test cases.
-- Generic command coverage is still biased toward common JavaScript and Python
-  commands. Add explicit coverage before relying on this gate for Go, Rust,
-  Java, .NET, or Gradle-heavy targets.
+- Generic command coverage is still biased toward common JavaScript, Make,
+  Just, and Python-shaped commands. Add explicit coverage before relying on
+  this gate for Go, Rust, Java, .NET, or Gradle-heavy targets.
 - Target repositories with pre-existing non-kit `docs/failures/*.md` schemas
   may need adoption-specific adaptation instead of blindly applying the generic
   checker.

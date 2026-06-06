@@ -97,7 +97,11 @@ CONCRETE_CHECK_PATTERNS = (
     re.compile(r"\b(?:tests?|specs?|fixtures?|scripts?)/[^\s,.;)]+"),
     re.compile(r"`?\.github/workflows/[^\s,.;)`]+`?"),
     re.compile(r"\b(?:npm|pnpm|yarn|bun)\s+run\s+[\w:./-]+"),
-    re.compile(r"\b(?:make|just)\s+[\w:./-]+"),
+    re.compile(
+        r"\bmake(?:\s+[\w.-]+=[^\s,;)`\]}]+)*\s+(?!-)[\w:./-]+"
+        r"(?=$|[\s,.;)`\]}])"
+    ),
+    re.compile(r"\bjust\s+(?!-)[\w:./-]+"),
     re.compile(r"\bpython3?\s+(?:-m\s+[\w.:-]+|scripts?/[^\s,.;)]+)"),
     re.compile(r"\bpytest\s+(?:-[\w-]+|tests?/[^\s,.;)]+|[\w/.-]+)"),
     re.compile(r"\b(?:vitest|jest|ruff|mypy|eslint)\s+[\w/.:@-]+"),
@@ -116,6 +120,13 @@ PATH_REFERENCE_RE = re.compile(
 PACKAGE_SCRIPT_COMMAND_RE = re.compile(
     r"\b(?P<manager>npm|pnpm|yarn|bun)\s+run\s+(?P<script>[\w:./-]+)"
 )
+MAKE_COMMAND_RE = re.compile(
+    r"\bmake(?:\s+[\w.-]+=[^\s,;)`\]}]+)*\s+(?!-)(?P<target>[\w:./-]+)"
+    r"(?=$|[\s,.;)`\]}])"
+)
+JUST_COMMAND_RE = re.compile(r"\bjust\s+(?!-)(?P<recipe>[\w:./-]+)")
+MAKEFILE_NAMES = ("GNUmakefile", "makefile", "Makefile")
+JUSTFILE_NAMES = ("justfile", "Justfile", ".justfile")
 
 FAILURE_RECORD_RE = re.compile(
     r"`?(docs/failures/[^\s,;)`]+)`?",
@@ -429,6 +440,10 @@ def normalize_package_script(value: str) -> str:
     return value.rstrip(".,;)]}")
 
 
+def normalize_command_target(value: str) -> str:
+    return value.rstrip(".,;)]}")
+
+
 def root_package_scripts(root: Path) -> set[str]:
     package_json = root / "package.json"
     if not package_json.exists():
@@ -441,6 +456,71 @@ def root_package_scripts(root: Path) -> set[str]:
     if not isinstance(package_scripts, dict):
         return set()
     return {str(name) for name in package_scripts}
+
+
+def root_make_targets(root: Path) -> set[str]:
+    targets: set[str] = set()
+    path = next(
+        (root / name for name in MAKEFILE_NAMES if (root / name).exists()),
+        None,
+    )
+    if path is None:
+        return targets
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError):
+        return targets
+    for raw_line in lines:
+        if not raw_line or raw_line[:1].isspace():
+            continue
+        line = raw_line.split("#", 1)[0].rstrip()
+        if ":" not in line:
+            continue
+        target_part, rule_part = line.split(":", 1)
+        if not target_part.strip() or "=" in target_part:
+            continue
+        if rule_part.lstrip().startswith("="):
+            continue
+        for target in target_part.split():
+            if target and "%" not in target and not target.startswith("."):
+                targets.add(target)
+    return targets
+
+
+def root_just_recipes(root: Path) -> set[str]:
+    recipes: set[str] = set()
+    for name in JUSTFILE_NAMES:
+        path = root / name
+        if not path.exists():
+            continue
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for raw_line in lines:
+            if not raw_line or raw_line[:1].isspace():
+                continue
+            line = raw_line.split("#", 1)[0].rstrip()
+            alias_match = re.match(r"alias\s+(?P<name>[\w.-]+)\s*:=", line)
+            if alias_match is not None:
+                recipes.add(alias_match.group("name"))
+                continue
+            if ":" not in line:
+                continue
+            recipe_part, rule_part = line.split(":", 1)
+            if not recipe_part.strip():
+                continue
+            if rule_part.lstrip().startswith("="):
+                continue
+            recipe_part = recipe_part.strip()
+            while recipe_part.startswith("[") and "]" in recipe_part:
+                recipe_part = recipe_part.split("]", 1)[1].strip()
+            if not recipe_part:
+                continue
+            recipe = recipe_part.split()[0].lstrip("@")
+            if recipe and not recipe.startswith("["):
+                recipes.add(recipe)
+    return recipes
 
 
 def missing_package_script_commands(root: Path, value: str | None) -> list[str]:
@@ -461,6 +541,38 @@ def missing_package_script_commands(root: Path, value: str | None) -> list[str]:
         for manager, script in commands
         if script not in scripts
     ]
+
+
+def missing_make_commands(root: Path, value: str | None) -> list[str]:
+    if value is None:
+        return []
+    commands = sorted(
+        {
+            normalize_command_target(match.group("target"))
+            for match in MAKE_COMMAND_RE.finditer(value)
+        }
+    )
+    if not commands:
+        return []
+
+    targets = root_make_targets(root)
+    return [f"make {target}" for target in commands if target not in targets]
+
+
+def missing_just_commands(root: Path, value: str | None) -> list[str]:
+    if value is None:
+        return []
+    commands = sorted(
+        {
+            normalize_command_target(match.group("recipe"))
+            for match in JUST_COMMAND_RE.finditer(value)
+        }
+    )
+    if not commands:
+        return []
+
+    recipes = root_just_recipes(root)
+    return [f"just {recipe}" for recipe in commands if recipe not in recipes]
 
 
 def says_no_failure_record(value: str | None) -> bool:
@@ -626,6 +738,26 @@ def validate_adoption_report(root: Path, path: Path, text: str) -> list[Finding]
                         ),
                     )
                 )
+            for command in missing_make_commands(root, detection_value):
+                findings.append(
+                    Finding(
+                        path,
+                        (
+                            "failure-memory detection references missing "
+                            f"Makefile target: {command}"
+                        ),
+                    )
+                )
+            for command in missing_just_commands(root, detection_value):
+                findings.append(
+                    Finding(
+                        path,
+                        (
+                            "failure-memory detection references missing "
+                            f"justfile recipe: {command}"
+                        ),
+                    )
+                )
 
     return findings
 
@@ -646,7 +778,7 @@ def validate_effectiveness_report(path: Path, text: str) -> list[Finding]:
     return findings
 
 
-def validate_task_outcome(path: Path, text: str) -> list[Finding]:
+def validate_task_outcome(root: Path, path: Path, text: str) -> list[Finding]:
     report_include_value = yaml_field_value(text, "include_in_effectiveness_report")
     comparable_count_value = yaml_field_value(
         text, "include_in_comparable_product_task_count"
@@ -676,6 +808,22 @@ def validate_task_outcome(path: Path, text: str) -> list[Finding]:
                     "task outcome included in comparable product-task count must set "
                     "include_in_effectiveness_report to true"
                 ),
+            )
+        )
+
+    verification_command = yaml_field_value(text, "verification_command")
+    for command in missing_make_commands(root, verification_command):
+        findings.append(
+            Finding(
+                path,
+                f"task outcome verification references missing Makefile target: {command}",
+            )
+        )
+    for command in missing_just_commands(root, verification_command):
+        findings.append(
+            Finding(
+                path,
+                f"task outcome verification references missing justfile recipe: {command}",
             )
         )
 
@@ -790,7 +938,9 @@ def check_effectiveness_plan(root: Path, require_report: bool) -> int:
             findings.extend(validate_effectiveness_report(path, text))
 
     for path in iter_task_outcomes(root):
-        findings.extend(validate_task_outcome(path, path.read_text(encoding="utf-8")))
+        findings.extend(
+            validate_task_outcome(root, path, path.read_text(encoding="utf-8"))
+        )
 
     for finding in findings:
         print(f"{finding.path.relative_to(root)}: {finding.message}")

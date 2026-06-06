@@ -165,6 +165,12 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
             encoding="utf-8",
         )
 
+    def write_makefile(self, root: Path, text: str) -> None:
+        (root / "Makefile").write_text(text, encoding="utf-8")
+
+    def write_justfile(self, root: Path, text: str) -> None:
+        (root / "justfile").write_text(text, encoding="utf-8")
+
     def test_no_report_passes_unless_report_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -631,6 +637,195 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
             )
             self.assertEqual(1, result.returncode)
 
+    def test_recorded_failure_with_make_or_just_command_detection_passes(self) -> None:
+        examples = (
+            ("make check.", "Makefile", "check:\n\tpython3 -m unittest\n"),
+            ("just verify.", "justfile", "@verify:\n    python3 -m unittest\n"),
+            (
+                "just ci.",
+                "justfile",
+                "alias ci := verify\nverify:\n    python3 -m unittest\n",
+            ),
+            (
+                "just deploy.",
+                "justfile",
+                "deploy env='prod':\n    python3 -m unittest\n",
+            ),
+        )
+        for command, command_file, command_file_text in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    (root / command_file).write_text(
+                        command_file_text,
+                        encoding="utf-8",
+                    )
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: `{command}`",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
+    def test_recorded_failure_with_missing_make_target_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            self.write_makefile(root, "other:\n\tpython3 -m unittest\n")
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `make check`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "failure-memory detection references missing Makefile target: make check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_make_command_allows_leading_variable_assignments(
+        self,
+    ) -> None:
+        examples = (
+            "make ENV=ci check",
+            "make PYTHON=python3.11 check",
+        )
+        for command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: `{command}`.",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
+    def test_recorded_failure_make_variable_assignment_without_target_is_not_concrete(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `make ENV=ci`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "incomplete failure-memory detection link",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_make_command_uses_gnu_makefile_precedence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            (root / "GNUmakefile").write_text(
+                "other:\n\tpython3 -m unittest\n",
+                encoding="utf-8",
+            )
+            self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `make check`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "failure-memory detection references missing Makefile target: make check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_missing_just_recipe_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            self.write_justfile(root, "other:\n    python3 -m unittest\n")
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `just verify`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "failure-memory detection references missing justfile recipe: just verify",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
     def test_recorded_failure_requires_root_package_script(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -1071,6 +1266,93 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
 
             self.assertIn(
                 "missing first_pass_verification.result",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_included_task_outcome_make_or_just_verification_passes_when_defined(
+        self,
+    ) -> None:
+        examples = (
+            ("make check.", "Makefile", "check:\n\tpython3 -m unittest\n"),
+            ("just verify.", "justfile", "@verify:\n    python3 -m unittest\n"),
+            (
+                "just ci.",
+                "justfile",
+                "alias ci := verify\nverify:\n    python3 -m unittest\n",
+            ),
+            (
+                "just deploy.",
+                "justfile",
+                "deploy env='prod':\n    python3 -m unittest\n",
+            ),
+        )
+        for command, command_file, command_file_text in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    (root / command_file).write_text(
+                        command_file_text,
+                        encoding="utf-8",
+                    )
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        verification_command=command,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
+    def test_included_task_outcome_make_or_just_verification_must_exist(self) -> None:
+        examples = (
+            (
+                "make check",
+                "task outcome verification references missing Makefile target: make check",
+            ),
+            (
+                "make PYTHON=python3.11 missing",
+                "task outcome verification references missing Makefile target: make missing",
+            ),
+            (
+                "just verify",
+                "task outcome verification references missing justfile recipe: just verify",
+            ),
+        )
+        for command, expected_message in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        verification_command=command,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(expected_message, result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_false_inclusion_task_outcome_still_validates_make_verification(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                include_in_report="false",
+                include_in_count="false",
+                verification_command="make check",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "task outcome verification references missing Makefile target: make check",
                 result.stdout,
             )
             self.assertEqual(1, result.returncode)
