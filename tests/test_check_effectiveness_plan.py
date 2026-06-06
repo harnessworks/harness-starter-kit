@@ -90,6 +90,39 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("", encoding="utf-8")
 
+    def write_task_outcome(
+        self,
+        root: Path,
+        relative: str,
+        include_in_report: str = "true",
+        include_in_count: str = "true",
+        task_id: str = "T1",
+        run_id: str = "T1-001",
+        prompt_summary: str = "Add route",
+        start_ref: str = "abc123",
+    ) -> None:
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            "\n".join(
+                (
+                    "schema_version: 1",
+                    "",
+                    "task:",
+                    f"  id: {task_id}",
+                    f"  run_id: {run_id}",
+                    f"  prompt_summary: {prompt_summary}",
+                    f"  start_ref: {start_ref}",
+                    "",
+                    "follow_up:",
+                    f"  include_in_effectiveness_report: {include_in_report}",
+                    f"  include_in_comparable_product_task_count: {include_in_count}",
+                    "",
+                )
+            ),
+            encoding="utf-8",
+        )
+
     def write_package_json(self, root: Path, scripts: dict[str, str]) -> None:
         (root / "package.json").write_text(
             json.dumps({"scripts": scripts}),
@@ -781,6 +814,42 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
             self.assertEqual("", result.stdout)
             self.assertEqual(0, result.returncode)
 
+    def test_effectiveness_report_completion_contradiction_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "node-effectiveness-report.md").write_text(
+                COMPLETE_EFFECTIVENESS_REPORT
+                + "\nFive comparable product-task runs have been completed.\n"
+                + "\n- Confounders or limitations: no baseline and no completed "
+                "product-task records yet.\n"
+                + "- Harness changes to make next: record T1 through T5 task "
+                "outcomes as they run.\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "contradictory effectiveness-report completion language",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_no_completed_language_without_completion_claim_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "node-effectiveness-report.md").write_text(
+                COMPLETE_EFFECTIVENESS_REPORT
+                + "\n- Confounders or limitations: no completed product-task "
+                "records yet.\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertEqual("", result.stdout)
+            self.assertEqual(0, result.returncode)
+
     def test_effectiveness_report_with_todo_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -792,6 +861,146 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
             result = self.run_checker(root)
 
             self.assertIn("effectiveness report still contains TODO", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_task_outcome_template_with_true_inclusion_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/task-outcome-template.yaml",
+                task_id="unknown",
+                run_id="unknown",
+                prompt_summary="unknown",
+                start_ref="unknown",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn("task outcome template must not be included", result.stdout)
+            self.assertEqual(1, result.returncode)
+
+    def test_included_task_outcome_requires_comparable_count_flag(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                include_in_count="",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "must declare include_in_comparable_product_task_count",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_comparable_task_outcome_requires_report_inclusion_flag(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                include_in_report="",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "must set include_in_effectiveness_report to true",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_comparable_task_outcome_rejects_false_report_inclusion(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                include_in_report="false",
+                include_in_count="true",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "must set include_in_effectiveness_report to true",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_report_included_non_product_task_outcome_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-adoption-cleanup.yaml",
+                include_in_report="true",
+                include_in_count="false",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertEqual("", result.stdout)
+            self.assertEqual(0, result.returncode)
+
+    def test_task_outcome_template_with_false_inclusion_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/task-outcome-template.yaml",
+                include_in_report="false",
+                include_in_count="false",
+                task_id="unknown",
+                run_id="unknown",
+                prompt_summary="unknown",
+                start_ref="unknown",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertEqual("", result.stdout)
+            self.assertEqual(0, result.returncode)
+
+    def test_placeholder_task_outcome_with_true_inclusion_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-placeholder.yaml",
+                task_id="unknown",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "placeholder task outcome must not be included",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_todo_task_outcome_with_true_inclusion_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-todo.yaml",
+                task_id="TODO",
+                run_id="TODO",
+                prompt_summary="TODO",
+                start_ref="TODO",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "placeholder task outcome must not be included",
+                result.stdout,
+            )
             self.assertEqual(1, result.returncode)
 
 

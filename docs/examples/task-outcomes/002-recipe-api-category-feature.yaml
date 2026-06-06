@@ -70,3 +70,4 @@ follow_up:
   harness_change_needed: false
   decision_or_failure_record: docs/decisions/003-add-recipe-categories.md
   include_in_effectiveness_report: true
+  include_in_comparable_product_task_count: true

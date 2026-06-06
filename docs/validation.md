@@ -99,6 +99,10 @@ claiming effectiveness improvement:
 - [Harness ERP Spring/Maven dogfood benchmark](examples/effectiveness-report-harness-erp-dogfood.md)
   for a Spring Boot backend target
 
+Use the
+[dogfood evidence adoption checklist](checklists/dogfood-evidence-adoption.md)
+before adding another target as validation or effectiveness evidence.
+
 ## Example Reports
 
 Use these examples when checking whether a target adoption report is complete:

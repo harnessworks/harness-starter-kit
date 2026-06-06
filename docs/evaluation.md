@@ -111,3 +111,8 @@ cheaper to correct after the harness becomes part of the repository.
 - [Small harness outcome evidence report](examples/effectiveness-report-small-evidence.md) records three harnessed task outcomes and summarizes a narrow operational evidence pass without treating Harness Doctor scores or passing checks as proof of agent effectiveness.
 - [TodayBus harnessed-only dogfood benchmark](examples/effectiveness-report-todaybus-dogfood.md) records three product-task outcomes, excludes a non-comparable setup run, and treats the result as an initial benchmark rather than proof of effectiveness improvement.
 - [Harness ERP Spring/Maven dogfood benchmark](examples/effectiveness-report-harness-erp-dogfood.md) records five backend product-task outcomes, one honest boundary miss, prompt hashes, failure-memory linkage, and source tracking as initial benchmark evidence rather than proof of effectiveness improvement.
+
+Before adding a new dogfood report to this kit, use
+[`docs/checklists/dogfood-evidence-adoption.md`](checklists/dogfood-evidence-adoption.md)
+to verify source tracking, task outcomes, failure memory, gate placement, and
+claim boundaries.

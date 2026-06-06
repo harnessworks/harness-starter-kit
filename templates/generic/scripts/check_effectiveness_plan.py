@@ -54,6 +54,11 @@ FAILURE_MEMORY_FIELDS = (
     "Skipped",
 )
 
+TASK_OUTCOME_INCLUDE_FIELDS = (
+    "include_in_effectiveness_report",
+    "include_in_comparable_product_task_count",
+)
+
 NO_FAILURE_RECORD_PHRASES = (
     "no failure record",
     "no failure note",
@@ -154,6 +159,38 @@ EFFECTIVENESS_SECTIONS = (
 
 TODO_RE = re.compile(r"\bTODO\b", flags=re.IGNORECASE)
 SECTION_RE = re.compile(r"^##\s+", flags=re.MULTILINE)
+COMPLETED_OUTCOME_PATTERNS = (
+    re.compile(
+        r"\b(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"
+        r"comparable\s+product-task\s+runs?\s+have\s+been\s+completed\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:all\s+)?(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"
+        r"planned\s+product-task\s+records?\s+are\s+complete\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bproduct-task\s+outcomes\s+counted\s*\|\s*"
+        r"(?:not available|unknown|n/a)\s*\|\s*"
+        r"(?:[1-9]\d*|one|two|three|four|five|six|seven|eight|nine|ten)\b",
+        flags=re.IGNORECASE,
+    ),
+)
+STALE_NO_COMPLETED_PATTERNS = (
+    re.compile(
+        r"\bno\s+completed\s+(?:product[- ]task\s+)?records?\s+yet\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bno\s+completed\s+product[- ]task\s+runs?\s+yet\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\brecord\s+.{1,160}\btask\s+outcomes\s+as\s+they\s+run\b",
+        flags=re.IGNORECASE,
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -204,6 +241,18 @@ def iter_reports(root: Path) -> list[Path]:
     ]
 
 
+def iter_task_outcomes(root: Path) -> list[Path]:
+    paths: list[Path] = []
+    for pattern in ("*.yaml", "*.yml"):
+        for path in root.rglob(pattern):
+            relative = path.relative_to(root)
+            if is_ignored(relative) or is_template(relative):
+                continue
+            if "task-outcomes" in relative.parts or path.name.startswith("task-outcome"):
+                paths.append(path)
+    return sorted(set(paths))
+
+
 def field_value(text: str, field: str) -> str | None:
     pattern = re.compile(rf"^(\s*)-\s*{re.escape(field)}:\s*(.*)$")
     lines = text.splitlines()
@@ -248,6 +297,33 @@ def section_text(text: str, heading: str) -> str | None:
 
 def is_placeholder(value: str | None) -> bool:
     return value is None or not value or bool(TODO_RE.search(value))
+
+
+def yaml_field_value(text: str, field: str) -> str | None:
+    pattern = re.compile(
+        rf"^[ \t]*{re.escape(field)}:[ \t]*(.*?)[ \t]*$",
+        flags=re.MULTILINE,
+    )
+    match = pattern.search(text)
+    if match is None:
+        return None
+    return match.group(1).split("#", 1)[0].strip()
+
+
+def is_truthy_yaml_value(value: str | None) -> bool:
+    if value is None:
+        return False
+    normalized = value.strip().strip("\"'`").lower()
+    return normalized in {"true", "yes", "1"}
+
+
+def is_missing_or_placeholder_yaml_value(value: str | None) -> bool:
+    if value is None:
+        return True
+    normalized = value.strip().strip("\"'`").lower()
+    return not normalized or normalized in {"todo", "unknown"} or bool(
+        TODO_RE.search(value)
+    )
 
 
 def recorded_failure_exists(value: str | None) -> bool:
@@ -495,6 +571,85 @@ def validate_effectiveness_report(path: Path, text: str) -> list[Finding]:
             findings.append(Finding(path, f"missing required section: {section}"))
     if TODO_RE.search(text):
         findings.append(Finding(path, "effectiveness report still contains TODO"))
+    if any(pattern.search(text) for pattern in COMPLETED_OUTCOME_PATTERNS) and any(
+        pattern.search(text) for pattern in STALE_NO_COMPLETED_PATTERNS
+    ):
+        findings.append(
+            Finding(path, "contradictory effectiveness-report completion language")
+        )
+    return findings
+
+
+def validate_task_outcome(path: Path, text: str) -> list[Finding]:
+    report_include_value = yaml_field_value(text, "include_in_effectiveness_report")
+    comparable_count_value = yaml_field_value(
+        text, "include_in_comparable_product_task_count"
+    )
+    findings: list[Finding] = []
+
+    if is_truthy_yaml_value(report_include_value) and is_missing_or_placeholder_yaml_value(
+        comparable_count_value
+    ):
+        findings.append(
+            Finding(
+                path,
+                (
+                    "task outcome included in effectiveness report must declare "
+                    "include_in_comparable_product_task_count"
+                ),
+            )
+        )
+
+    if is_truthy_yaml_value(comparable_count_value) and not is_truthy_yaml_value(
+        report_include_value
+    ):
+        findings.append(
+            Finding(
+                path,
+                (
+                    "task outcome included in comparable product-task count must set "
+                    "include_in_effectiveness_report to true"
+                ),
+            )
+        )
+
+    truthy_include_fields = [
+        field
+        for field in TASK_OUTCOME_INCLUDE_FIELDS
+        if is_truthy_yaml_value(yaml_field_value(text, field))
+    ]
+    if not truthy_include_fields:
+        return findings
+
+    name = path.name.lower()
+    if "template" in name:
+        findings.append(
+            Finding(
+                path,
+                (
+                    "task outcome template must not be included in effectiveness "
+                    "or comparable product-task counts"
+                ),
+            )
+        )
+        return findings
+
+    placeholder_fields = [
+        field
+        for field in ("id", "run_id", "prompt_summary")
+        if is_missing_or_placeholder_yaml_value(yaml_field_value(text, field))
+    ]
+    if placeholder_fields:
+        findings.append(
+            Finding(
+                path,
+                (
+                    "placeholder task outcome must not be included in "
+                    "effectiveness or comparable product-task counts"
+                ),
+            )
+        )
+
     return findings
 
 
@@ -513,6 +668,9 @@ def check_effectiveness_plan(root: Path, require_report: bool) -> int:
             findings.extend(validate_adoption_report(root, path, text))
         if "effectiveness-report" in name:
             findings.extend(validate_effectiveness_report(path, text))
+
+    for path in iter_task_outcomes(root):
+        findings.extend(validate_task_outcome(path, path.read_text(encoding="utf-8")))
 
     for finding in findings:
         print(f"{finding.path.relative_to(root)}: {finding.message}")

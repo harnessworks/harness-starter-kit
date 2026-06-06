@@ -26,6 +26,7 @@ This map connects harness engineering concepts to files in a target repository.
 | External API work recipe | server-only API boundary, redaction, live/mock fallback, and smoke checks | `docs/checklists/external-api-work.md` |
 | Decision and failure memory guidance | examples for when to record ADRs, failure notes, domain docs, or final-report notes | `docs/checklists/decision-failure-memory.md` |
 | Verification script patterns | custom smoke checks and transparent `check:harness` composition | `docs/checklists/verification-scripts.md` |
+| Dogfood evidence adoption | source tracking, task outcome, failure memory, gate placement, and claim-boundary review | `docs/checklists/dogfood-evidence-adoption.md` |
 | Stack-specific rules | lint/type/pre-commit/framework snippets | `templates/profiles/*` |
 | Stack profile guide | available profiles and how to treat snippets as reference material | `docs/profiles.md` |
 | Profile absorption | checklist for turning profile snippets into project rules | `docs/checklists/profile-absorption.md` |

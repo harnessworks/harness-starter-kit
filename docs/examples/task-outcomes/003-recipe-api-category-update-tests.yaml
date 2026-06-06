@@ -56,3 +56,4 @@ follow_up:
   harness_change_needed: false
   decision_or_failure_record: Existing ADR updated.
   include_in_effectiveness_report: true
+  include_in_comparable_product_task_count: false
