@@ -23,8 +23,9 @@ This is the preferred order for near-term work. It is a sequencing guide, not a
 promise that every item belongs in the next release.
 
 1. Strengthen adoption evidence before adding larger features.
-2. Exercise the new task-outcome evidence decision gate on real substantial
-   harness work before adding a separate evidence command.
+2. Use the first task-outcome evidence pilots to decide what aggregate
+   maintenance evidence is worth reporting before adding a separate evidence
+   command.
 3. Improve governance commands, especially review and maintenance workflows.
 4. Use review findings to shape policy-driven enforcement.
 5. Add optional runtime or CI adapters only after the portable checks and
@@ -75,15 +76,19 @@ The pilot now has three harness-maintenance task outcome records:
 the loop can capture substantial checker and policy work, but they are still
 harness-maintenance observations, not product-task effectiveness proof.
 
-The remaining work is to prove that the loop is useful in practice before
-turning it into another command or a heavier reporting system.
+The remaining work is to prove that the loop is useful across different kinds
+of harness work before turning it into another command or a heavier reporting
+system. The third checker pilot included a real-project smoke pass with a Go
+module and Spring Framework Maven/Gradle projects; the next pilots should test
+whether the evidence shape still helps for less checker-shaped work.
 
 Near-term milestones:
 
-1. Continue applying the evidence decision gate until at least 3-5 substantial
-   harness changes have records or explicit skip reasons. The next useful
-   pilots should be a profile update, governance-command refinement, and
-   dogfood adoption or update rather than another checker-only change.
+1. Continue applying the evidence decision gate until at least five substantial
+   harness changes have records or explicit skip reasons. The lower bound of
+   three records is now met; the next useful pilots should be a profile update,
+   governance-command refinement, and dogfood adoption or update rather than
+   another checker-only change.
 2. For each substantial change, record a task outcome or state a skip reason in
    the final report. Keep trivial docs-only, typo, link-label, and formatting
    work out of task outcome records.
@@ -113,7 +118,8 @@ Recent additions cover external API checklists, provider-boundary fixture
 guidance, Next.js App Router notes, failure-memory verification, decision-memory
 warnings, deterministic behavior gate placement, trigger-based task outcome
 evidence, root `make`/`just` command-reference validation, and root
-Maven/Gradle/Go project-marker validation. Useful next additions include:
+Maven/Gradle/Go project-marker validation that was smoke-tested with temporary
+Go and Spring Framework Maven/Gradle projects. Useful next additions include:
 
 - command existence validation beyond package scripts, root `make` targets,
   root `just` recipes, and root Maven/Gradle/Go project markers for Rust, .NET,
