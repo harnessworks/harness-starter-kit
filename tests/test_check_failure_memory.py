@@ -89,6 +89,32 @@ class CheckFailureMemoryTests(unittest.TestCase):
     def write_justfile(self, root: Path, text: str) -> None:
         (root / "justfile").write_text(text, encoding="utf-8")
 
+    def write_maven_project(
+        self,
+        root: Path,
+        with_wrapper: bool = False,
+        wrapper_name: str = "mvnw",
+    ) -> None:
+        (root / "pom.xml").write_text(
+            "<project><modelVersion>4.0.0</modelVersion></project>\n",
+            encoding="utf-8",
+        )
+        if with_wrapper:
+            (root / wrapper_name).write_text("#!/bin/sh\n", encoding="utf-8")
+
+    def write_gradle_project(
+        self,
+        root: Path,
+        with_wrapper: bool = False,
+        wrapper_name: str = "gradlew",
+    ) -> None:
+        (root / "build.gradle").write_text("tasks.register('check')\n", encoding="utf-8")
+        if with_wrapper:
+            (root / wrapper_name).write_text("#!/bin/sh\n", encoding="utf-8")
+
+    def write_go_project(self, root: Path) -> None:
+        (root / "go.mod").write_text("module example.com/app\n", encoding="utf-8")
+
     def test_no_failure_records_passes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             result = self.run_checker(Path(tmp))
@@ -255,6 +281,13 @@ class CheckFailureMemoryTests(unittest.TestCase):
             "`make check` runs the regression suite.",
             "`just verify` runs the harness gate.",
             "`python -m unittest tests.test_provider_contract` covers the boundary.",
+            "`mvn test` runs the Maven regression suite.",
+            "`./mvnw verify` runs the Maven wrapper regression suite.",
+            "`.\\mvnw.cmd verify` runs the Windows Maven wrapper regression suite.",
+            "`gradle test` runs the Gradle regression suite.",
+            "`./gradlew check` runs the Gradle wrapper regression suite.",
+            "`.\\gradlew.bat check` runs the Windows Gradle wrapper regression suite.",
+            "`go test ./...` runs the Go regression suite.",
         )
         for index, example in enumerate(examples, start=1):
             with self.subTest(example=example):
@@ -269,6 +302,28 @@ class CheckFailureMemoryTests(unittest.TestCase):
                         self.write_makefile(root, "check:\n\tpython3 -m unittest\n")
                     if "just verify" in example:
                         self.write_justfile(root, "verify:\n    python3 -m unittest\n")
+                    if "`mvn test`" in example:
+                        self.write_maven_project(root)
+                    if "`./mvnw verify`" in example:
+                        self.write_maven_project(root, with_wrapper=True)
+                    if "`.\\mvnw.cmd verify`" in example:
+                        self.write_maven_project(
+                            root,
+                            with_wrapper=True,
+                            wrapper_name="mvnw.cmd",
+                        )
+                    if "`gradle test`" in example:
+                        self.write_gradle_project(root)
+                    if "`./gradlew check`" in example:
+                        self.write_gradle_project(root, with_wrapper=True)
+                    if "`.\\gradlew.bat check`" in example:
+                        self.write_gradle_project(
+                            root,
+                            with_wrapper=True,
+                            wrapper_name="gradlew.bat",
+                        )
+                    if "`go test ./...`" in example:
+                        self.write_go_project(root)
                     self.write_record(
                         root,
                         VALID_RECORD.replace(
@@ -338,6 +393,51 @@ class CheckFailureMemoryTests(unittest.TestCase):
 
             self.assertEqual("", result.stdout)
             self.assertEqual(0, result.returncode)
+
+    def test_maven_gradle_go_commands_allow_terminal_punctuation(self) -> None:
+        examples = (
+            ("mvn test.", "maven", False),
+            ("./mvnw verify.", "maven", True),
+            (".\\mvnw.cmd verify.", "maven-cmd", True),
+            ("gradle test.", "gradle", False),
+            ("./gradlew check.", "gradle", True),
+            (".\\gradlew.bat check.", "gradle-bat", True),
+            ("go test ./...", "go", False),
+        )
+        for command, project_type, with_wrapper in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    if project_type == "maven":
+                        self.write_maven_project(root, with_wrapper=with_wrapper)
+                    elif project_type == "maven-cmd":
+                        self.write_maven_project(
+                            root,
+                            with_wrapper=with_wrapper,
+                            wrapper_name="mvnw.cmd",
+                        )
+                    elif project_type == "gradle":
+                        self.write_gradle_project(root, with_wrapper=with_wrapper)
+                    elif project_type == "gradle-bat":
+                        self.write_gradle_project(
+                            root,
+                            with_wrapper=with_wrapper,
+                            wrapper_name="gradlew.bat",
+                        )
+                    else:
+                        self.write_go_project(root)
+                    self.write_record(
+                        root,
+                        VALID_RECORD.replace(
+                            "`tests/test_example.py` fails if the bug path returns.",
+                            command,
+                        ),
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
 
     def test_package_manager_run_script_managers_use_root_scripts(self) -> None:
         examples = (
@@ -514,6 +614,254 @@ class CheckFailureMemoryTests(unittest.TestCase):
 
             self.assertIn(
                 "just command references missing justfile recipe: just verify",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_maven_command_requires_pom(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`mvn test` runs the Maven regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "maven command references missing pom.xml: mvn test",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_maven_wrapper_command_requires_wrapper(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_maven_project(root)
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`./mvnw verify` runs the Maven wrapper regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "maven wrapper command references missing wrapper: ./mvnw verify",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_maven_wrapper_command_requires_matching_wrapper_flavor(self) -> None:
+        examples = (
+            ("./mvnw verify", "mvnw.cmd", "./mvnw verify"),
+            (".\\mvnw.cmd verify", "mvnw", ".\\mvnw.cmd verify"),
+        )
+        for command, existing_wrapper, expected_command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_maven_project(
+                        root,
+                        with_wrapper=True,
+                        wrapper_name=existing_wrapper,
+                    )
+                    self.write_record(
+                        root,
+                        VALID_RECORD.replace(
+                            "`tests/test_example.py` fails if the bug path returns.",
+                            f"`{command}` runs the Maven wrapper regression suite.",
+                        ),
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        (
+                            "maven wrapper command references missing wrapper: "
+                            f"{expected_command}"
+                        ),
+                        result.stdout,
+                    )
+                    self.assertEqual(1, result.returncode)
+
+    def test_gradle_command_requires_build_file(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`gradle test` runs the Gradle regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "gradle command references missing build file: gradle test",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_gradle_wrapper_command_requires_wrapper(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_gradle_project(root)
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`./gradlew check` runs the Gradle wrapper regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "gradle wrapper command references missing wrapper: ./gradlew check",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_gradle_wrapper_command_requires_matching_wrapper_flavor(self) -> None:
+        examples = (
+            ("./gradlew check", "gradlew.bat", "./gradlew check"),
+            (".\\gradlew.bat check", "gradlew", ".\\gradlew.bat check"),
+        )
+        for command, existing_wrapper, expected_command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_gradle_project(
+                        root,
+                        with_wrapper=True,
+                        wrapper_name=existing_wrapper,
+                    )
+                    self.write_record(
+                        root,
+                        VALID_RECORD.replace(
+                            "`tests/test_example.py` fails if the bug path returns.",
+                            f"`{command}` runs the Gradle wrapper regression suite.",
+                        ),
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        (
+                            "gradle wrapper command references missing wrapper: "
+                            f"{expected_command}"
+                        ),
+                        result.stdout,
+                    )
+                    self.assertEqual(1, result.returncode)
+
+    def test_go_command_requires_go_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`go test ./...` runs the Go regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "go command references missing go.mod: go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_capitalized_go_command_requires_go_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`Go test ./...` runs the Go regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "go command references missing go.mod: Go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_windows_subpath_wrappers_are_not_root_wrapper_commands(self) -> None:
+        examples = (
+            "tools\\mvnw.cmd verify",
+            "tools\\gradlew.bat check",
+        )
+        for command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_record(
+                        root,
+                        VALID_RECORD.replace(
+                            "`tests/test_example.py` fails if the bug path returns.",
+                            f"`{command}` is not a root wrapper command.",
+                        ),
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "detection/prevention section must name",
+                        result.stdout,
+                    )
+                    self.assertNotIn("wrapper command references", result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_go_command_does_not_count_vendor_only_source(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.touch_local_path(root, "vendor/example.com/lib/lib.go")
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`go test ./...` runs the Go regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "go command references missing go.mod: go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_go_command_does_not_count_source_only_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.touch_local_path(root, "cmd/app/main.go")
+            self.write_record(
+                root,
+                VALID_RECORD.replace(
+                    "`tests/test_example.py` fails if the bug path returns.",
+                    "`go test ./...` runs the Go regression suite.",
+                ),
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "go command references missing go.mod: go test ./...",
                 result.stdout,
             )
             self.assertEqual(1, result.returncode)

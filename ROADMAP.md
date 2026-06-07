@@ -68,10 +68,11 @@ The first step of the operational evidence loop is now in place: substantial
 harness work must decide whether task outcome evidence should be recorded, and
 included task outcome records are checked for comparable evidence fields.
 
-The pilot now has two harness-maintenance task outcome records:
+The pilot now has three harness-maintenance task outcome records:
 `004-evidence-decision-gate.yaml` and
-`005-make-just-command-validation.yaml`. Both are useful evidence that the loop
-can capture substantial checker and policy work, but they are still
+`005-make-just-command-validation.yaml`, and
+`006-maven-gradle-go-command-validation.yaml`. These are useful evidence that
+the loop can capture substantial checker and policy work, but they are still
 harness-maintenance observations, not product-task effectiveness proof.
 
 The remaining work is to prove that the loop is useful in practice before
@@ -111,12 +112,13 @@ framework-specific fixer.
 Recent additions cover external API checklists, provider-boundary fixture
 guidance, Next.js App Router notes, failure-memory verification, decision-memory
 warnings, deterministic behavior gate placement, trigger-based task outcome
-evidence, and root `make`/`just` command-reference validation. Useful next
-additions include:
+evidence, root `make`/`just` command-reference validation, and root
+Maven/Gradle/Go project-marker validation. Useful next additions include:
 
-- command existence validation beyond package scripts, root `make` targets, and
-  root `just` recipes for Maven, Gradle, Go, and other profile-relevant task
-  runners referenced by failure-memory or effectiveness records
+- command existence validation beyond package scripts, root `make` targets,
+  root `just` recipes, and root Maven/Gradle/Go project markers for Rust, .NET,
+  Python module commands, or other profile-relevant task runners referenced by
+  failure-memory or effectiveness records
 - more fixture-backed examples for provider-specific request shape, response
   envelopes, redaction, zero-result behavior, and provider errors
 - clearer ADR and failure-record boundary examples for small changes so

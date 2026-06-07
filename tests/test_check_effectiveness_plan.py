@@ -171,6 +171,32 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
     def write_justfile(self, root: Path, text: str) -> None:
         (root / "justfile").write_text(text, encoding="utf-8")
 
+    def write_maven_project(
+        self,
+        root: Path,
+        with_wrapper: bool = False,
+        wrapper_name: str = "mvnw",
+    ) -> None:
+        (root / "pom.xml").write_text(
+            "<project><modelVersion>4.0.0</modelVersion></project>\n",
+            encoding="utf-8",
+        )
+        if with_wrapper:
+            (root / wrapper_name).write_text("#!/bin/sh\n", encoding="utf-8")
+
+    def write_gradle_project(
+        self,
+        root: Path,
+        with_wrapper: bool = False,
+        wrapper_name: str = "gradlew",
+    ) -> None:
+        (root / "build.gradle").write_text("tasks.register('check')\n", encoding="utf-8")
+        if with_wrapper:
+            (root / wrapper_name).write_text("#!/bin/sh\n", encoding="utf-8")
+
+    def write_go_project(self, root: Path) -> None:
+        (root / "go.mod").write_text("module example.com/app\n", encoding="utf-8")
+
     def test_no_report_passes_unless_report_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -680,6 +706,58 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
                     self.assertEqual("", result.stdout)
                     self.assertEqual(0, result.returncode)
 
+    def test_recorded_failure_with_maven_gradle_go_detection_passes(self) -> None:
+        examples = (
+            ("mvn test.", "maven", False),
+            ("./mvnw verify.", "maven", True),
+            (".\\mvnw.cmd verify.", "maven-cmd", True),
+            ("gradle test.", "gradle", False),
+            ("./gradlew check.", "gradle", True),
+            (".\\gradlew.bat check.", "gradle-bat", True),
+            ("go test ./...", "go", False),
+        )
+        for command, project_type, with_wrapper in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    if project_type == "maven":
+                        self.write_maven_project(root, with_wrapper=with_wrapper)
+                    elif project_type == "maven-cmd":
+                        self.write_maven_project(
+                            root,
+                            with_wrapper=with_wrapper,
+                            wrapper_name="mvnw.cmd",
+                        )
+                    elif project_type == "gradle":
+                        self.write_gradle_project(root, with_wrapper=with_wrapper)
+                    elif project_type == "gradle-bat":
+                        self.write_gradle_project(
+                            root,
+                            with_wrapper=with_wrapper,
+                            wrapper_name="gradlew.bat",
+                        )
+                    else:
+                        self.write_go_project(root)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: `{command}`",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
     def test_recorded_failure_with_missing_make_target_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -706,6 +784,213 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
                 result.stdout,
             )
             self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_missing_maven_gradle_go_project_fails(self) -> None:
+        examples = (
+            (
+                "`mvn test`.",
+                "failure-memory detection maven command references missing pom.xml: mvn test",
+            ),
+            (
+                "`gradle test`.",
+                "failure-memory detection gradle command references missing build file: gradle test",
+            ),
+            (
+                "`go test ./...`.",
+                (
+                    "failure-memory detection go command references missing go.mod: "
+                    "go test ./..."
+                ),
+            ),
+        )
+        for command, expected_message in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: {command}",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(expected_message, result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_capitalized_go_command_requires_go_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_failure_record(root)
+            report = COMPLETE_ADOPTION_REPORT.replace(
+                "- Recorded: none; no recurring failure was fixed.",
+                "- Recorded: `docs/failures/0001-provider-casing.md`.",
+            ).replace(
+                "- Detection or prevention check: not applicable because no failure record was\n"
+                "  added.",
+                "- Detection or prevention check: `Go test ./...`.",
+            ).replace(
+                "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                "- Skipped: none; failure memory was recorded.",
+            )
+            (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "failure-memory detection go command references missing go.mod: Go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_windows_subpath_wrappers_are_not_root_commands(
+        self,
+    ) -> None:
+        examples = (
+            "tools\\mvnw.cmd verify",
+            "tools\\gradlew.bat check",
+        )
+        for command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: `{command}`.",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(
+                        "incomplete failure-memory detection link",
+                        result.stdout,
+                    )
+                    self.assertNotIn("wrapper command references", result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_missing_maven_or_gradle_wrapper_fails(self) -> None:
+        examples = (
+            (
+                "./mvnw verify",
+                "maven",
+                "failure-memory detection maven wrapper command references missing wrapper: ./mvnw verify",
+            ),
+            (
+                "./gradlew check",
+                "gradle",
+                "failure-memory detection gradle wrapper command references missing wrapper: ./gradlew check",
+            ),
+        )
+        for command, project_type, expected_message in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    if project_type == "maven":
+                        self.write_maven_project(root)
+                    else:
+                        self.write_gradle_project(root)
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: `{command}`.",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(expected_message, result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_recorded_failure_with_wrapper_flavor_mismatch_fails(self) -> None:
+        examples = (
+            (
+                "./mvnw verify",
+                "maven",
+                "mvnw.cmd",
+                "failure-memory detection maven wrapper command references missing wrapper: ./mvnw verify",
+            ),
+            (
+                ".\\mvnw.cmd verify",
+                "maven",
+                "mvnw",
+                "failure-memory detection maven wrapper command references missing wrapper: .\\mvnw.cmd verify",
+            ),
+            (
+                "./gradlew check",
+                "gradle",
+                "gradlew.bat",
+                "failure-memory detection gradle wrapper command references missing wrapper: ./gradlew check",
+            ),
+            (
+                ".\\gradlew.bat check",
+                "gradle",
+                "gradlew",
+                "failure-memory detection gradle wrapper command references missing wrapper: .\\gradlew.bat check",
+            ),
+        )
+        for command, project_type, existing_wrapper, expected_message in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_failure_record(root)
+                    if project_type == "maven":
+                        self.write_maven_project(
+                            root,
+                            with_wrapper=True,
+                            wrapper_name=existing_wrapper,
+                        )
+                    else:
+                        self.write_gradle_project(
+                            root,
+                            with_wrapper=True,
+                            wrapper_name=existing_wrapper,
+                        )
+                    report = COMPLETE_ADOPTION_REPORT.replace(
+                        "- Recorded: none; no recurring failure was fixed.",
+                        "- Recorded: `docs/failures/0001-provider-casing.md`.",
+                    ).replace(
+                        "- Detection or prevention check: not applicable because no failure record was\n"
+                        "  added.",
+                        f"- Detection or prevention check: `{command}`.",
+                    ).replace(
+                        "- Skipped: no user-visible runtime failure, high-risk bug path, failed check,\n"
+                        "  CI failure, repeated agent mistake, or cross-environment mismatch was fixed.",
+                        "- Skipped: none; failure memory was recorded.",
+                    )
+                    (root / "adoption-report.md").write_text(report, encoding="utf-8")
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(expected_message, result.stdout)
+                    self.assertEqual(1, result.returncode)
 
     def test_recorded_failure_make_command_allows_leading_variable_assignments(
         self,
@@ -1306,6 +1591,51 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
                     self.assertEqual("", result.stdout)
                     self.assertEqual(0, result.returncode)
 
+    def test_included_task_outcome_maven_gradle_go_verification_passes_when_defined(
+        self,
+    ) -> None:
+        examples = (
+            ("mvn test.", "maven", False),
+            ("./mvnw verify.", "maven", True),
+            (".\\mvnw.cmd verify.", "maven-cmd", True),
+            ("gradle test.", "gradle", False),
+            ("./gradlew check.", "gradle", True),
+            (".\\gradlew.bat check.", "gradle-bat", True),
+            ("go test ./...", "go", False),
+        )
+        for command, project_type, with_wrapper in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    if project_type == "maven":
+                        self.write_maven_project(root, with_wrapper=with_wrapper)
+                    elif project_type == "maven-cmd":
+                        self.write_maven_project(
+                            root,
+                            with_wrapper=with_wrapper,
+                            wrapper_name="mvnw.cmd",
+                        )
+                    elif project_type == "gradle":
+                        self.write_gradle_project(root, with_wrapper=with_wrapper)
+                    elif project_type == "gradle-bat":
+                        self.write_gradle_project(
+                            root,
+                            with_wrapper=with_wrapper,
+                            wrapper_name="gradlew.bat",
+                        )
+                    else:
+                        self.write_go_project(root)
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        verification_command=command,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
     def test_included_task_outcome_make_or_just_verification_must_exist(self) -> None:
         examples = (
             (
@@ -1335,6 +1665,184 @@ class CheckEffectivenessPlanTests(unittest.TestCase):
 
                     self.assertIn(expected_message, result.stdout)
                     self.assertEqual(1, result.returncode)
+
+    def test_included_task_outcome_maven_gradle_go_verification_must_exist(
+        self,
+    ) -> None:
+        examples = (
+            (
+                "mvn test",
+                "task outcome verification maven command references missing pom.xml: mvn test",
+            ),
+            (
+                "./mvnw verify",
+                "task outcome verification maven wrapper command references missing wrapper: ./mvnw verify",
+            ),
+            (
+                "gradle test",
+                "task outcome verification gradle command references missing build file: gradle test",
+            ),
+            (
+                "./gradlew check",
+                "task outcome verification gradle wrapper command references missing wrapper: ./gradlew check",
+            ),
+            (
+                "go test ./...",
+                (
+                    "task outcome verification go command references missing go.mod: "
+                    "go test ./..."
+                ),
+            ),
+        )
+        for command, expected_message in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        verification_command=command,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(expected_message, result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_task_outcome_capitalized_go_verification_requires_go_project(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                verification_command="Go test ./...",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "task outcome verification go command references missing go.mod: Go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_task_outcome_windows_subpath_wrappers_are_not_root_commands(
+        self,
+    ) -> None:
+        examples = (
+            "tools\\mvnw.cmd verify",
+            "tools\\gradlew.bat check",
+        )
+        for command in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        verification_command=command,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertEqual("", result.stdout)
+                    self.assertEqual(0, result.returncode)
+
+    def test_task_outcome_wrapper_flavor_mismatch_fails(self) -> None:
+        examples = (
+            (
+                "./mvnw verify",
+                "maven",
+                "mvnw.cmd",
+                "task outcome verification maven wrapper command references missing wrapper: ./mvnw verify",
+            ),
+            (
+                ".\\mvnw.cmd verify",
+                "maven",
+                "mvnw",
+                "task outcome verification maven wrapper command references missing wrapper: .\\mvnw.cmd verify",
+            ),
+            (
+                "./gradlew check",
+                "gradle",
+                "gradlew.bat",
+                "task outcome verification gradle wrapper command references missing wrapper: ./gradlew check",
+            ),
+            (
+                ".\\gradlew.bat check",
+                "gradle",
+                "gradlew",
+                "task outcome verification gradle wrapper command references missing wrapper: .\\gradlew.bat check",
+            ),
+        )
+        for command, project_type, existing_wrapper, expected_message in examples:
+            with self.subTest(command=command):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    if project_type == "maven":
+                        self.write_maven_project(
+                            root,
+                            with_wrapper=True,
+                            wrapper_name=existing_wrapper,
+                        )
+                    else:
+                        self.write_gradle_project(
+                            root,
+                            with_wrapper=True,
+                            wrapper_name=existing_wrapper,
+                        )
+                    self.write_task_outcome(
+                        root,
+                        "docs/effectiveness/task-outcomes/001-route.yaml",
+                        verification_command=command,
+                    )
+
+                    result = self.run_checker(root)
+
+                    self.assertIn(expected_message, result.stdout)
+                    self.assertEqual(1, result.returncode)
+
+    def test_task_outcome_go_verification_does_not_count_vendor_only_source(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.touch_local_path(root, "vendor/example.com/lib/lib.go")
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                verification_command="go test ./...",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "task outcome verification go command references missing go.mod: go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
+
+    def test_task_outcome_go_verification_does_not_count_source_only_project(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.touch_local_path(root, "cmd/app/main.go")
+            self.write_task_outcome(
+                root,
+                "docs/effectiveness/task-outcomes/001-route.yaml",
+                verification_command="go test ./...",
+            )
+
+            result = self.run_checker(root)
+
+            self.assertIn(
+                "task outcome verification go command references missing go.mod: go test ./...",
+                result.stdout,
+            )
+            self.assertEqual(1, result.returncode)
 
     def test_false_inclusion_task_outcome_still_validates_make_verification(
         self,

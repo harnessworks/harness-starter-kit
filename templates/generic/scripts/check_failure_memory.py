@@ -20,6 +20,22 @@ REQUIRED_SECTIONS = (
     "## Agent Guidance",
 )
 
+MAVEN_COMMAND_RE = re.compile(
+    r"(?<![\w./\\-])(?P<runner>(?:\./|\.\\)?mvnw(?:\.cmd)?|mvn)\s+"
+    r"(?P<args>[^`\n,;)\]}]+)",
+    flags=re.IGNORECASE,
+)
+GRADLE_COMMAND_RE = re.compile(
+    r"(?<![\w./\\-])(?P<runner>(?:\./|\.\\)?gradlew(?:\.bat)?|gradle)\s+"
+    r"(?P<args>[^`\n,;)\]}]+)",
+    flags=re.IGNORECASE,
+)
+GO_COMMAND_RE = re.compile(
+    r"(?<![\w./\\-])go\s+(?:build|fmt|generate|list|mod|run|test|vet)\b"
+    r"[^`\n,;)\]}]*",
+    flags=re.IGNORECASE,
+)
+
 CONCRETE_CHECK_PATTERNS = (
     re.compile(r"\b(?:tests?|specs?|fixtures?|scripts?)/[^\s,.;)]+"),
     re.compile(r"`?\.github/workflows/[^\s,.;)`]+`?"),
@@ -31,6 +47,9 @@ CONCRETE_CHECK_PATTERNS = (
     re.compile(r"\bjust\s+(?!-)[\w:./-]+"),
     re.compile(r"\bpython3?\s+(?:-m\s+[\w.:-]+|scripts?/[^\s,.;)]+)"),
     re.compile(r"\bpytest\s+(?:-[\w-]+|tests?/[^\s,.;)]+|[\w/.-]+)"),
+    MAVEN_COMMAND_RE,
+    GRADLE_COMMAND_RE,
+    GO_COMMAND_RE,
     re.compile(r"\b(?:vitest|jest|ruff|mypy|eslint)\s+[\w/.:@-]+"),
     re.compile(r"\blint rule\s+`?[\w@./]+[-:/][\w@./:-]+`?"),
     re.compile(r"\bci gate\s+`?\.github/workflows/[^\s,.;)`]+`?"),
@@ -54,6 +73,14 @@ MAKE_COMMAND_RE = re.compile(
 JUST_COMMAND_RE = re.compile(r"\bjust\s+(?!-)(?P<recipe>[\w:./-]+)")
 MAKEFILE_NAMES = ("GNUmakefile", "makefile", "Makefile")
 JUSTFILE_NAMES = ("justfile", "Justfile", ".justfile")
+MAVEN_WRAPPER_NAMES = ("mvnw", "mvnw.cmd")
+GRADLE_BUILD_FILES = (
+    "settings.gradle",
+    "settings.gradle.kts",
+    "build.gradle",
+    "build.gradle.kts",
+)
+GRADLE_WRAPPER_NAMES = ("gradlew", "gradlew.bat")
 
 REJECTED_PHRASES = (
     "no test has been added",
@@ -162,6 +189,26 @@ def normalize_package_script(value: str) -> str:
 
 def normalize_command_target(value: str) -> str:
     return value.rstrip(".,;)]}")
+
+
+def normalize_command_reference(value: str) -> str:
+    command = value.strip().strip("`")
+    while command.endswith((";", ",", ")", "]", "}")):
+        command = command[:-1].rstrip()
+    if command.endswith(".") and not command.endswith("..."):
+        command = command[:-1].rstrip()
+    return command
+
+
+def normalized_runner(value: str) -> str:
+    runner = value.strip().lower().replace("\\", "/")
+    if runner.startswith("./"):
+        runner = runner[2:]
+    return runner
+
+
+def root_has_go_project(root: Path) -> bool:
+    return (root / "go.mod").exists()
 
 
 def root_package_scripts(root: Path) -> set[str]:
@@ -289,6 +336,50 @@ def missing_just_commands(root: Path, section: str) -> list[str]:
     return [f"just {recipe}" for recipe in commands if recipe not in recipes]
 
 
+def missing_maven_commands(root: Path, section: str) -> list[str]:
+    findings: list[str] = []
+    has_pom = (root / "pom.xml").exists()
+
+    for match in MAVEN_COMMAND_RE.finditer(section):
+        command = normalize_command_reference(match.group(0))
+        runner = normalized_runner(match.group("runner"))
+        if runner in MAVEN_WRAPPER_NAMES and not (root / runner).exists():
+            findings.append(f"maven wrapper command references missing wrapper: {command}")
+        if not has_pom:
+            findings.append(f"maven command references missing pom.xml: {command}")
+
+    return sorted(set(findings))
+
+
+def missing_gradle_commands(root: Path, section: str) -> list[str]:
+    findings: list[str] = []
+    has_build_file = any((root / name).exists() for name in GRADLE_BUILD_FILES)
+
+    for match in GRADLE_COMMAND_RE.finditer(section):
+        command = normalize_command_reference(match.group(0))
+        runner = normalized_runner(match.group("runner"))
+        if runner in GRADLE_WRAPPER_NAMES and not (root / runner).exists():
+            findings.append(f"gradle wrapper command references missing wrapper: {command}")
+        if not has_build_file:
+            findings.append(f"gradle command references missing build file: {command}")
+
+    return sorted(set(findings))
+
+
+def missing_go_commands(root: Path, section: str) -> list[str]:
+    if root_has_go_project(root):
+        return []
+    return sorted(
+        {
+            (
+                "go command references missing go.mod: "
+                f"{normalize_command_reference(match.group(0))}"
+            )
+            for match in GO_COMMAND_RE.finditer(section)
+        }
+    )
+
+
 def validate_record(root: Path, path: Path) -> list[Finding]:
     text = path.read_text(encoding="utf-8")
     findings: list[Finding] = []
@@ -361,6 +452,12 @@ def validate_record(root: Path, path: Path) -> list[Finding]:
                 f"just command references missing justfile recipe: {command}",
             )
         )
+    for message in missing_maven_commands(root, detection_section):
+        findings.append(Finding(path, message))
+    for message in missing_gradle_commands(root, detection_section):
+        findings.append(Finding(path, message))
+    for message in missing_go_commands(root, detection_section):
+        findings.append(Finding(path, message))
 
     return findings
 
