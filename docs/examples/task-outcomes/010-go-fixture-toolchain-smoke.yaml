@@ -21,6 +21,7 @@ task:
     - tests/fixtures/go-basic/calculator_test.go
     - tests/fixtures/go-basic/README.md
     - tests/test_smoke_fixtures.py
+    - docs/failures/0008-go-profile-fixture-did-not-exercise-go-toolchain.md
     - CHANGELOG.md
     - docs/examples/task-outcomes/010-go-fixture-toolchain-smoke.yaml
   known_failure_mode: The go-basic fixture had no .go source, so the Go profile check_harness.py was never exercised. Running it against the source-less fixture actually failed at `go vet ./...` (exit 1, no packages to vet), leaving the Go toolchain path unverified.
@@ -49,6 +50,7 @@ outcome:
     - tests/fixtures/go-basic/calculator_test.go
     - tests/fixtures/go-basic/README.md
     - tests/test_smoke_fixtures.py
+    - docs/failures/0008-go-profile-fixture-did-not-exercise-go-toolchain.md
     - CHANGELOG.md
     - docs/examples/task-outcomes/010-go-fixture-toolchain-smoke.yaml
   wrong_file_edits: 0
@@ -63,6 +65,6 @@ outcome:
 
 follow_up:
   harness_change_needed: false
-  decision_or_failure_record: no new decision or failure record; this implements the Go-only fix scoped in issue #41. Other source-less fixtures (android, nextjs, react, vue) remain a separate follow-up.
+  decision_or_failure_record: docs/failures/0008-go-profile-fixture-did-not-exercise-go-toolchain.md records the failed Go check path and names the new smoke test as its detection check. Other source-less fixtures (android, nextjs, react, vue) remain a separate follow-up.
   include_in_effectiveness_report: false
   include_in_comparable_product_task_count: false
