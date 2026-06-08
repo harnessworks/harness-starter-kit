@@ -39,6 +39,7 @@ class FixtureSmokeTests(unittest.TestCase):
             ),
         ),
         "go-basic": ("go", ("check_harness.py", "gitignore.harness.txt")),
+        "rust-basic": ("rust", ("check_harness.py", "gitignore.harness.txt")),
         "spring-basic": ("spring", ("check_harness.py", "gitignore.harness.txt")),
         "android-basic": ("android", ("check_harness.py", "gitignore.harness.txt")),
         "vue-basic": (

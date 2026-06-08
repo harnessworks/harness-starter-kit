@@ -1,0 +1,12 @@
+# Rust build outputs
+/target/
+
+# Cargo.lock: commit it for binaries and applications. Uncomment the next line
+# only if the target project is a library that intentionally omits Cargo.lock.
+# Cargo.lock
+
+# Debug symbols
+*.pdb
+
+# Harness kit reference clone
+harness-starter-kit/
