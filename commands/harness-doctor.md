@@ -20,11 +20,24 @@ or mistake reduction.
 
 ## Scope
 
-Harness Doctor scores five baseline evidence categories. It does not score the
-entire six-part model in `docs/theory/harness-engineering.md`: task outcome
-evidence, agent effectiveness, `.harness/source.json`, `/harness update`,
-`/harness refresh`, and other governance maturity signals are non-scored manual
-review items.
+Harness Doctor scores the six-part repository harness model in
+`docs/theory/harness-engineering.md`:
+
+```text
+Harness = Instructions + Constraints + Feedback + Memory + Evaluation + Governance
+```
+
+The score is a harness health and coupling diagnostic. It checks durable
+repository evidence for the six elements and reports broken links between
+rules, checks, memory, evaluation, and governance. It does not prove agent
+effectiveness or mistake reduction.
+
+Doctor may report task outcome records and effectiveness reports as evidence
+that the Evaluation element exists. It must not count those records as proof
+that agents improved unless the report explicitly includes comparable outcome
+evidence. Runtime-only execution sandboxes and tool protocols are outside the
+score unless their assumptions are visible in repository files, commands, CI, or
+approval rules.
 
 Use this principle when judging the repository:
 
@@ -51,8 +64,8 @@ Use this principle when judging the repository:
    Treat this script output as objective baseline evidence only. You must still
    review content quality and enforceability yourself.
 
-6. Score the repository across the five categories below.
-7. Review non-scored evaluation and governance signals when present.
+6. Score the repository across the six elements below.
+7. Review coupling findings between elements.
 8. Produce the required report format.
 
 ## Scoring Rules
@@ -66,19 +79,26 @@ Be strict.
 - Partial credit is allowed only when the durable artifact is present but weak.
 - If you cannot find evidence for an item, give 0 for that item.
 - If a check exists but is not documented or wired into a normal workflow, count
-  it only for the item it actually satisfies.
+  the script as constraint evidence but report the missing feedback binding.
+- If a workflow runs a check whose rule, local script, or purpose is unclear,
+  report it as a possible orphan feedback signal.
 
 Use the detailed rubric in `docs/scoring/harness-score-rubric.md`.
 
-## Categories
+## Elements
 
 Total score: 100 points.
 
-- Agent Instructions: 20
-- Feedback Loops: 20
-- Durable Memory: 20
-- Structural Safety: 20
-- Adoption Clarity: 20
+- Instructions
+- Constraints
+- Feedback
+- Memory
+- Evaluation
+- Governance
+
+Each element is scored on repository-visible health signals. Proven
+effectiveness is shown as unmeasured unless durable task outcome or
+effectiveness evidence exists; it is not part of the default score.
 
 ## Required Report Format
 
@@ -91,12 +111,16 @@ Grade: <grade>
 Verdict:
 <one short paragraph explaining what the score means>
 
-Breakdown:
-- Agent Instructions: <points>/20
-- Feedback Loops: <points>/20
-- Durable Memory: <points>/20
-- Structural Safety: <points>/20
-- Adoption Clarity: <points>/20
+Element Breakdown:
+- Instructions: <points>/100 | Stated <status> · Routed <status> · Proven <status>
+- Constraints: <points>/100 | Stated <status> · Enforced <status> · Proven <status>
+- Feedback: <points>/100 | Exists <status> · Coverage <status> · Proven <status>
+- Memory: <points>/100 | Recorded <status> · Operationalized <status> · Proven <status>
+- Evaluation: <points>/100 | Exists <status> · Coverage <status> · Proven <status>
+- Governance: <points>/100 | Exists <status> · Coverage <status> · Proven <status>
+
+Coupling Findings:
+- <severity> <finding type>: <evidence and review question>
 
 Evidence:
 - <durable evidence found in the repository>
@@ -104,8 +128,8 @@ Evidence:
 - <missing or weak evidence that affected the score>
 
 Non-Scored Manual Review:
-- Evaluation evidence: <task outcomes, effectiveness reports, or none found>
-- Governance evidence: <source tracking, update/refresh workflow evidence, or none found>
+- Proven effectiveness: <task outcomes, effectiveness reports, or unmeasured>
+- Runtime execution/tooling: <repo-visible assumptions only, or out of scope>
 
 Top Risks:
 1. <highest-impact risk>

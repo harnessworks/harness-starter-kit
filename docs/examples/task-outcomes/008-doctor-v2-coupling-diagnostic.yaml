@@ -1,0 +1,79 @@
+schema_version: 1
+
+target:
+  repository: baskduf/harness-starter-kit
+  repository_ref: main working tree based on 52a20487707d50d24807a6f5063c9a982fee3119
+  stack_or_framework: Python and Markdown harness kit
+  date: 2026-06-08
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus requested sub-agent perspective
+
+task:
+  id: doctor-v2-coupling-diagnostic
+  run_id: harness-starter-kit-008
+  prompt_summary: Plan and implement Doctor v2, then review from primary and sub-agent perspectives until no findings remain.
+  prompt_ref: current Codex thread objective for Doctor v2 implementation and no-findings review loop
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - ROADMAP.md
+    - commands/harness-doctor.md
+    - docs/component-map.md
+    - docs/decisions/0007-harness-doctor-six-element-coupling-diagnostic.md
+    - docs/examples/harness-doctor-report.md
+    - docs/examples/task-outcomes/008-doctor-v2-coupling-diagnostic.yaml
+    - docs/scoring/harness-score-rubric.md
+    - docs/theory/harness-engineering.md
+    - scripts/harness_doctor.py
+    - tests/test_harness_doctor.py
+    - tests/test_repository_hygiene.py
+  known_failure_mode: Harness Doctor stays as a five-category baseline file scan and misses broken loops between constraints, feedback, memory, evaluation, and governance.
+
+harness_context:
+  harness_doctor_score: Doctor v2 reports 100/100 on this working tree, not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_commit: 52a20487707d50d24807a6f5063c9a982fee3119
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - commands/harness-doctor.md
+    - docs/theory/harness-engineering.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_harness_doctor
+    - python3 -m unittest tests.test_repository_hygiene
+    - python3 -m unittest discover -s tests
+    - python3 scripts/harness_doctor.py --target .
+  relevant_memory_records:
+    - docs/decisions/0007-harness-doctor-six-element-coupling-diagnostic.md
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+
+outcome:
+  files_changed:
+    - ROADMAP.md
+    - commands/harness-doctor.md
+    - docs/component-map.md
+    - docs/decisions/0007-harness-doctor-six-element-coupling-diagnostic.md
+    - docs/examples/harness-doctor-report.md
+    - docs/examples/task-outcomes/008-doctor-v2-coupling-diagnostic.yaml
+    - docs/scoring/harness-score-rubric.md
+    - docs/theory/harness-engineering.md
+    - scripts/harness_doctor.py
+    - tests/test_harness_doctor.py
+    - tests/test_repository_hygiene.py
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: failed_then_passed
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: Focused Doctor tests first failed because assertions still expected the old five-category output and because the initial detection-link heuristic did not recognize tests/test_*.py wording in an existing failure note. Sub-agent review then found that non-comparable task outcomes and illustrative effectiveness reports could suppress Unevaluated Memory, generic rubric/example mentions could count as feedback binding, unbound check scripts could inflate Feedback, Orphan Feedback detection was too narrow, and Proven status sounded proof-like. The implementation now keeps Proven unmeasured, separates included task outcomes and local effectiveness reports from maintenance/example evidence, narrows binding sources, prevents unbound scripts from counting as Feedback, reports unknown checks run without documented purpose, fixes the weak example label, and adds focused regression tests.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: docs/decisions/0007-harness-doctor-six-element-coupling-diagnostic.md; no new failure record because the first-pass misses were implementation/test-contract adjustments from this run, not a recurring failed harness check after the new ADR.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

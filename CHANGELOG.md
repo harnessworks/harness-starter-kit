@@ -10,6 +10,38 @@ Notable project changes should be recorded here before release tags are cut.
   coverage, and README/profile documentation so Rust crate and Cargo workspace
   targets have a conservative local verification path.
 
+## v0.1.10 - 2026-06-08
+
+Patch release for Harness Doctor v2. This release turns Doctor from a flat
+baseline scan into a six-element repository health and coupling diagnostic
+while preserving the boundary between harness readiness and agent
+effectiveness.
+
+### Added
+
+- Harness Doctor v2 scoring across Instructions, Constraints, Feedback, Memory,
+  Evaluation, and Governance.
+- First-class coupling findings for orphan constraints, orphan feedback,
+  unoperationalized memory, unevaluated memory, ungoverned change types, and
+  promotion gaps.
+- Optional Doctor gates for minimum score and critical coupling findings,
+  disabled by default.
+- Decision memory for the Doctor v2 model and task outcome evidence for the
+  implementation and review loop.
+
+### Changed
+
+- Update `/harness doctor`, the scoring rubric, example reports, component map,
+  theory docs, and roadmap guidance to describe the six-element diagnostic.
+- Keep Proven/effectiveness signals unmeasured in Doctor output unless durable
+  outcome evidence supports a claim.
+- Tighten feedback-binding heuristics so generic documentation mentions do not
+  count as execution wiring, and unbound check scripts do not inflate Feedback
+  health.
+- Expand Doctor regression tests for coupling findings, optional gates,
+  non-comparable outcome evidence, illustrative effectiveness reports, and
+  feedback-binding edge cases.
+
 ## v0.1.9 - 2026-06-06
 
 Patch release for operational evidence tracking, Go profile coverage, and

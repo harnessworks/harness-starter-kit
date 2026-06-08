@@ -16,12 +16,12 @@ This map connects harness engineering concepts to files in a target repository.
 | Effectiveness plan check | `scripts/check_effectiveness_plan.py` | `templates/generic/scripts/check_effectiveness_plan.py` |
 | Failure-memory check | `scripts/check_failure_memory.py` | `templates/generic/scripts/check_failure_memory.py` |
 | Decision-memory diff warning | `scripts/check_decision_memory.py`, `.harness/decision-memory-rules.json` | `templates/generic/scripts/check_decision_memory.py`, `templates/generic/.harness/decision-memory-rules.json` |
-| Harness readiness diagnostic | `/harness doctor` report | `commands/harness-doctor.md`, `docs/scoring/harness-score-rubric.md` |
+| Harness readiness diagnostic | six-element `/harness doctor` report with coupling findings | `commands/harness-doctor.md`, `docs/scoring/harness-score-rubric.md` |
 | Harness source tracking | `.harness/source.json` | documented in `commands/harness-update.md` |
 | Harness update workflow | `/harness update` report | `commands/harness-update.md` |
 | Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
 | Harness change-set review | `/harness review` or `/harness review sub-agent` report | `commands/harness-review.md`, `docs/templates/harness-review-report.md` |
-| Baseline harness score scan | preliminary file and directory scan | `scripts/harness_doctor.py` |
+| Baseline harness score scan | six-element repository health and coupling scan | `scripts/harness_doctor.py` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
 | External API work recipe | server-only API boundary, redaction, live/mock fallback, and smoke checks | `docs/checklists/external-api-work.md` |
 | Decision and failure memory guidance | examples for when to record ADRs, failure notes, domain docs, or final-report notes | `docs/checklists/decision-failure-memory.md` |

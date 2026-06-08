@@ -10,7 +10,7 @@ target:
 
 task:
   id: rust-profile-fixture-and-cargo-smoke
-  run_id: harness-starter-kit-008
+  run_id: harness-starter-kit-009
   prompt_summary: Address PR #39 review for the Rust profile by making the rust-basic fixture a real Cargo target, adding a cargo-path smoke check, and recording task outcome evidence.
   prompt_ref: PR #39 review comments by baskduf requesting changes (CHANGES_REQUESTED) on feat/rust-profile
   prompt_hash: not recorded
@@ -21,7 +21,7 @@ task:
     - tests/fixtures/rust-basic/.gitignore
     - tests/fixtures/rust-basic/README.md
     - tests/test_smoke_fixtures.py
-    - docs/examples/task-outcomes/008-rust-profile-fixture-and-cargo-smoke.yaml
+    - docs/examples/task-outcomes/009-rust-profile-fixture-and-cargo-smoke.yaml
   known_failure_mode: A new stack profile adds cargo build as its check path, but its fixture is not a buildable Cargo crate and no smoke test exercises the profile check_harness.py, so the real toolchain path stays unverified.
 
 harness_context:
@@ -48,7 +48,7 @@ outcome:
     - tests/fixtures/rust-basic/.gitignore
     - tests/fixtures/rust-basic/README.md
     - tests/test_smoke_fixtures.py
-    - docs/examples/task-outcomes/008-rust-profile-fixture-and-cargo-smoke.yaml
+    - docs/examples/task-outcomes/009-rust-profile-fixture-and-cargo-smoke.yaml
   wrong_file_edits: 0
   repeated_known_mistake: false
   verification_command: python3 -m unittest tests.test_smoke_fixtures tests.test_apply_harness && python3 scripts/check_docs_drift.py && python3 scripts/check_effectiveness_plan.py
