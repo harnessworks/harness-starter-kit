@@ -22,15 +22,17 @@ repository as the source of truth.
 This is the preferred order for near-term work. It is a sequencing guide, not a
 promise that every item belongs in the next release.
 
-1. Strengthen adoption evidence before adding larger features.
-2. Use the first task-outcome evidence pilots to decide what aggregate
+1. Finish the Harness Doctor v2 coupling-diagnostic transition before adding
+   heavier evidence automation.
+2. Strengthen adoption evidence before adding larger features.
+3. Use the first task-outcome evidence pilots to decide what aggregate
    maintenance evidence is worth reporting before adding a separate evidence
    command.
-3. Improve governance commands, especially review and maintenance workflows.
-4. Use review findings to shape policy-driven enforcement.
-5. Add optional runtime or CI adapters only after the portable checks and
+4. Improve governance commands, especially review and maintenance workflows.
+5. Use review findings to shape policy-driven enforcement.
+6. Add optional runtime or CI adapters only after the portable checks and
    policy workflow are clear.
-6. Grow stack profiles only when they have fixtures, smoke coverage, and a
+7. Grow stack profiles only when they have fixtures, smoke coverage, and a
    clear local verification path.
 
 ## Adoption Evidence
@@ -108,6 +110,44 @@ is stable. The likely minimal addition is a `Task Outcome Evidence` field that
 records `recorded in <path>` or `skipped because <reason>` without requiring
 YAML for every task.
 
+JSONL task-outcome ledgers, signature-based recurrence matching, read-only
+reconcilers, and evidence-grade enums such as `asserted`, `observed`, and
+`controlled` remain maturity-path ideas, not default adoption requirements.
+They should be introduced only after enough task outcomes exist to justify a
+machine-readable event layer. If added later, the event log should be factual
+and append-only, human-readable YAML should remain interpretive, and Doctor
+should not treat narrative prose as score input.
+
+## Harness Doctor V2 Coupling Diagnostic
+
+Harness Doctor should evolve from a mostly flat evidence score into a
+six-element health and coupling diagnostic while preserving the existing claim
+boundary: Doctor measures repository harness readiness, not agent
+effectiveness.
+
+Near-term Doctor work should follow
+`docs/decisions/0007-harness-doctor-six-element-coupling-diagnostic.md`:
+
+- keep the repository-local six-element model:
+  `Instructions`, `Constraints`, `Feedback`, `Memory`, `Evaluation`, and
+  `Governance`
+- treat runtime-only execution sandboxes and tool protocols as out of scope
+  unless their assumptions are visible in local commands, CI, scripts,
+  documentation, or approval paths
+- report check scripts as a Constraint and Feedback join: the rule belongs to
+  Constraints, while execution, reporting, and CI wiring belong to Feedback
+- report coupling findings as first-class output, including orphan
+  constraints, orphan feedback, unoperationalized memory, unevaluated memory,
+  ungoverned change types, and promotion gaps
+- keep Proven or effectiveness signals unmeasured until durable task outcome
+  or effectiveness evidence supports the claim
+- keep `--min-score` or critical-finding gates optional and off by default
+
+The first implementation should update the rubric, Doctor report contract,
+example report, and golden fixture tests together. It should avoid scoring
+observed effectiveness, automatic failure-signature matching, outcome-ledger
+reconciliation, or automatic memory mutation in the same change.
+
 ## Practical Verification Patterns
 
 Recent adoption feedback says the kit is useful as a completion safety belt but
@@ -140,7 +180,8 @@ Go and Spring Framework Maven/Gradle projects. Useful next additions include:
 Future command work should make the harness easier to maintain without turning
 the starter kit into an automatic rewrite system.
 
-- Improve Harness Doctor evidence messages and scoring calibration.
+- Refine Harness Doctor v2 coupling findings and report wording from real
+  target repository use before changing score weights.
 - Refine `/harness update`, `/harness refresh`, and `/harness review` workflows
   from real target repository use.
 - Improve diagnostics for durable-memory gaps, gate placement, and review timing
@@ -232,6 +273,10 @@ repository already has macOS CI.
 - Adding profiles without fixtures and smoke tests.
 - Claiming effectiveness from fixture tests alone.
 - Replacing target repository conventions with starter-kit defaults.
+- Adding a default JSONL outcome ledger, automatic failure-signature matching,
+  or Proven/effectiveness scoring before enough task outcome evidence exists.
+- Letting Doctor score human-written narrative prose or mutate decision and
+  failure memory automatically.
 
 ## Related Decisions
 
@@ -241,3 +286,4 @@ repository already has macOS CI.
 - `docs/decisions/0004-link-failure-memory-to-regression-checks.md`
 - `docs/decisions/0005-validate-dogfood-evidence-consistency.md`
 - `docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md`
+- `docs/decisions/0007-harness-doctor-six-element-coupling-diagnostic.md`
