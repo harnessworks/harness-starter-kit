@@ -1,0 +1,68 @@
+schema_version: 1
+
+target:
+  repository: baskduf/harness-starter-kit
+  repository_ref: feat/go-fixture-smoke branch based on d5cf04fd51464fbfdb275f6426cf3266c58eda2a
+  stack_or_framework: Go profile fixture and Python smoke tests
+  date: 2026-06-08
+  agent_or_model: Claude
+  reviewer: baskduf (issue #41 analysis)
+
+task:
+  id: go-fixture-toolchain-smoke
+  run_id: harness-starter-kit-010
+  prompt_summary: Close the Go profile verification gap from issue #41 by making the go-basic fixture a real buildable package and adding a Go toolchain smoke test mirroring the Rust pattern.
+  prompt_ref: issue #41 and its maintainer analysis comment recommending a Go-only fixture and smoke test
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - tests/fixtures/go-basic/calculator.go
+    - tests/fixtures/go-basic/calculator_test.go
+    - tests/fixtures/go-basic/README.md
+    - tests/test_smoke_fixtures.py
+    - CHANGELOG.md
+    - docs/examples/task-outcomes/010-go-fixture-toolchain-smoke.yaml
+  known_failure_mode: The go-basic fixture had no .go source, so the Go profile check_harness.py was never exercised. Running it against the source-less fixture actually failed at `go vet ./...` (exit 1, no packages to vet), leaving the Go toolchain path unverified.
+
+harness_context:
+  harness_doctor_score: not measured for this change; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_commit: d5cf04fd51464fbfdb275f6426cf3266c58eda2a
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - CONTRIBUTING.md
+    - templates/profiles/go/check_harness.py
+  relevant_constraints:
+    - python3 -m unittest tests.test_apply_harness tests.test_smoke_fixtures tests.test_profile_consistency
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_effectiveness_plan.py
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/examples/task-outcomes/008-doctor-v2-coupling-diagnostic.yaml
+
+outcome:
+  files_changed:
+    - tests/fixtures/go-basic/calculator.go
+    - tests/fixtures/go-basic/calculator_test.go
+    - tests/fixtures/go-basic/README.md
+    - tests/test_smoke_fixtures.py
+    - CHANGELOG.md
+    - docs/examples/task-outcomes/010-go-fixture-toolchain-smoke.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_apply_harness tests.test_smoke_fixtures tests.test_profile_consistency && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py
+  first_pass_verification:
+    result: passed
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The go-basic fixture now ships a real gobasic package (calculator.go + calculator_test.go) so go build/vet/test succeed. A new test_go_profile_check_harness_runs_go_path smoke check installs the Go profile and runs the installed check_harness.py against the fixture when go is available, and skips when go is absent. Go was installed locally (go1.26.4) to verify the real toolchain path; go does not write build artifacts into the source directory, so no fixture .gitignore was needed. This applies the same pattern used for the Rust profile in PR #39.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: no new decision or failure record; this implements the Go-only fix scoped in issue #41. Other source-less fixtures (android, nextjs, react, vue) remain a separate follow-up.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

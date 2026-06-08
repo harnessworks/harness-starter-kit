@@ -2,6 +2,15 @@
 
 Notable project changes should be recorded here before release tags are cut.
 
+## Unreleased
+
+### Added
+
+- Buildable `gobasic` package in the `go-basic` fixture plus a Go toolchain
+  smoke test that runs the installed Go profile `check_harness.py` (`go build`,
+  `go vet`, `go test`) when `go` is available and skips otherwise, closing the
+  verification gap from issue #41.
+
 ## v0.1.10 - 2026-06-08
 
 Patch release for Harness Doctor v2. This release turns Doctor from a flat
