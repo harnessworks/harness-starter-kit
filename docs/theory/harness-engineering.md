@@ -51,7 +51,10 @@ choose the next durable artifact, not justify adding every artifact.
 Harness health is the condition of the repository harness itself. It asks
 whether durable instructions, enforceable constraints, feedback loops, memory,
 and maintenance paths exist and are discoverable. Harness Doctor is a harness
-health diagnostic.
+health diagnostic. Its six-element score is a repository evidence scan, and its
+coupling findings highlight broken links such as rules without checks, checks
+without clear rules, memory without recurrence detection, or risky change types
+without governance.
 
 Agent effectiveness is the observed result of agent work. It asks whether
 agents edit fewer wrong files, repeat fewer known mistakes, pass verification
@@ -61,6 +64,11 @@ outcomes require task records or effectiveness reports.
 A high Harness Doctor score does not prove that agents became smarter, safer,
 or more productive. It means the repository has stronger baseline evidence for
 agent collaboration. Treat it as a readiness signal, not an outcome claim.
+
+`Proven` signals should be interpreted carefully. A repository can prove that a
+check exists, that a rule is wired into CI, or that a failure record names a
+recurrence-detection path. It cannot prove reduced agent mistakes without task
+outcome records or effectiveness reports that compare observable outcomes.
 
 ## Improvement Loop
 
