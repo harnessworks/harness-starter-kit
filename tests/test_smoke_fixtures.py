@@ -112,6 +112,35 @@ class FixtureSmokeTests(unittest.TestCase):
                     self.run_generated_check(target, "check_failure_memory.py")
                     self.run_generated_check(target, "check_decision_memory.py")
 
+    @unittest.skipUnless(
+        shutil.which("cargo"), "cargo not installed; skipping Rust Cargo path check"
+    )
+    def test_rust_profile_check_harness_runs_cargo_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp)
+            shutil.copytree(
+                FIXTURE_ROOT / "rust-basic", target, dirs_exist_ok=True
+            )
+
+            self.run_installer(target, "rust")
+
+            check_harness = (
+                target / "docs" / "harness" / "profiles" / "rust" / "check_harness.py"
+            )
+            self.assertTrue(check_harness.exists())
+
+            result = subprocess.run(
+                [sys.executable, str(check_harness)],
+                cwd=target,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                0,
+                result.returncode,
+                msg=f"rust check_harness.py failed:\n{result.stdout}\n{result.stderr}",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
