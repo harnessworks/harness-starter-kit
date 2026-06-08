@@ -214,7 +214,7 @@ Thanks to everyone who has helped shape this kit through code, docs, reviews,
 examples, translations, and dogfooding.
 
 <a href="https://github.com/baskduf/harness-starter-kit/graphs/contributors">
-  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260604" alt="Contributors" />
+  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
 ## License
