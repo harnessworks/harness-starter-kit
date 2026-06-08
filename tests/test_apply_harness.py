@@ -140,6 +140,17 @@ class ApplyHarnessTests(unittest.TestCase):
             self.assertTrue((profile_root / "check_harness.py").exists())
             self.assertTrue((profile_root / "gitignore.harness.txt").exists())
 
+    def test_rust_profile_snippets_are_written_under_docs_harness(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp)
+
+            self.run_installer(target, "--profile", "rust")
+
+            profile_root = target / "docs" / "harness" / "profiles" / "rust"
+            self.assertTrue((profile_root / "README.md").exists())
+            self.assertTrue((profile_root / "check_harness.py").exists())
+            self.assertTrue((profile_root / "gitignore.harness.txt").exists())
+
     def test_generated_harness_checks_pass(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             target = Path(tmp)

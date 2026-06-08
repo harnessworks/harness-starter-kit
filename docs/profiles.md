@@ -19,6 +19,7 @@ Available profiles:
 - `react`
 - `vue`
 - `go`
+- `rust`
 
 ## How Agents Use Profiles
 

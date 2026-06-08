@@ -1,0 +1,66 @@
+schema_version: 1
+
+target:
+  repository: baskduf/harness-starter-kit
+  repository_ref: feat/rust-profile branch based on 2b7ca2032ca6f8ebc8995dade27fbd8aa1fe3f8d
+  stack_or_framework: Rust profile templates and Python smoke tests
+  date: 2026-06-08
+  agent_or_model: Claude
+  reviewer: baskduf (PR #39 review)
+
+task:
+  id: rust-profile-fixture-and-cargo-smoke
+  run_id: harness-starter-kit-009
+  prompt_summary: Address PR #39 review for the Rust profile by making the rust-basic fixture a real Cargo target, adding a cargo-path smoke check, and recording task outcome evidence.
+  prompt_ref: PR #39 review comments by baskduf requesting changes (CHANGES_REQUESTED) on feat/rust-profile
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - tests/fixtures/rust-basic/src/lib.rs
+    - tests/fixtures/rust-basic/.gitignore
+    - tests/fixtures/rust-basic/README.md
+    - tests/test_smoke_fixtures.py
+    - docs/examples/task-outcomes/009-rust-profile-fixture-and-cargo-smoke.yaml
+  known_failure_mode: A new stack profile adds cargo build as its check path, but its fixture is not a buildable Cargo crate and no smoke test exercises the profile check_harness.py, so the real toolchain path stays unverified.
+
+harness_context:
+  harness_doctor_score: not measured for this change; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_commit: 2b7ca2032ca6f8ebc8995dade27fbd8aa1fe3f8d
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/evaluation.md
+    - templates/profiles/rust/check_harness.py
+  relevant_constraints:
+    - python3 -m unittest tests.test_smoke_fixtures tests.test_apply_harness
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_effectiveness_plan.py
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/examples/task-outcomes/007-maintenance-evidence-report.yaml
+
+outcome:
+  files_changed:
+    - tests/fixtures/rust-basic/src/lib.rs
+    - tests/fixtures/rust-basic/.gitignore
+    - tests/fixtures/rust-basic/README.md
+    - tests/test_smoke_fixtures.py
+    - docs/examples/task-outcomes/009-rust-profile-fixture-and-cargo-smoke.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_smoke_fixtures tests.test_apply_harness && python3 scripts/check_docs_drift.py && python3 scripts/check_effectiveness_plan.py
+  first_pass_verification:
+    result: passed
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The rust-basic fixture now ships a src/lib.rs library target with a unit test so cargo build and cargo test succeed. A new test_rust_profile_check_harness_runs_cargo_path smoke check installs the profile and runs the installed check_harness.py against the fixture when cargo is available, and skips when cargo is absent. Build outputs and Cargo.lock are gitignored to keep the fixture source-only like the other fixtures.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: no new decision or failure record; this fixes the gap identified in PR #39 review against the existing Rust profile work.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

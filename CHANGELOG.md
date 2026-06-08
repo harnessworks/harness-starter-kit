@@ -6,6 +6,9 @@ Notable project changes should be recorded here before release tags are cut.
 
 ### Added
 
+- Rust profile guidance, fixture coverage, smoke-test wiring, installer
+  coverage, and README/profile documentation so Rust crate and Cargo workspace
+  targets have a conservative local verification path.
 - Buildable `gobasic` package in the `go-basic` fixture plus a Go toolchain
   smoke test that runs the installed Go profile `check_harness.py` (`go build`,
   `go vet`, `go test`) when `go` is available and skips otherwise, closing the

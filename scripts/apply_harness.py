@@ -72,6 +72,7 @@ def parse_args() -> argparse.Namespace:
             "react",
             "vue",
             "go",
+            "rust",
         ),
         default="generic",
         help="Optional stack profile. Profiles add reference snippets only.",
