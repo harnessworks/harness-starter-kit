@@ -1,6 +1,7 @@
-<p align="center">
-  <img width="2172" height="724" alt="06d3c515-5fd8-4942-95e0-50ae2a2c5456" src="https://github.com/user-attachments/assets/4ba0bcf8-7500-49bd-a0fd-b8666807df39" />
-<img width="1672" height="941" alt="ChatGPT Image 2026년 5월 31일 오후 03_58_36" src="https://github.com/user-attachments/assets/e9edcba6-4cf1-43e5-8fbb-6d4d6426d0c3" />
+<img width="2172" height="724" alt="new_logo" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
+
+<img width="1536" height="1024" alt="workflow_simple" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
+
 
 </p>
 
@@ -17,6 +18,8 @@
   <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" />
   <img alt="Spring Boot" src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white" />
   <img alt="Android" src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white" />
+  <img alt="Go" src="https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white" />
+  <img alt="Rust" src="https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white" />
   <img alt="Contributors" src="https://img.shields.io/github/contributors/baskduf/harness-starter-kit?style=flat-square" />
 </p>
 
@@ -34,6 +37,9 @@
   </a>
   <a href="https://github.com/baskduf/today-bus">
     <img alt="View Next.js dogfood repo" src="https://img.shields.io/badge/View-Next.js_Dogfood-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  </a>
+  <a href="https://github.com/baskduf/harness-erp">
+    <img alt="View Spring Boot dogfood repo" src="https://img.shields.io/badge/View-Spring_Boot_Dogfood-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" />
   </a>
 </p>
 
@@ -203,7 +209,7 @@ code、docs、reviews、examples、translations、dogfooding を通じてこの 
 形づくってくれたすべての方に感謝します。
 
 <a href="https://github.com/baskduf/harness-starter-kit/graphs/contributors">
-  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260604" alt="Contributors" />
+  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
 ## ライセンス
