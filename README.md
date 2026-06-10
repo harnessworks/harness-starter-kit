@@ -115,9 +115,11 @@ For the full prompt and workflow details, see
 and [`docs/adoption-workflow.md`](docs/adoption-workflow.md).
 
 <p align="center">
-<img width="939" height="783" alt="GitHub star support illustration for Harness Starter Kit" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+  <img width="360" alt="GitHub star support illustration for Harness Starter Kit" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+</p>
 
-> 💫 If this kit helps you, a GitHub star would be appreciated. 💫
+<p align="center">
+  <em>💫 If this kit helps you, a GitHub star would be appreciated. 💫</em>
 </p>
 
 

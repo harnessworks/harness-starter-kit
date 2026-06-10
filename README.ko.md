@@ -114,9 +114,11 @@ Expected result:
 [`docs/adoption-workflow.md`](docs/adoption-workflow.md)를 보세요.
 
 <p align="center">
-<img width="939" height="783" alt="Harness Starter Kit GitHub star 안내 이미지" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+  <img width="360" alt="Harness Starter Kit GitHub star 안내 이미지" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+</p>
 
-> 💫 If this kit helps you, a GitHub star would be appreciated. 💫
+<p align="center">
+  <em>💫 If this kit helps you, a GitHub star would be appreciated. 💫</em>
 </p>
 
 
