@@ -1,7 +1,7 @@
 schema_version: 1
 
 target:
-  repository: baskduf/harness-starter-kit
+  repository: harnessworks/harness-starter-kit
   repository_ref: feat/go-fixture-smoke branch based on d5cf04fd51464fbfdb275f6426cf3266c58eda2a
   stack_or_framework: Go profile fixture and Python smoke tests
   date: 2026-06-08
@@ -29,7 +29,7 @@ task:
 harness_context:
   harness_doctor_score: not measured for this change; not treated as effectiveness proof
   harness_source:
-    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_url: https://github.com/harnessworks/harness-starter-kit
     kit_commit: d5cf04fd51464fbfdb275f6426cf3266c58eda2a
     source_tracking_ref: none; this repository is the kit source
   relevant_instructions:

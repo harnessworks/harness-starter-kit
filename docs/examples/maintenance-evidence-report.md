@@ -2,7 +2,7 @@
 
 ## Target
 
-- Repository: [baskduf/harness-starter-kit](https://github.com/baskduf/harness-starter-kit)
+- Repository: [harnessworks/harness-starter-kit](https://github.com/harnessworks/harness-starter-kit)
 - Stack and framework: Python and Markdown harness kit
 - Evaluation date or window: 2026-06-06 through 2026-06-07
 - Agent or model: Codex with primary-agent and subagent review loops

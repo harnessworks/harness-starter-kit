@@ -20,25 +20,25 @@
   <img alt="Android" src="https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white" />
   <img alt="Go" src="https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white" />
   <img alt="Rust" src="https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white" />
-  <img alt="Contributors" src="https://img.shields.io/github/contributors/baskduf/harness-starter-kit?style=flat-square" />
+  <img alt="Contributors" src="https://img.shields.io/github/contributors/harnessworks/harness-starter-kit?style=flat-square" />
 </p>
 
 [English](README.md) | [한국어](README.ko.md) | **日本語** | [简体中文](README.zh-CN.md)
 
 <p align="center">
-  <a href="https://baskduf.github.io/harness-starter-kit/">
+  <a href="https://harnessworks.github.io/harness-starter-kit/">
     <img alt="Launch site" src="https://img.shields.io/badge/Launch-Agent_Session_Demo-0077ff?style=for-the-badge" />
   </a>
   <a href="https://dev.to/baskduf/i-stopped-prompt-engineering-my-ai-coding-agent-i-started-engineering-the-repo-instead-1i3e">
     <img alt="Read the launch essay" src="https://img.shields.io/badge/Read-Launch_Essay-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white" />
   </a>
-  <a href="https://github.com/baskduf/harness_starter_kit_django/tree/main">
+  <a href="https://github.com/harnessworks/harness_starter_kit_django/tree/main">
     <img alt="View Django dogfood repo" src="https://img.shields.io/badge/View-Django_Dogfood-092E20?style=for-the-badge&logo=django&logoColor=white" />
   </a>
-  <a href="https://github.com/baskduf/today-bus">
+  <a href="https://github.com/harnessworks/today-bus">
     <img alt="View Next.js dogfood repo" src="https://img.shields.io/badge/View-Next.js_Dogfood-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
   </a>
-  <a href="https://github.com/baskduf/harness-erp">
+  <a href="https://github.com/harnessworks/harness-erp">
     <img alt="View Spring Boot dogfood repo" src="https://img.shields.io/badge/View-Spring_Boot_Dogfood-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" />
   </a>
 </p>
@@ -58,7 +58,7 @@ memory, evaluation に変えるための prompt-first starter kit です。
 ```text
 Use this kit to apply harness engineering to this repository:
 
-https://github.com/baskduf/harness-starter-kit
+https://github.com/harnessworks/harness-starter-kit
 
 Clone the kit into ./harness-starter-kit if it is not already present, read it,
 then apply its prompt-first harness engineering workflow to this repository.
@@ -219,8 +219,8 @@ improvement の証明ではありません。
 code、docs、reviews、examples、translations、dogfooding を通じてこの kit を
 形づくってくれたすべての方に感謝します。
 
-<a href="https://github.com/baskduf/harness-starter-kit/graphs/contributors">
-  <img src="https://readme-contribs.as93.net/contributors/baskduf/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
+<a href="https://github.com/harnessworks/harness-starter-kit/graphs/contributors">
+  <img src="https://readme-contribs.as93.net/contributors/harnessworks/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
 ## ライセンス

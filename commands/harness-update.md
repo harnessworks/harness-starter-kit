@@ -19,7 +19,7 @@ Record the kit source used by the target repository in `.harness/source.json`:
 
 ```json
 {
-  "kit_url": "https://github.com/baskduf/harness-starter-kit",
+  "kit_url": "https://github.com/harnessworks/harness-starter-kit",
   "kit_commit": "<current-kit-commit>",
   "updated_at": "YYYY-MM-DD",
   "update_command": "/harness update"
@@ -45,7 +45,7 @@ fallback evidence before updating.
      before the update and treat them as pre-existing target changes
 3. Refresh the kit reference:
    - If `./harness-starter-kit` does not exist, clone
-     `https://github.com/baskduf/harness-starter-kit` into that path.
+     `https://github.com/harnessworks/harness-starter-kit` into that path.
    - If it exists, inspect `git -C harness-starter-kit status --short`,
      `git -C harness-starter-kit remote -v`, and
      `git -C harness-starter-kit rev-parse HEAD`.

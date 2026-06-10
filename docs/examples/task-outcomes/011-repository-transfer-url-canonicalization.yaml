@@ -1,0 +1,109 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: main working tree based on 216c8a6f0979af31efdb00278404cb363ef9b35a
+  stack_or_framework: Python and Markdown harness kit
+  date: 2026-06-10
+  agent_or_model: Codex
+  reviewer: Codex primary agent
+
+task:
+  id: repository-transfer-url-canonicalization
+  run_id: harness-starter-kit-011
+  prompt_summary: Canonicalize this kit's repository references after transferring the GitHub repository from baskduf to harnessworks.
+  prompt_ref: current Codex thread request after the maintainer completed the GitHub transfer
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - commands/harness-update.md
+    - docs/prompts/apply-to-target-repo.md
+    - docs/validation.md
+    - docs/examples/maintenance-evidence-report.md
+    - docs/examples/effectiveness-report-harness-erp-dogfood.md
+    - docs/examples/effectiveness-report-todaybus-dogfood.md
+    - docs/examples/task-outcomes/001-recipe-api-harness-adoption.yaml
+    - docs/examples/task-outcomes/002-recipe-api-category-feature.yaml
+    - docs/examples/task-outcomes/003-recipe-api-category-update-tests.yaml
+    - docs/examples/task-outcomes/004-evidence-decision-gate.yaml
+    - docs/examples/task-outcomes/005-make-just-command-validation.yaml
+    - docs/examples/task-outcomes/006-maven-gradle-go-command-validation.yaml
+    - docs/examples/task-outcomes/007-maintenance-evidence-report.yaml
+    - docs/examples/task-outcomes/008-doctor-v2-coupling-diagnostic.yaml
+    - docs/examples/task-outcomes/009-rust-profile-fixture-and-cargo-smoke.yaml
+    - docs/examples/task-outcomes/010-go-fixture-toolchain-smoke.yaml
+    - docs/examples/task-outcomes/011-repository-transfer-url-canonicalization.yaml
+    - site/index.html
+    - site/robots.txt
+    - site/sitemap.xml
+  known_failure_mode: After a GitHub ownership transfer, stale canonical URLs can keep badges, adoption prompts, update workflow instructions, and evidence metadata pointing at the old owner namespace.
+
+harness_context:
+  harness_doctor_score: not measured before this change; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: 216c8a6f0979af31efdb00278404cb363ef9b35a
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - commands/harness-update.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - python3 -m unittest discover -s tests
+    - python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_structure.py
+    - python3 scripts/check_encoding_hygiene.py
+    - python3 scripts/check_effectiveness_plan.py
+    - python3 scripts/check_failure_memory.py
+    - python3 scripts/check_decision_memory.py
+    - python3 scripts/harness_doctor.py --target .
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+
+outcome:
+  files_changed:
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - commands/harness-update.md
+    - docs/prompts/apply-to-target-repo.md
+    - docs/validation.md
+    - docs/examples/maintenance-evidence-report.md
+    - docs/examples/effectiveness-report-harness-erp-dogfood.md
+    - docs/examples/effectiveness-report-todaybus-dogfood.md
+    - docs/examples/task-outcomes/001-recipe-api-harness-adoption.yaml
+    - docs/examples/task-outcomes/002-recipe-api-category-feature.yaml
+    - docs/examples/task-outcomes/003-recipe-api-category-update-tests.yaml
+    - docs/examples/task-outcomes/004-evidence-decision-gate.yaml
+    - docs/examples/task-outcomes/005-make-just-command-validation.yaml
+    - docs/examples/task-outcomes/006-maven-gradle-go-command-validation.yaml
+    - docs/examples/task-outcomes/007-maintenance-evidence-report.yaml
+    - docs/examples/task-outcomes/008-doctor-v2-coupling-diagnostic.yaml
+    - docs/examples/task-outcomes/009-rust-profile-fixture-and-cargo-smoke.yaml
+    - docs/examples/task-outcomes/010-go-fixture-toolchain-smoke.yaml
+    - docs/examples/task-outcomes/011-repository-transfer-url-canonicalization.yaml
+    - site/index.html
+    - site/robots.txt
+    - site/sitemap.xml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: passed
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The maintainer completed the GitHub transfer in the UI, then confirmed the existing dogfood repositories were also transferred. The local origin was changed to https://github.com/harnessworks/harness-starter-kit.git, canonical GitHub Pages metadata was changed to https://harnessworks.github.io/harness-starter-kit/, and starter-kit plus dogfood repository references were canonicalized under the harnessworks organization.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: no new decision or failure record; this canonicalizes external repository ownership after an intended transfer and did not expose a recurring runtime failure path.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

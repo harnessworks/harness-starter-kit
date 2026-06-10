@@ -2,13 +2,13 @@
 
 ## Target
 
-- Repository: [baskduf/harness-erp](https://github.com/baskduf/harness-erp)
+- Repository: [harnessworks/harness-erp](https://github.com/harnessworks/harness-erp)
 - Evidence commit:
-  [`0192d962961427a49c20210b5692aa76ac96d6bd`](https://github.com/baskduf/harness-erp/commit/0192d962961427a49c20210b5692aa76ac96d6bd)
+  [`0192d962961427a49c20210b5692aa76ac96d6bd`](https://github.com/harnessworks/harness-erp/commit/0192d962961427a49c20210b5692aa76ac96d6bd)
 - Backend follow-up evidence commit:
-  [`eeb6c74f8e13320207db0827781987aee22bce77`](https://github.com/baskduf/harness-erp/commit/eeb6c74f8e13320207db0827781987aee22bce77)
+  [`eeb6c74f8e13320207db0827781987aee22bce77`](https://github.com/harnessworks/harness-erp/commit/eeb6c74f8e13320207db0827781987aee22bce77)
 - Initial benchmark evidence commit:
-  [`ef34c12517158da62032a33bb93e318c0418b6f7`](https://github.com/baskduf/harness-erp/commit/ef34c12517158da62032a33bb93e318c0418b6f7)
+  [`ef34c12517158da62032a33bb93e318c0418b6f7`](https://github.com/harnessworks/harness-erp/commit/ef34c12517158da62032a33bb93e318c0418b6f7)
 - Stack and framework: Java 21, Spring Boot 4.0.6, Maven wrapper, H2, vanilla
   HTML/CSS/JavaScript static resources
 - Evaluation window: 2026-06-06 dogfood benchmark, backend follow-up benchmark,
@@ -17,7 +17,7 @@
 - Evaluation mode: harnessed-only initial benchmark plus separate backend and
   frontend follow-up benchmarks
 - Harness source at final evidence commit:
-  [`387dbfabda3d63975494bdabfc812ddf64100919`](https://github.com/baskduf/harness-starter-kit/commit/387dbfabda3d63975494bdabfc812ddf64100919)
+  [`387dbfabda3d63975494bdabfc812ddf64100919`](https://github.com/harnessworks/harness-starter-kit/commit/387dbfabda3d63975494bdabfc812ddf64100919)
 
 This report records Spring/Maven backend and vanilla frontend dogfood evidence
 for harness adoption, source tracking, task outcome records, failure memory,
@@ -175,33 +175,33 @@ are not comparable product-task outcomes.
 ## Source Records
 
 - Final evidence commit:
-  [`0192d962961427a49c20210b5692aa76ac96d6bd`](https://github.com/baskduf/harness-erp/commit/0192d962961427a49c20210b5692aa76ac96d6bd)
+  [`0192d962961427a49c20210b5692aa76ac96d6bd`](https://github.com/harnessworks/harness-erp/commit/0192d962961427a49c20210b5692aa76ac96d6bd)
 - CI evidence:
-  [Harness Verification push run](https://github.com/baskduf/harness-erp/actions/runs/27059370935)
+  [Harness Verification push run](https://github.com/harnessworks/harness-erp/actions/runs/27059370935)
 - Adoption and setup evidence:
-  - [adoption report](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/harness/adoption-report.md)
-  - [Harness Doctor setup baseline](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/harness/harness-doctor-setup.md)
-  - [source tracking](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/.harness/source.json)
-  - [legacy frontend design convention](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/conventions/legacy-erp-design.md)
+  - [adoption report](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/harness/adoption-report.md)
+  - [Harness Doctor setup baseline](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/harness/harness-doctor-setup.md)
+  - [source tracking](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/.harness/source.json)
+  - [legacy frontend design convention](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/conventions/legacy-erp-design.md)
 - Task outcome records reviewed:
-  - [ERP-001 employee search](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-001-employee-search.yaml)
-  - [ERP-002 purchase request amount validation](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-002-purchase-request-amount-validation.yaml)
-  - [ERP-003 approval comment](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-003-approval-comment.yaml)
-  - [ERP-004 employee department field](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-004-employee-department-field.yaml)
-  - [ERP-005 role-based access policy](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-005-role-based-access-policy.yaml)
-  - [ERP-006 service-layer role policy enforcement](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-006-service-layer-role-policy-enforcement.yaml)
-  - [ERP-007 purchase request filtering](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-007-purchase-request-filtering.yaml)
-  - [ERP-008 approval history](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-008-approval-history.yaml)
-  - [ERP-009 employee update](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-009-employee-update.yaml)
-  - [MAINT-001 CI verification](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/MAINT-001-ci-verification.yaml)
-  - [MAINT-002 frontend design baseline](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/MAINT-002-frontend-design-baseline.yaml)
-  - [FE-001 vanilla frontend shell](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-001-vanilla-frontend-shell.yaml)
-  - [FE-002 employee management frontend](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-002-employee-management-frontend.yaml)
-  - [FE-003 purchase request frontend](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-003-purchase-request-frontend.yaml)
-  - [FE-004 approval workflow frontend](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-004-approval-workflow-frontend.yaml)
-  - [FE-005 full frontend API verification](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-005-full-frontend-api-verification.yaml)
+  - [ERP-001 employee search](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-001-employee-search.yaml)
+  - [ERP-002 purchase request amount validation](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-002-purchase-request-amount-validation.yaml)
+  - [ERP-003 approval comment](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-003-approval-comment.yaml)
+  - [ERP-004 employee department field](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-004-employee-department-field.yaml)
+  - [ERP-005 role-based access policy](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-005-role-based-access-policy.yaml)
+  - [ERP-006 service-layer role policy enforcement](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-006-service-layer-role-policy-enforcement.yaml)
+  - [ERP-007 purchase request filtering](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-007-purchase-request-filtering.yaml)
+  - [ERP-008 approval history](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-008-approval-history.yaml)
+  - [ERP-009 employee update](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/ERP-009-employee-update.yaml)
+  - [MAINT-001 CI verification](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/MAINT-001-ci-verification.yaml)
+  - [MAINT-002 frontend design baseline](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/MAINT-002-frontend-design-baseline.yaml)
+  - [FE-001 vanilla frontend shell](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-001-vanilla-frontend-shell.yaml)
+  - [FE-002 employee management frontend](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-002-employee-management-frontend.yaml)
+  - [FE-003 purchase request frontend](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-003-purchase-request-frontend.yaml)
+  - [FE-004 approval workflow frontend](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-004-approval-workflow-frontend.yaml)
+  - [FE-005 full frontend API verification](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/effectiveness/task-outcomes/FE-005-full-frontend-api-verification.yaml)
 - Failure memory reviewed:
-  - [Spring Boot coordinate resolution](https://github.com/baskduf/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/failures/0001-spring-boot-coordinate-resolution.md)
+  - [Spring Boot coordinate resolution](https://github.com/harnessworks/harness-erp/blob/0192d962961427a49c20210b5692aa76ac96d6bd/docs/failures/0001-spring-boot-coordinate-resolution.md)
   - `FE-001` and `FE-003` did not create separate target failure notes at this
     evidence commit. The failures are preserved in task outcome records because
     they were deterministic verification-test design failures caught before

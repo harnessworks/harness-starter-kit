@@ -7,7 +7,7 @@ workflow to the target repository.
 ```text
 Use this kit to apply harness engineering to this repository:
 
-https://github.com/baskduf/harness-starter-kit
+https://github.com/harnessworks/harness-starter-kit
 
 Clone the kit into ./harness-starter-kit, read it, then apply its prompt-first
 harness engineering workflow to the current project.

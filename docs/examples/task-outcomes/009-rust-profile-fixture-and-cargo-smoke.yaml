@@ -1,7 +1,7 @@
 schema_version: 1
 
 target:
-  repository: baskduf/harness-starter-kit
+  repository: harnessworks/harness-starter-kit
   repository_ref: feat/rust-profile branch based on 2b7ca2032ca6f8ebc8995dade27fbd8aa1fe3f8d
   stack_or_framework: Rust profile templates and Python smoke tests
   date: 2026-06-08
@@ -27,7 +27,7 @@ task:
 harness_context:
   harness_doctor_score: not measured for this change; not treated as effectiveness proof
   harness_source:
-    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_url: https://github.com/harnessworks/harness-starter-kit
     kit_commit: 2b7ca2032ca6f8ebc8995dade27fbd8aa1fe3f8d
     source_tracking_ref: none; this repository is the kit source
   relevant_instructions:

@@ -3,13 +3,13 @@
 ## Target
 
 - Repository: `today-bus`
-- PR reviewed: [baskduf/today-bus#2](https://github.com/baskduf/today-bus/pull/2)
+- PR reviewed: [harnessworks/today-bus#2](https://github.com/harnessworks/today-bus/pull/2)
 - Merge commit: `85312c181b294c3419dd0813820c10977dd5005b`
 - Evaluation window: 2026-06-04 dogfood PR
 - Agent or model: Codex
 - Reviewer: wb
 - Evaluation mode: harnessed-only initial benchmark
-- Harness source: [starter-kit commit 7d6fac27](https://github.com/baskduf/harness-starter-kit/commit/7d6fac27d69229bfc954b662d24dea9984b1bc50)
+- Harness source: [starter-kit commit 7d6fac27](https://github.com/harnessworks/harness-starter-kit/commit/7d6fac27d69229bfc954b662d24dea9984b1bc50)
 
 ## Scope
 
@@ -62,18 +62,18 @@ be counted as product-task effectiveness evidence.
 
 | Task ID | Expected boundary | Actual changed files | Wrong-file edit result |
 | --- | --- | --- | --- |
-| `todaybus-homepage-copy-tightening` | TodayBus app, component, domain-doc, outcome-record, and optional README paths | [src/app/layout.tsx](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/src/app/layout.tsx), [src/app/page.tsx](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/src/app/page.tsx), [src/components/today-bus/search-form.tsx](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/src/components/today-bus/search-form.tsx), and [todaybus-001-homepage-copy.yaml](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-001-homepage-copy.yaml) | 0 observed |
-| `todaybus-planner-empty-result-test-hardening` | TodayBus test, library, domain-doc, and outcome-record paths | [tests/planner-branches.test.mjs](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/tests/planner-branches.test.mjs) and [todaybus-002-empty-result-tests.yaml](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-002-empty-result-tests.yaml) | 0 observed |
-| `todaybus-domain-planner-terms-alignment` | TodayBus domain-doc and outcome-record paths | [docs/domain/glossary.md](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/domain/glossary.md), [docs/domain/tago-api.md](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/domain/tago-api.md), [docs/domain/gumi-bis.md](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/domain/gumi-bis.md), and [todaybus-003-domain-planner-terms.yaml](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-003-domain-planner-terms.yaml) | 0 observed |
+| `todaybus-homepage-copy-tightening` | TodayBus app, component, domain-doc, outcome-record, and optional README paths | [src/app/layout.tsx](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/src/app/layout.tsx), [src/app/page.tsx](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/src/app/page.tsx), [src/components/today-bus/search-form.tsx](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/src/components/today-bus/search-form.tsx), and [todaybus-001-homepage-copy.yaml](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-001-homepage-copy.yaml) | 0 observed |
+| `todaybus-planner-empty-result-test-hardening` | TodayBus test, library, domain-doc, and outcome-record paths | [tests/planner-branches.test.mjs](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/tests/planner-branches.test.mjs) and [todaybus-002-empty-result-tests.yaml](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-002-empty-result-tests.yaml) | 0 observed |
+| `todaybus-domain-planner-terms-alignment` | TodayBus domain-doc and outcome-record paths | [docs/domain/glossary.md](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/domain/glossary.md), [docs/domain/tago-api.md](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/domain/tago-api.md), [docs/domain/gumi-bis.md](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/domain/gumi-bis.md), and [todaybus-003-domain-planner-terms.yaml](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-003-domain-planner-terms.yaml) | 0 observed |
 
 ## Source Records
 
 - Task outcome records reviewed:
-  - [TodayBus setup record `dogfood-effectiveness-20260604-160333.yaml`](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/dogfood-effectiveness-20260604-160333.yaml), excluded from product-task counts
-  - [TodayBus record `todaybus-001-homepage-copy.yaml`](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-001-homepage-copy.yaml)
-  - [TodayBus record `todaybus-002-empty-result-tests.yaml`](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-002-empty-result-tests.yaml)
-  - [TodayBus record `todaybus-003-domain-planner-terms.yaml`](https://github.com/baskduf/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-003-domain-planner-terms.yaml)
-- Repository refs compared: [TodayBus PR #2](https://github.com/baskduf/today-bus/pull/2), merge commit `85312c181b294c3419dd0813820c10977dd5005b`
+  - [TodayBus setup record `dogfood-effectiveness-20260604-160333.yaml`](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/dogfood-effectiveness-20260604-160333.yaml), excluded from product-task counts
+  - [TodayBus record `todaybus-001-homepage-copy.yaml`](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-001-homepage-copy.yaml)
+  - [TodayBus record `todaybus-002-empty-result-tests.yaml`](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-002-empty-result-tests.yaml)
+  - [TodayBus record `todaybus-003-domain-planner-terms.yaml`](https://github.com/harnessworks/today-bus/blob/85312c181b294c3419dd0813820c10977dd5005b/docs/effectiveness/task-outcomes/todaybus-003-domain-planner-terms.yaml)
+- Repository refs compared: [TodayBus PR #2](https://github.com/harnessworks/today-bus/pull/2), merge commit `85312c181b294c3419dd0813820c10977dd5005b`
 - Prompt refs compared: local dogfood prompts from 2026-06-04
 - Verification commands compared:
   - `npm run check:harness`

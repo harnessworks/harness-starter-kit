@@ -82,7 +82,7 @@ See `docs/examples/lifecycle-pilot-results.md` for the detailed pilot summary.
 
 ## Live Adoption Target
 
-[baskduf/harness_starter_kit_django](https://github.com/baskduf/harness_starter_kit_django)
+[harnessworks/harness_starter_kit_django](https://github.com/harnessworks/harness_starter_kit_django)
 is the active dogfooding repository for this kit. It is used to validate
 prompt-first adoption, Django profile absorption, `/harness update`, failure
 memory, and effectiveness measurement workflows in a real target repository.

@@ -1,7 +1,7 @@
 schema_version: 1
 
 target:
-  repository: baskduf/harness-starter-kit
+  repository: harnessworks/harness-starter-kit
   repository_ref: main working tree based on 52a20487707d50d24807a6f5063c9a982fee3119
   stack_or_framework: Python and Markdown harness kit
   date: 2026-06-08
@@ -33,7 +33,7 @@ task:
 harness_context:
   harness_doctor_score: Doctor v2 reports 100/100 on this working tree, not treated as effectiveness proof
   harness_source:
-    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_url: https://github.com/harnessworks/harness-starter-kit
     kit_commit: 52a20487707d50d24807a6f5063c9a982fee3119
     source_tracking_ref: none; this repository is the kit source
   relevant_instructions:

@@ -24,8 +24,8 @@ task:
 harness_context:
   harness_doctor_score: recorded locally but not treated as effectiveness proof
   harness_source:
-    kit_url: https://github.com/baskduf/harness-starter-kit
-    kit_commit: baskduf/harness-starter-kit@94e416b354facffafead6bbb9691af1598139389
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: harnessworks/harness-starter-kit@94e416b354facffafead6bbb9691af1598139389
     source_tracking_ref: recipe-api/harness-starter-kit
   relevant_instructions:
     - AGENTS.md

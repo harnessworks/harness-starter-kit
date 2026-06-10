@@ -1,7 +1,7 @@
 schema_version: 1
 
 target:
-  repository: baskduf/harness-starter-kit
+  repository: harnessworks/harness-starter-kit
   repository_ref: codex/maven-gradle-go-command-validation working tree based on d3b9732922457ca1cd388145e4aab01773976563
   stack_or_framework: Python and Markdown harness kit
   date: 2026-06-07
@@ -31,7 +31,7 @@ task:
 harness_context:
   harness_doctor_score: previously 98/100, not treated as effectiveness proof
   harness_source:
-    kit_url: https://github.com/baskduf/harness-starter-kit
+    kit_url: https://github.com/harnessworks/harness-starter-kit
     kit_commit: d3b9732922457ca1cd388145e4aab01773976563
     source_tracking_ref: none; this repository is the kit source
   relevant_instructions:
