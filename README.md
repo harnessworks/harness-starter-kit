@@ -1,6 +1,6 @@
-<img width="2172" height="724" alt="new_logo" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
+<img width="2172" height="724" alt="Harness Starter Kit logo banner" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
 
-<img width="1536" height="1024" alt="workflow_simple" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
+<img width="1536" height="1024" alt="Harness engineering workflow diagram" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
 
 
 </p>
@@ -115,7 +115,7 @@ For the full prompt and workflow details, see
 and [`docs/adoption-workflow.md`](docs/adoption-workflow.md).
 
 <p align="center">
-<img width="939" height="783" alt="제목 없는 디자인" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+<img width="939" height="783" alt="GitHub star support illustration for Harness Starter Kit" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
 
 > 💫 If this kit helps you, a GitHub star would be appreciated. 💫
 </p>

@@ -1,6 +1,6 @@
-<img width="2172" height="724" alt="new_logo" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
+<img width="2172" height="724" alt="Harness Starter Kit 标志横幅" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
 
-<img width="1536" height="1024" alt="workflow_simple" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
+<img width="1536" height="1024" alt="Harness engineering 工作流图" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
 
 
 </p>
@@ -42,6 +42,8 @@
     <img alt="View Spring Boot dogfood repo" src="https://img.shields.io/badge/View-Spring_Boot_Dogfood-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" />
   </a>
 </p>
+
+# Harness Starter Kit
 
 一个 prompt-first starter kit，用于把反复出现的 coding-agent mistakes 转化为
 durable repository instructions、checks、memory 和 evaluation。
@@ -112,7 +114,7 @@ Expected result:
 以及 [`docs/adoption-workflow.md`](docs/adoption-workflow.md)。
 
 <p align="center">
-<img width="939" height="783" alt="제목 없는 디자인" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+<img width="939" height="783" alt="Harness Starter Kit GitHub star 支持插图" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
 
 > 💫 If this kit helps you, a GitHub star would be appreciated. 💫
 </p>
@@ -193,6 +195,12 @@ comparable tasks、wrong-file edits、first-pass verification 和 human rework�
 [`docs/evaluation.md`](docs/evaluation.md),
 [`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md),
 [`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml)。
+
+Dogfood reports 包括 Next.js public-data target
+[`TodayBus`](docs/examples/effectiveness-report-todaybus-dogfood.md)，以及
+Spring/Maven backend 和 vanilla frontend target
+[`Harness ERP`](docs/examples/effectiveness-report-harness-erp-dogfood.md)。两者都只是
+harnessed-only benchmarks，并不能证明 effectiveness improvement。
 
 </details>
 
