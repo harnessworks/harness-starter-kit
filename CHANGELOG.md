@@ -4,6 +4,14 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+## v0.1.11 - 2026-06-11
+
+Patch release for deterministic benchmark tasks, stack-profile fixture
+coverage, and README localization drift hardening. This release adds
+repository-owned benchmark task specs for the external runner while preserving
+the rule that project-specific oracles live in this repository, not in the
+runner.
+
 ### Added
 
 - Rust profile guidance, fixture coverage, smoke-test wiring, installer
@@ -13,6 +21,26 @@ Notable project changes should be recorded here before release tags are cut.
   smoke test that runs the installed Go profile `check_harness.py` (`go build`,
   `go vet`, `go test`) when `go` is available and skips otherwise, closing the
   verification gap from issue #41.
+- Eight deterministic benchmark task definitions under `benchmarks/tasks/`,
+  covering small bugfixes, docs-only boundaries, forbidden-file guards, failure
+  memory, decision memory, profile scope, installer safety, and command
+  workflow guidance.
+- Benchmark documentation and task outcome evidence for runner smoke checks,
+  Codex dry-run oracle fixes, and benchmark ownership boundaries.
+- Traditional Chinese README localization and README language-switcher drift
+  coverage.
+
+### Changed
+
+- Harden benchmark task tests so each task has a deterministic oracle, narrow
+  expected files, explicit forbidden files, and required expected-file edits
+  where the runner treats `expected_files` as an allowlist.
+- Normalize Markdown-oriented benchmark oracles for docs-only and refresh
+  workflow tasks so ordinary line wrapping does not create false negatives.
+- Refresh README badges, localized README image references, repository-transfer
+  URLs, static-site metadata, profile lists, and validation docs.
+- Update `/harness update` and adoption prompt guidance around source tracking
+  and current repository URLs.
 
 ## v0.1.10 - 2026-06-08
 
