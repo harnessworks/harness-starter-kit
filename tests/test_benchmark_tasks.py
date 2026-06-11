@@ -25,7 +25,7 @@ EXPECTED_FILES_BY_TASK = {
         ".harness/structure-rules.json",
     },
     "failure-memory-benchmark-noop-oracle-gap": {
-        "docs/failures/0011-benchmark-noop-oracle-gap.md",
+        "docs/failures/0012-benchmark-noop-oracle-gap.md",
     },
     "decision-memory-benchmark-ownership-adr": {
         "docs/decisions/0008-benchmark-task-ownership.md",
@@ -191,6 +191,47 @@ class BenchmarkTaskTests(unittest.TestCase):
         )
         self.assertIn("benchmarks/**", task["forbidden_files"])
 
+    def test_command_workflow_oracle_accepts_line_wrapped_concepts(self) -> None:
+        result = self.run_refresh_workflow_oracle(
+            command_body="""
+            Refresh reviews should inspect `benchmarks/tasks/*.json` and
+            benchmark documentation for stale prompts, stale verification
+            commands, obsolete expected/forbidden boundaries, or runner-output
+            assumptions.
+            """,
+            test_body="""
+            def test_refresh_mentions_benchmark_guidance():
+                guidance = '''
+                benchmarks/tasks/*.json
+                expected/forbidden boundaries
+                runner-output
+                assumptions
+                '''
+                assert guidance
+            """,
+        )
+        self.assertEqual("", result.stderr)
+        self.assertEqual(0, result.returncode)
+
+    def test_command_workflow_oracle_rejects_missing_runner_output_concept(self) -> None:
+        result = self.run_refresh_workflow_oracle(
+            command_body="""
+            Refresh reviews should inspect `benchmarks/tasks/*.json` and
+            benchmark documentation for stale prompts, stale verification
+            commands, and obsolete expected/forbidden boundaries.
+            """,
+            test_body="""
+            def test_refresh_mentions_benchmark_guidance():
+                guidance = '''
+                benchmarks/tasks/*.json
+                expected/forbidden boundaries
+                '''
+                assert guidance
+            """,
+        )
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("runner-output assumptions", result.stderr)
+
     def test_benchmark_readme_documents_main_ref_reproducibility(self) -> None:
         text = (ROOT / "benchmarks" / "README.md").read_text(encoding="utf-8")
         self.assertIn("`repo.ref` set to `main`", text)
@@ -210,6 +251,68 @@ class BenchmarkTaskTests(unittest.TestCase):
             self.assertTrue(all(isinstance(item, str) and item for item in command))
             return
         self.fail(f"unsupported command shape: {command!r}")
+
+    def run_refresh_workflow_oracle(
+        self,
+        *,
+        command_body: str,
+        test_body: str,
+    ) -> subprocess.CompletedProcess[str]:
+        task = self.load_tasks()["command-workflow-refresh-benchmark-guidance"]
+        command = task["verification"]["commands"][1]["command"]
+        script = command[2]
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            commands_dir = tmp / "commands"
+            tests_dir = tmp / "tests"
+            commands_dir.mkdir()
+            tests_dir.mkdir()
+            refresh = commands_dir / "harness-refresh.md"
+            hygiene = tests_dir / "test_repository_hygiene.py"
+            refresh.write_text("# /harness refresh\n\nInitial guidance.\n", encoding="utf-8")
+            hygiene.write_text("def test_seed():\n    assert True\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=tmp, check=True)
+            subprocess.run(
+                ["git", "config", "user.email", "test@example.com"],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Benchmark Test"],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(
+                [
+                    "git",
+                    "add",
+                    "commands/harness-refresh.md",
+                    "tests/test_repository_hygiene.py",
+                ],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "commit", "-q", "-m", "seed refresh workflow"],
+                cwd=tmp,
+                check=True,
+            )
+            refresh.write_text(
+                "# /harness refresh\n\n"
+                f"{textwrap.dedent(command_body).strip()}\n",
+                encoding="utf-8",
+            )
+            hygiene.write_text(
+                f"{textwrap.dedent(test_body).strip()}\n",
+                encoding="utf-8",
+            )
+            return subprocess.run(
+                ["python3", "-c", script],
+                cwd=tmp,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
 
     def run_docs_only_text_oracle(
         self, section_body: str
