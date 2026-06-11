@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "installer-non-destructive-list-profiles",
+  "description": "Add a non-destructive --list-profiles mode to the optional installer.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Add a non-destructive `--list-profiles` mode to `scripts/apply_harness.py`. When invoked as `python3 scripts/apply_harness.py --list-profiles`, it should print the supported profile names and exit successfully without requiring `--target` and without writing files. Preserve the existing behavior for normal installs, dry runs, `--force`, and `--with-ci`. Add focused coverage in `tests/test_apply_harness.py`. Only edit `scripts/apply_harness.py` and `tests/test_apply_harness.py`.",
+  "prompt_ref": "benchmarks/tasks/installer-non-destructive-list-profiles.json",
+  "timeout_seconds": 360,
+  "max_attempts": 1,
+  "expected_files": [
+    "scripts/apply_harness.py",
+    "tests/test_apply_harness.py"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    "benchmarks/**",
+    "docs/**",
+    "logs/**",
+    "results/**",
+    "runs/**",
+    "templates/**",
+    "tests/fixtures/**"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "apply harness tests",
+        "command": [
+          "python3",
+          "-m",
+          "unittest",
+          "tests.test_apply_harness"
+        ],
+        "timeout_seconds": 180
+      },
+      {
+        "name": "list profiles oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import subprocess\nresult = subprocess.run(['python3', 'scripts/apply_harness.py', '--list-profiles'], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)\nassert result.returncode == 0, result.stderr or result.stdout\nfor profile in ['generic', 'python', 'typescript', 'nextjs', 'django', 'flask', 'fastapi', 'spring', 'android', 'react', 'vue', 'go', 'rust']:\n    assert profile in result.stdout.split(), f'missing profile {profile}'\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nrequired_changed = {'scripts/apply_harness.py', 'tests/test_apply_harness.py'}\nmissing_changes = sorted(required_changed - changed)\nassert not missing_changes, 'required files were not changed: ' + ', '.join(missing_changes)\n"
+        ],
+        "timeout_seconds": 60
+      }
+    ]
+  }
+}

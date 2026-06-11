@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 from typing import Any
@@ -20,6 +23,23 @@ EXPECTED_FILES_BY_TASK = {
     },
     "forbidden-file-structure-ignore-runner-output": {
         ".harness/structure-rules.json",
+    },
+    "failure-memory-benchmark-noop-oracle-gap": {
+        "docs/failures/0011-benchmark-noop-oracle-gap.md",
+    },
+    "decision-memory-benchmark-ownership-adr": {
+        "docs/decisions/0008-benchmark-task-ownership.md",
+    },
+    "profile-boundary-go-race-check": {
+        "templates/profiles/go/README.md",
+    },
+    "installer-non-destructive-list-profiles": {
+        "scripts/apply_harness.py",
+        "tests/test_apply_harness.py",
+    },
+    "command-workflow-refresh-benchmark-guidance": {
+        "commands/harness-refresh.md",
+        "tests/test_repository_hygiene.py",
     },
 }
 
@@ -43,6 +63,11 @@ class BenchmarkTaskTests(unittest.TestCase):
                 "small-bugfix-docs-drift-uv-command.json",
                 "docs-only-evaluation-benchmark-ownership.json",
                 "forbidden-file-structure-ignore-runner-output.json",
+                "failure-memory-benchmark-noop-oracle-gap.json",
+                "decision-memory-benchmark-ownership-adr.json",
+                "profile-boundary-go-race-check.json",
+                "installer-non-destructive-list-profiles.json",
+                "command-workflow-refresh-benchmark-guidance.json",
             },
             present,
         )
@@ -83,6 +108,32 @@ class BenchmarkTaskTests(unittest.TestCase):
         self.assertIn("tests/**", task["forbidden_files"])
         self.assertIn("benchmarks/**", task["forbidden_files"])
 
+    def test_docs_only_task_oracle_accepts_concept_equivalent_wording(self) -> None:
+        result = self.run_docs_only_text_oracle(
+            """
+            Keep benchmark task definitions in `benchmarks/tasks/`.
+            Project-specific benchmark oracle logic is owned by this repository
+            instead of the runner repository.
+            `expected_files` and `forbidden_files` are boundary controls that
+            are assessed independently from verification success.
+            """
+        )
+        self.assertEqual("", result.stderr)
+        self.assertEqual(0, result.returncode)
+
+    def test_docs_only_task_oracle_rejects_runner_owned_oracles(self) -> None:
+        result = self.run_docs_only_text_oracle(
+            """
+            Keep benchmark task definitions in `benchmarks/tasks/`.
+            Project-specific benchmark oracles belong to the runner repository,
+            not this repository.
+            `expected_files` and `forbidden_files` are boundary controls that
+            are assessed independently from verification success.
+            """
+        )
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("runner repository", result.stderr)
+
     def test_forbidden_file_guard_names_sensitive_and_generated_paths(self) -> None:
         task = self.load_tasks()["forbidden-file-structure-ignore-runner-output"]
         forbidden = set(task["forbidden_files"])
@@ -99,6 +150,47 @@ class BenchmarkTaskTests(unittest.TestCase):
         ):
             self.assertIn(pattern, forbidden)
 
+    def test_expanded_tasks_cover_core_harness_failure_modes(self) -> None:
+        tasks = self.load_tasks()
+        for task_id in (
+            "failure-memory-benchmark-noop-oracle-gap",
+            "decision-memory-benchmark-ownership-adr",
+            "profile-boundary-go-race-check",
+            "installer-non-destructive-list-profiles",
+            "command-workflow-refresh-benchmark-guidance",
+        ):
+            self.assertIn(task_id, tasks)
+
+    def test_expected_files_are_required_by_task_oracles(self) -> None:
+        tasks = self.load_tasks()
+        for task_id, expected_files in EXPECTED_FILES_BY_TASK.items():
+            with self.subTest(task_id=task_id):
+                command_text = "\n".join(
+                    "\n".join(command["command"])
+                    if isinstance(command["command"], list)
+                    else command["command"]
+                    for command in tasks[task_id]["verification"]["commands"]
+                )
+                for expected_file in expected_files:
+                    self.assertIn(expected_file, command_text)
+
+    def test_installer_task_preserves_template_boundary(self) -> None:
+        task = self.load_tasks()["installer-non-destructive-list-profiles"]
+        self.assertEqual(
+            {"scripts/apply_harness.py", "tests/test_apply_harness.py"},
+            set(task["expected_files"]),
+        )
+        self.assertIn("templates/**", task["forbidden_files"])
+        self.assertIn("tests/fixtures/**", task["forbidden_files"])
+
+    def test_command_workflow_task_blocks_benchmark_json_edits(self) -> None:
+        task = self.load_tasks()["command-workflow-refresh-benchmark-guidance"]
+        self.assertEqual(
+            {"commands/harness-refresh.md", "tests/test_repository_hygiene.py"},
+            set(task["expected_files"]),
+        )
+        self.assertIn("benchmarks/**", task["forbidden_files"])
+
     def test_benchmark_readme_documents_main_ref_reproducibility(self) -> None:
         text = (ROOT / "benchmarks" / "README.md").read_text(encoding="utf-8")
         self.assertIn("`repo.ref` set to `main`", text)
@@ -106,6 +198,8 @@ class BenchmarkTaskTests(unittest.TestCase):
         self.assertIn("`repository_ref`", text)
         self.assertIn("`--repo-ref <commit-sha>`", text)
         self.assertIn("runner repository", text)
+        for task_id in EXPECTED_FILES_BY_TASK:
+            self.assertIn(task_id, text)
 
     def assert_command_shape(self, command: Any) -> None:
         if isinstance(command, str):
@@ -116,6 +210,55 @@ class BenchmarkTaskTests(unittest.TestCase):
             self.assertTrue(all(isinstance(item, str) and item for item in command))
             return
         self.fail(f"unsupported command shape: {command!r}")
+
+    def run_docs_only_text_oracle(
+        self, section_body: str
+    ) -> subprocess.CompletedProcess[str]:
+        task = self.load_tasks()["docs-only-evaluation-benchmark-ownership"]
+        command = task["verification"]["commands"][0]["command"]
+        script = command[2]
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            docs = tmp / "docs"
+            docs.mkdir()
+            evaluation = docs / "evaluation.md"
+            evaluation.write_text(
+                "# Harness Effectiveness Evaluation\n\n"
+                "Initial tracked content.\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "init", "-q"], cwd=tmp, check=True)
+            subprocess.run(
+                ["git", "config", "user.email", "test@example.com"],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Benchmark Test"],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(["git", "add", "docs/evaluation.md"], cwd=tmp, check=True)
+            subprocess.run(
+                ["git", "commit", "-q", "-m", "seed docs"],
+                cwd=tmp,
+                check=True,
+            )
+            evaluation.write_text(
+                "# Harness Effectiveness Evaluation\n\n"
+                "## Deterministic Benchmark Tasks\n\n"
+                f"{textwrap.dedent(section_body).strip()}\n\n"
+                "## Interpretation\n\n"
+                "The rest of the evaluation guide continues here.\n",
+                encoding="utf-8",
+            )
+            return subprocess.run(
+                ["python3", "-c", script],
+                cwd=tmp,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
 
 
 if __name__ == "__main__":

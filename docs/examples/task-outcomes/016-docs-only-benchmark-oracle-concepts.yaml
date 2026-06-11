@@ -1,0 +1,67 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: branch codex/expand-deterministic-benchmark-tasks based on fbcb14e1bfc0b2156a3e1e52efa24fc72cccc9b0
+  stack_or_framework: Python unittest, JSON benchmark specs, Markdown harness docs
+  date: 2026-06-11
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only sub-agent review
+
+task:
+  id: docs-only-benchmark-oracle-concepts
+  run_id: harness-starter-kit-016
+  prompt_summary: Relax the docs-only benchmark oracle from exact sentence matching to deterministic concept coverage after a Codex adapter dry run produced a semantically correct docs-only update that failed verification.
+  prompt_ref: current Codex thread report from real Codex adapter dry run against docs-only-evaluation-benchmark-ownership
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - benchmarks/tasks/docs-only-evaluation-benchmark-ownership.json
+    - benchmarks/tasks/failure-memory-benchmark-noop-oracle-gap.json
+    - tests/test_benchmark_tasks.py
+    - docs/failures/0010-docs-only-benchmark-oracle-exact-string-drift.md
+    - docs/examples/task-outcomes/016-docs-only-benchmark-oracle-concepts.yaml
+  known_failure_mode: Docs-only benchmark oracles can fail semantically correct documentation updates when they require exact sentence fragments, but overly loose concept checks can also accept inverted ownership semantics.
+
+harness_context:
+  harness_doctor_score: 100/100 before this oracle maintenance; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: fbcb14e1bfc0b2156a3e1e52efa24fc72cccc9b0
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - benchmarks/README.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_benchmark_tasks
+    - python3 -m unittest discover -s tests
+    - python3 scripts/check_failure_memory.py
+    - python3 scripts/check_effectiveness_plan.py
+  relevant_memory_records:
+    - docs/failures/0010-docs-only-benchmark-oracle-exact-string-drift.md
+    - docs/examples/task-outcomes/013-deterministic-benchmark-tasks.yaml
+
+outcome:
+  files_changed:
+    - benchmarks/tasks/docs-only-evaluation-benchmark-ownership.json
+    - benchmarks/tasks/failure-memory-benchmark-noop-oracle-gap.json
+    - tests/test_benchmark_tasks.py
+    - docs/failures/0010-docs-only-benchmark-oracle-exact-string-drift.md
+    - docs/examples/task-outcomes/016-docs-only-benchmark-oracle-concepts.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_benchmark_tasks && python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: passed after the docs-only oracle was converted to section-level relation checks, positive and negative oracle fixtures were added, and the failure-memory path reference was normalized
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The docs-only task oracle now extracts the intended section and validates concept groups with normalized text instead of exact sentence fragments. The project-specific oracle ownership check ties this repository ownership and runner repository exclusion to the same oracle sentence, and tests run the oracle against positive and negative documentation fixtures. The failure-memory expansion task now targets docs/failures/0011-benchmark-noop-oracle-gap.md because this maintenance change records the actual oracle false-negative as docs/failures/0010-docs-only-benchmark-oracle-exact-string-drift.md.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: Failure record added in docs/failures/0010-docs-only-benchmark-oracle-exact-string-drift.md with tests/test_benchmark_tasks.py named as the prevention check.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false
