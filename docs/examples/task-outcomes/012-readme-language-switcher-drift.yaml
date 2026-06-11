@@ -1,0 +1,63 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: main working tree based on a111d4ad09f9339f5f609afac5bc222e6e497fda
+  stack_or_framework: Python unittest and Markdown README localization
+  date: 2026-06-11
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only sub-agent review
+
+task:
+  id: readme-language-switcher-drift
+  run_id: harness-starter-kit-012
+  prompt_summary: Fix the P0 README language-switcher test failure and the P1 duplicated language-list risk, then review from primary and sub-agent perspectives until no findings remain.
+  prompt_ref: current Codex thread objective requesting P0/P1 fixes, primary plus sub-agent review, and a no-findings loop
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - tests/test_readme_prompt_drift.py
+    - docs/failures/0009-readme-language-switcher-drift-missed-traditional-chinese.md
+    - docs/examples/task-outcomes/012-readme-language-switcher-drift.yaml
+  known_failure_mode: README.zh-TW.md was linked by the README language switchers, but tests/test_readme_prompt_drift.py still hardcoded only Korean, Japanese, and Simplified Chinese localized README coverage and expected switcher strings.
+
+harness_context:
+  harness_doctor_score: 100/100 before this change; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: a111d4ad09f9339f5f609afac5bc222e6e497fda
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_readme_prompt_drift
+    - python3 -m unittest discover -s tests
+    - python3 scripts/check_failure_memory.py
+    - python3 scripts/check_effectiveness_plan.py
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/failures/0009-readme-language-switcher-drift-missed-traditional-chinese.md
+
+outcome:
+  files_changed:
+    - tests/test_readme_prompt_drift.py
+    - docs/failures/0009-readme-language-switcher-drift-missed-traditional-chinese.md
+    - docs/examples/task-outcomes/012-readme-language-switcher-drift.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_readme_prompt_drift && python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: focused README prompt-drift regression passed after the first patch; full validation recorded in final task output
+  drift_violations_detected:
+    - tests/test_readme_prompt_drift.py previously detected four language-switcher mismatches after README.zh-TW.md was added
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The README prompt-drift test now discovers README*.md files, derives localized README coverage from the filesystem, parses the language switcher, and checks that every README links every other README while highlighting exactly one current language. This fixes the immediate Traditional Chinese switcher failure and removes the duplicated expected-switcher list that caused the drift. Sub-agent review flagged that set-only target comparison could miss duplicate switcher entries; the final test also asserts total entry and linked-target cardinality before the no-findings review pass.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: docs/failures/0009-readme-language-switcher-drift-missed-traditional-chinese.md records the failed harness check and names tests.test_readme_prompt_drift plus the full unittest CI gate as recurrence detection.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false
