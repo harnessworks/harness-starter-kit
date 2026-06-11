@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import tempfile
+import textwrap
 import unittest
 from pathlib import Path
 from typing import Any
@@ -22,7 +25,7 @@ EXPECTED_FILES_BY_TASK = {
         ".harness/structure-rules.json",
     },
     "failure-memory-benchmark-noop-oracle-gap": {
-        "docs/failures/0010-benchmark-noop-oracle-gap.md",
+        "docs/failures/0011-benchmark-noop-oracle-gap.md",
     },
     "decision-memory-benchmark-ownership-adr": {
         "docs/decisions/0008-benchmark-task-ownership.md",
@@ -105,6 +108,32 @@ class BenchmarkTaskTests(unittest.TestCase):
         self.assertIn("tests/**", task["forbidden_files"])
         self.assertIn("benchmarks/**", task["forbidden_files"])
 
+    def test_docs_only_task_oracle_accepts_concept_equivalent_wording(self) -> None:
+        result = self.run_docs_only_text_oracle(
+            """
+            Keep benchmark task definitions in `benchmarks/tasks/`.
+            Project-specific benchmark oracle logic is owned by this repository
+            instead of the runner repository.
+            `expected_files` and `forbidden_files` are boundary controls that
+            are assessed independently from verification success.
+            """
+        )
+        self.assertEqual("", result.stderr)
+        self.assertEqual(0, result.returncode)
+
+    def test_docs_only_task_oracle_rejects_runner_owned_oracles(self) -> None:
+        result = self.run_docs_only_text_oracle(
+            """
+            Keep benchmark task definitions in `benchmarks/tasks/`.
+            Project-specific benchmark oracles belong to the runner repository,
+            not this repository.
+            `expected_files` and `forbidden_files` are boundary controls that
+            are assessed independently from verification success.
+            """
+        )
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("runner repository", result.stderr)
+
     def test_forbidden_file_guard_names_sensitive_and_generated_paths(self) -> None:
         task = self.load_tasks()["forbidden-file-structure-ignore-runner-output"]
         forbidden = set(task["forbidden_files"])
@@ -181,6 +210,55 @@ class BenchmarkTaskTests(unittest.TestCase):
             self.assertTrue(all(isinstance(item, str) and item for item in command))
             return
         self.fail(f"unsupported command shape: {command!r}")
+
+    def run_docs_only_text_oracle(
+        self, section_body: str
+    ) -> subprocess.CompletedProcess[str]:
+        task = self.load_tasks()["docs-only-evaluation-benchmark-ownership"]
+        command = task["verification"]["commands"][0]["command"]
+        script = command[2]
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            docs = tmp / "docs"
+            docs.mkdir()
+            evaluation = docs / "evaluation.md"
+            evaluation.write_text(
+                "# Harness Effectiveness Evaluation\n\n"
+                "Initial tracked content.\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "init", "-q"], cwd=tmp, check=True)
+            subprocess.run(
+                ["git", "config", "user.email", "test@example.com"],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "user.name", "Benchmark Test"],
+                cwd=tmp,
+                check=True,
+            )
+            subprocess.run(["git", "add", "docs/evaluation.md"], cwd=tmp, check=True)
+            subprocess.run(
+                ["git", "commit", "-q", "-m", "seed docs"],
+                cwd=tmp,
+                check=True,
+            )
+            evaluation.write_text(
+                "# Harness Effectiveness Evaluation\n\n"
+                "## Deterministic Benchmark Tasks\n\n"
+                f"{textwrap.dedent(section_body).strip()}\n\n"
+                "## Interpretation\n\n"
+                "The rest of the evaluation guide continues here.\n",
+                encoding="utf-8",
+            )
+            return subprocess.run(
+                ["python3", "-c", script],
+                cwd=tmp,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
 
 
 if __name__ == "__main__":
