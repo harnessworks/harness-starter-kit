@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "id": "forbidden-file-structure-ignore-runner-output",
+  "description": "Add runner output directories to local structure-rule ignores while guarding sensitive, generated, and metadata files.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Update the starter kit's local structure drift rules so benchmark runner output directories are ignored by the structure check. Add `runs`, `results`, and `logs` to the `ignored_directories` list in .harness/structure-rules.json. Keep the JSON valid and preserve the existing forbidden pattern policy. Do not create those directories, do not edit templates, do not change CI, and do not touch environment, lock, package, project metadata, generated output, script, or test files. Only edit .harness/structure-rules.json.",
+  "prompt_ref": "benchmarks/tasks/forbidden-file-structure-ignore-runner-output.json",
+  "timeout_seconds": 180,
+  "max_attempts": 1,
+  "expected_files": [
+    ".harness/structure-rules.json"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    "AGENTS.md",
+    "README.md",
+    "benchmarks/**",
+    "docs/**",
+    "logs",
+    "logs/**",
+    "package-lock.json",
+    "package.json",
+    "poetry.lock",
+    "pyproject.toml",
+    "results",
+    "results/**",
+    "runs",
+    "runs/**",
+    "scripts/**",
+    "templates/**",
+    "tests/**",
+    "uv.lock"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "structure rules oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import json\nimport subprocess\nfrom pathlib import Path\nrules = json.loads(Path('.harness/structure-rules.json').read_text(encoding='utf-8'))\nignored = set(rules.get('ignored_directories', []))\nexisting_ignored = {'.git', '.hg', '.svn', '.venv', 'venv', 'node_modules', 'dist', 'build', 'target', 'out', '.next', '.turbo', '.gradle', '__pycache__'}\nnew_ignored = {'runs', 'results', 'logs'}\nmissing_ignored = sorted((existing_ignored | new_ignored) - ignored)\nassert not missing_ignored, 'missing ignored directories: ' + ', '.join(missing_ignored)\nrequired_patterns = {'**/temp_*', '**/*_new.*', '**/*_old.*', '**/*_backup.*', '**/*_fix.*', '**/*.bak'}\npatterns = set(rules.get('forbidden_patterns', []))\nmissing_patterns = sorted(required_patterns - patterns)\nassert not missing_patterns, 'missing existing forbidden patterns: ' + ', '.join(missing_patterns)\nfor name in sorted(new_ignored):\n    path = Path(name)\n    assert not path.exists(), f'{name} must be listed as ignored but not created by this task'\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nassert '.harness/structure-rules.json' in changed, '.harness/structure-rules.json must be changed by this task'\n"
+        ],
+        "timeout_seconds": 60
+      },
+      {
+        "name": "structure drift check",
+        "command": [
+          "python3",
+          "scripts/check_structure.py"
+        ],
+        "timeout_seconds": 120
+      }
+    ]
+  }
+}
