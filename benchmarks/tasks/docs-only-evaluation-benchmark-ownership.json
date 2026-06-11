@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "id": "docs-only-evaluation-benchmark-ownership",
+  "description": "Document benchmark task ownership in the evaluation guide without changing source or test files.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Make a docs-only update to docs/evaluation.md. Add a short section named `## Deterministic Benchmark Tasks` that explains how repository-owned benchmark tasks should be maintained. The section must state that benchmark task definitions live under `benchmarks/tasks/`, project-specific benchmark oracles belong to this repository and not to the runner repository, and `expected_files` plus `forbidden_files` measure boundary adherence separately from verification success. Do not edit source files, scripts, tests, task JSON, CI, or templates.",
+  "prompt_ref": "benchmarks/tasks/docs-only-evaluation-benchmark-ownership.json",
+  "timeout_seconds": 240,
+  "max_attempts": 1,
+  "expected_files": [
+    "docs/evaluation.md"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    ".harness/**",
+    "AGENTS.md",
+    "README.md",
+    "benchmarks/**",
+    "scripts/**",
+    "tests/**",
+    "templates/**",
+    "runs/**",
+    "results/**",
+    "logs/**"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "benchmark ownership text oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import subprocess\nfrom pathlib import Path\ntext = Path('docs/evaluation.md').read_text(encoding='utf-8')\nrequired = [\n    '## Deterministic Benchmark Tasks',\n    'benchmark task definitions live under `benchmarks/tasks/`',\n    'project-specific benchmark oracles belong to this repository',\n    'not to the runner repository',\n    '`expected_files`',\n    '`forbidden_files`',\n    'boundary adherence separately from verification success',\n]\nmissing = [item for item in required if item not in text]\nassert not missing, 'missing required docs text: ' + ', '.join(missing)\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nassert 'docs/evaluation.md' in changed, 'docs/evaluation.md must be changed by this task'\n"
+        ],
+        "timeout_seconds": 60
+      },
+      {
+        "name": "docs drift check",
+        "command": [
+          "python3",
+          "scripts/check_docs_drift.py"
+        ],
+        "timeout_seconds": 120
+      },
+      {
+        "name": "encoding hygiene check",
+        "command": [
+          "python3",
+          "scripts/check_encoding_hygiene.py"
+        ],
+        "timeout_seconds": 120
+      }
+    ]
+  }
+}

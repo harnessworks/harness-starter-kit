@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "small-bugfix-docs-drift-uv-command",
+  "description": "Teach the docs drift checker command heuristic to recognize uv and uvx snippets, with focused unittest coverage.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Fix a small command-classification gap in the docs drift checker. The helper in scripts/check_docs_drift.py should treat inline-code snippets that start with `uv run ...` or `uvx ...` as commands, matching the existing behavior for Python, pytest, npm, and other command roots. Add focused regression coverage in tests/test_check_docs_drift.py for both `uv run pytest` and `uvx ruff check`. Keep the existing command/path behavior intact. Do not add dependencies, do not edit docs, and do not add a failure note; docs/failures/0001-docs-drift-venv-command-false-positive.md already covers this class of docs-drift false positive. Only edit scripts/check_docs_drift.py and tests/test_check_docs_drift.py.",
+  "prompt_ref": "benchmarks/tasks/small-bugfix-docs-drift-uv-command.json",
+  "timeout_seconds": 300,
+  "max_attempts": 1,
+  "expected_files": [
+    "scripts/check_docs_drift.py",
+    "tests/test_check_docs_drift.py"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    "benchmarks/**",
+    "docs/**",
+    "runs/**",
+    "results/**",
+    "logs/**",
+    "tests/__pycache__/**"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "focused docs drift tests",
+        "command": [
+          "python3",
+          "-m",
+          "unittest",
+          "tests.test_check_docs_drift"
+        ],
+        "timeout_seconds": 120
+      },
+      {
+        "name": "uv command oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import subprocess\nfrom pathlib import Path\nfrom scripts.check_docs_drift import looks_like_command\npositive_cases = ['uv run pytest', 'uv run python -m unittest discover -s tests', 'uvx ruff check']\nmissing = [case for case in positive_cases if not looks_like_command(case)]\nassert not missing, 'not classified as command: ' + ', '.join(missing)\nnegative_cases = ['docs/missing-file.md', 'README.md', 'scripts/check_docs_drift.py']\nfalse_positives = [case for case in negative_cases if looks_like_command(case)]\nassert not false_positives, 'path-like snippets misclassified as commands: ' + ', '.join(false_positives)\ntest_text = Path('tests/test_check_docs_drift.py').read_text(encoding='utf-8')\nrequired = ['uv run pytest', 'uvx ruff check']\nmissing_tests = [item for item in required if item not in test_text]\nassert not missing_tests, 'missing regression examples: ' + ', '.join(missing_tests)\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nrequired_changed = {'scripts/check_docs_drift.py', 'tests/test_check_docs_drift.py'}\nmissing_changes = sorted(required_changed - changed)\nassert not missing_changes, 'required files were not changed: ' + ', '.join(missing_changes)\n"
+        ],
+        "timeout_seconds": 60
+      }
+    ]
+  }
+}

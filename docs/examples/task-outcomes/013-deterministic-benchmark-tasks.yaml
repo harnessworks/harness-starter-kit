@@ -1,0 +1,70 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: main working tree based on 61ea4c04f36bc57c1083292744d16697fc90b2e9
+  stack_or_framework: Python unittest, JSON benchmark specs, and Markdown harness docs
+  date: 2026-06-11
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only sub-agent review
+
+task:
+  id: deterministic-benchmark-tasks
+  run_id: harness-starter-kit-013
+  prompt_summary: Add three deterministic benchmark tasks owned by harness-starter-kit for use with harness-agent-benchmark-runner, without modifying the runner repository.
+  prompt_ref: current Codex thread objective requesting small-bugfix, docs-only boundary, and forbidden-file guard benchmark tasks plus sub-agent and primary review until no findings remain
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - benchmarks/tasks/small-bugfix-docs-drift-uv-command.json
+    - benchmarks/tasks/docs-only-evaluation-benchmark-ownership.json
+    - benchmarks/tasks/forbidden-file-structure-ignore-runner-output.json
+    - benchmarks/README.md
+    - tests/test_benchmark_tasks.py
+    - docs/component-map.md
+    - docs/examples/task-outcomes/013-deterministic-benchmark-tasks.yaml
+  known_failure_mode: Benchmark tasks could become runner-owned, depend on runner internals, omit deterministic verification, or fail to measure expected_files and forbidden_files boundaries.
+
+harness_context:
+  harness_doctor_score: 100/100 before this change; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: 61ea4c04f36bc57c1083292744d16697fc90b2e9
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_benchmark_tasks
+    - python3 -m unittest discover -s tests
+    - python3 scripts/check_effectiveness_plan.py
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_structure.py
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+
+outcome:
+  files_changed:
+    - benchmarks/tasks/small-bugfix-docs-drift-uv-command.json
+    - benchmarks/tasks/docs-only-evaluation-benchmark-ownership.json
+    - benchmarks/tasks/forbidden-file-structure-ignore-runner-output.json
+    - benchmarks/README.md
+    - tests/test_benchmark_tasks.py
+    - docs/component-map.md
+    - docs/examples/task-outcomes/013-deterministic-benchmark-tasks.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_benchmark_tasks && python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: passed for focused benchmark task tests and full starter-kit validation after the initial benchmark files were added; runner noop smoke reached each task oracle and failed verification as expected for edit-requiring tasks
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The benchmark specs define a small docs-drift bugfix task, a docs-only evaluation-boundary task, and a forbidden-file guard task. Each task keeps repo.source at the canonical GitHub URL, repo.ref at "main", max_attempts at 1, narrow expected_files, explicit forbidden_files, and deterministic verification commands that run inside the isolated cloned repo without depending on runner internals. The task oracles also require the intended expected files to appear in git status, because runner expected_files is an allowlist rather than a required-change list. Noop runner smoke used /tmp output directories and confirmed there were no runner errors; the tasks failed only because the noop agent made no edits. Sub-agent review found that repo.source "." was cwd-sensitive in the runner, the structure-rule oracle needed to prove existing forbidden patterns and existing ignored directories were preserved, and the uv command oracle needed negative path-like cases; the final specs address those findings. A later sub-agent review flagged moving-ref risk from repo.ref "main"; this remains because the task spec explicitly requires main, and benchmarks/README.md now documents recording the resolved repository_ref or using --repo-ref for pinned comparisons.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: No new decision or failure record; this work adds evaluation task assets under the existing task-outcome evidence policy and does not fix a recurring failed harness check.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

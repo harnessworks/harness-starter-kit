@@ -22,6 +22,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
 | Harness change-set review | `/harness review` or `/harness review sub-agent` report | `commands/harness-review.md`, `docs/templates/harness-review-report.md` |
 | Baseline harness score scan | six-element repository health and coupling scan | `scripts/harness_doctor.py` |
+| Deterministic benchmark tasks | repo-owned benchmark task definitions and project-specific oracles for `harness-agent-benchmark-runner` | `benchmarks/README.md`, `benchmarks/tasks/*.json` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
 | External API work recipe | server-only API boundary, redaction, live/mock fallback, and smoke checks | `docs/checklists/external-api-work.md` |
 | Decision and failure memory guidance | examples for when to record ADRs, failure notes, domain docs, or final-report notes | `docs/checklists/decision-failure-memory.md` |
