@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "command-workflow-refresh-benchmark-guidance",
+  "description": "Align the harness refresh workflow with benchmark task maintenance and add repository-hygiene coverage.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Update the `/harness refresh` workflow so it explicitly includes repository-owned benchmark task definitions when reviewing stale, duplicated, or unused harness guidance. Add concise guidance in `commands/harness-refresh.md` that refresh should inspect `benchmarks/tasks/*.json` and benchmark documentation for stale prompts, stale verification commands, obsolete expected/forbidden boundaries, or runner-output assumptions. Add focused repository hygiene coverage in `tests/test_repository_hygiene.py` so this workflow stays wired. Only edit `commands/harness-refresh.md` and `tests/test_repository_hygiene.py`; do not edit benchmark task JSON, runner code, scripts, templates, or unrelated docs.",
+  "prompt_ref": "benchmarks/tasks/command-workflow-refresh-benchmark-guidance.json",
+  "timeout_seconds": 360,
+  "max_attempts": 1,
+  "expected_files": [
+    "commands/harness-refresh.md",
+    "tests/test_repository_hygiene.py"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    "benchmarks/**",
+    "docs/**",
+    "logs/**",
+    "results/**",
+    "runs/**",
+    "scripts/**",
+    "templates/**"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "repository hygiene tests",
+        "command": [
+          "python3",
+          "-m",
+          "unittest",
+          "tests.test_repository_hygiene"
+        ],
+        "timeout_seconds": 180
+      },
+      {
+        "name": "refresh workflow oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import subprocess\nfrom pathlib import Path\ncommand_text = Path('commands/harness-refresh.md').read_text(encoding='utf-8')\ntest_text = Path('tests/test_repository_hygiene.py').read_text(encoding='utf-8')\nrequired_command = ['benchmarks/tasks/*.json', 'stale prompts', 'stale verification commands', 'expected/forbidden boundaries', 'runner-output assumptions']\nmissing_command = [item for item in required_command if item not in command_text]\nassert not missing_command, 'missing refresh workflow text: ' + ', '.join(missing_command)\nrequired_test = ['benchmarks/tasks/*.json', 'expected/forbidden boundaries', 'runner-output assumptions']\nmissing_test = [item for item in required_test if item not in test_text]\nassert not missing_test, 'missing repository hygiene assertions: ' + ', '.join(missing_test)\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nrequired_changed = {'commands/harness-refresh.md', 'tests/test_repository_hygiene.py'}\nmissing_changes = sorted(required_changed - changed)\nassert not missing_changes, 'required files were not changed: ' + ', '.join(missing_changes)\n"
+        ],
+        "timeout_seconds": 60
+      }
+    ]
+  }
+}

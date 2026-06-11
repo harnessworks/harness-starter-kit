@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "decision-memory-benchmark-ownership-adr",
+  "description": "Record an ADR for benchmark task ownership and runner separation.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Add a decision record documenting benchmark ownership boundaries. Create `docs/decisions/0008-benchmark-task-ownership.md` with Status, Context, Decision, Rationale, Consequences or Alternatives, and Agent Guidance sections. The decision must state that benchmark task definitions and project-specific oracles live in `benchmarks/tasks/` in this repository, while `harness-agent-benchmark-runner` remains generic and must not receive project-specific oracle logic. Also mention how `repo.ref: main` should be handled for reproducibility by recording the runner result's `repository_ref` or using `--repo-ref <commit-sha>` for pinned comparisons. Do not edit benchmark task JSON, scripts, tests, templates, or existing decision records.",
+  "prompt_ref": "benchmarks/tasks/decision-memory-benchmark-ownership-adr.json",
+  "timeout_seconds": 240,
+  "max_attempts": 1,
+  "expected_files": [
+    "docs/decisions/0008-benchmark-task-ownership.md"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    "benchmarks/**",
+    "docs/failures/**",
+    "logs/**",
+    "results/**",
+    "runs/**",
+    "scripts/**",
+    "templates/**",
+    "tests/**"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "docs drift check",
+        "command": [
+          "python3",
+          "scripts/check_docs_drift.py"
+        ],
+        "timeout_seconds": 120
+      },
+      {
+        "name": "decision record oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import subprocess\nfrom pathlib import Path\npath = Path('docs/decisions/0008-benchmark-task-ownership.md')\nassert path.exists(), f'missing {path}'\ntext = path.read_text(encoding='utf-8')\nrequired = [\n    '# 0008.',\n    '## Status',\n    '## Context',\n    '## Decision',\n    '## Rationale',\n    '## Agent Guidance',\n    '`benchmarks/tasks/`',\n    '`harness-agent-benchmark-runner`',\n    'project-specific oracles',\n    'generic',\n    '`repository_ref`',\n    '`--repo-ref <commit-sha>`',\n]\nmissing = [item for item in required if item not in text]\nassert not missing, 'missing decision-record content: ' + ', '.join(missing)\nassert '## Consequences' in text or '## Alternatives' in text, 'decision record must include Consequences or Alternatives section'\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nassert str(path) in changed, f'{path} must be changed by this task'\n"
+        ],
+        "timeout_seconds": 60
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: branch codex/expand-deterministic-benchmark-tasks based on fbcb14e1bfc0b2156a3e1e52efa24fc72cccc9b0
+  stack_or_framework: Python unittest, JSON benchmark specs, Markdown harness docs
+  date: 2026-06-11
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only sub-agent review
+
+task:
+  id: benchmark-task-expansion
+  run_id: harness-starter-kit-014
+  prompt_summary: Add five more deterministic benchmark tasks covering failure memory, decision memory, profile boundaries, installer non-destructive behavior, and command workflow alignment.
+  prompt_ref: current Codex thread objective requesting benchmark expansions 1 through 5 plus sub-agent and primary review until no findings remain
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - benchmarks/README.md
+    - benchmarks/tasks/failure-memory-benchmark-noop-oracle-gap.json
+    - benchmarks/tasks/decision-memory-benchmark-ownership-adr.json
+    - benchmarks/tasks/profile-boundary-go-race-check.json
+    - benchmarks/tasks/installer-non-destructive-list-profiles.json
+    - benchmarks/tasks/command-workflow-refresh-benchmark-guidance.json
+    - tests/test_benchmark_tasks.py
+    - docs/examples/task-outcomes/014-benchmark-task-expansion.yaml
+  known_failure_mode: A benchmark suite can overfit to simple docs and file-boundary smoke tests while missing durable-memory discipline, profile scoping, installer safety, and command workflow alignment.
+
+harness_context:
+  harness_doctor_score: 100/100 before this expansion; not treated as effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: fbcb14e1bfc0b2156a3e1e52efa24fc72cccc9b0
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - benchmarks/README.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_benchmark_tasks
+    - python3 -m unittest discover -s tests
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_effectiveness_plan.py
+    - python3 scripts/harness_doctor.py --target .
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/examples/task-outcomes/013-deterministic-benchmark-tasks.yaml
+
+outcome:
+  files_changed:
+    - benchmarks/README.md
+    - benchmarks/tasks/failure-memory-benchmark-noop-oracle-gap.json
+    - benchmarks/tasks/decision-memory-benchmark-ownership-adr.json
+    - benchmarks/tasks/profile-boundary-go-race-check.json
+    - benchmarks/tasks/installer-non-destructive-list-profiles.json
+    - benchmarks/tasks/command-workflow-refresh-benchmark-guidance.json
+    - tests/test_benchmark_tasks.py
+    - docs/examples/task-outcomes/014-benchmark-task-expansion.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_benchmark_tasks && python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: focused benchmark tests, full unittest suite, harness checks, Harness Doctor, runner task loader parsing, and noop runner smoke passed or failed as expected after the initial expansion patch
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The expansion adds five task definitions that deliberately cover separate harness failure modes. Each task uses repo.source as the canonical GitHub URL, repo.ref main, max_attempts 1, narrow expected_files, explicit forbidden_files, deterministic verification commands, and an oracle that asserts the intended expected files are actually changed. Noop runner smoke reached each new task oracle with no runner_error; verification failed because noop made no edits, which is expected for these edit-requiring tasks. Sub-agent review found that the decision-memory oracle needed to enforce the requested Consequences or Alternatives ADR section and that the failure-memory task cited a non-detecting structure check for runner output directories. The final decision oracle includes the ADR section assertion, and the final failure-memory task records the real benchmark no-op oracle gap detected by tests/test_benchmark_tasks.py.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: No new ADR or failure record for this maintenance change; the expansion is recorded as task outcome evidence and does not fix a recurring failed harness check.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

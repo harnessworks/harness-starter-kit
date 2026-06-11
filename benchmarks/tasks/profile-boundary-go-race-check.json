@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "profile-boundary-go-race-check",
+  "description": "Update only the Go profile with focused race-detector guidance.",
+  "repo": {
+    "source": "https://github.com/harnessworks/harness-starter-kit",
+    "ref": "main"
+  },
+  "prompt": "Make a profile-scoped documentation update for Go only. In `templates/profiles/go/README.md`, add guidance that `go test -race ./...` is an optional focused or manual check for race-sensitive concurrent code and should not become the default harness gate unless the target project already treats it as a normal check. Keep the profile conditional and conservative. Do not edit other profiles, generic templates, scripts, tests, docs outside the Go profile, CI, or benchmark task JSON.",
+  "prompt_ref": "benchmarks/tasks/profile-boundary-go-race-check.json",
+  "timeout_seconds": 180,
+  "max_attempts": 1,
+  "expected_files": [
+    "templates/profiles/go/README.md"
+  ],
+  "forbidden_files": [
+    ".env",
+    ".env.*",
+    ".github/workflows/**",
+    "benchmarks/**",
+    "docs/**",
+    "logs/**",
+    "results/**",
+    "runs/**",
+    "scripts/**",
+    "templates/generic/**",
+    "templates/profiles/android/**",
+    "templates/profiles/django/**",
+    "templates/profiles/fastapi/**",
+    "templates/profiles/flask/**",
+    "templates/profiles/nextjs/**",
+    "templates/profiles/python/**",
+    "templates/profiles/react/**",
+    "templates/profiles/rust/**",
+    "templates/profiles/spring/**",
+    "templates/profiles/typescript/**",
+    "templates/profiles/vue/**",
+    "tests/**"
+  ],
+  "verification": {
+    "commands": [
+      {
+        "name": "profile consistency tests",
+        "command": [
+          "python3",
+          "-m",
+          "unittest",
+          "tests.test_profile_consistency"
+        ],
+        "timeout_seconds": 120
+      },
+      {
+        "name": "go profile boundary oracle",
+        "command": [
+          "python3",
+          "-c",
+          "import subprocess\nfrom pathlib import Path\npath = Path('templates/profiles/go/README.md')\ntext = path.read_text(encoding='utf-8')\nrequired = ['`go test -race ./...`', 'focused', 'manual', 'race-sensitive concurrent code', 'default harness gate']\nmissing = [item for item in required if item not in text]\nassert not missing, 'missing Go profile guidance: ' + ', '.join(missing)\nfor other in Path('templates/profiles').glob('*/README.md'):\n    if other == path:\n        continue\n    assert '`go test -race ./...`' not in other.read_text(encoding='utf-8'), f'race guidance leaked into {other}'\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nassert str(path) in changed, f'{path} must be changed by this task'\n"
+        ],
+        "timeout_seconds": 60
+      }
+    ]
+  }
+}
