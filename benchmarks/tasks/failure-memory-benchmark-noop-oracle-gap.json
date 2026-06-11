@@ -6,12 +6,12 @@
     "source": "https://github.com/harnessworks/harness-starter-kit",
     "ref": "main"
   },
-  "prompt": "Add a failure-memory record for a benchmark design bug path: `expected_files` is an allowlist in the runner, not a required-changes list, so a task can accidentally pass a no-op agent if its verification commands only check content that already exists. Create `docs/failures/0011-benchmark-noop-oracle-gap.md` using the existing failure-note structure. The note must explain the no-op false-positive risk, why it matters, the current replacement behavior, and name `tests/test_benchmark_tasks.py` plus `test_expected_files_are_required_by_task_oracles` as the concrete detection/prevention check. Do not edit scripts, tests, templates, benchmark task JSON, CI, or existing failure records.",
+  "prompt": "Add a failure-memory record for a benchmark design bug path: `expected_files` is an allowlist in the runner, not a required-changes list, so a task can accidentally pass a no-op agent if its verification commands only check content that already exists. Create `docs/failures/0012-benchmark-noop-oracle-gap.md` using the existing failure-note structure. The note must explain the no-op false-positive risk, why it matters, the current replacement behavior, and name `tests/test_benchmark_tasks.py` plus `test_expected_files_are_required_by_task_oracles` as the concrete detection/prevention check. Do not edit scripts, tests, templates, benchmark task JSON, CI, or existing failure records.",
   "prompt_ref": "benchmarks/tasks/failure-memory-benchmark-noop-oracle-gap.json",
   "timeout_seconds": 240,
   "max_attempts": 1,
   "expected_files": [
-    "docs/failures/0011-benchmark-noop-oracle-gap.md"
+    "docs/failures/0012-benchmark-noop-oracle-gap.md"
   ],
   "forbidden_files": [
     ".env",
@@ -44,7 +44,7 @@
         "command": [
           "python3",
           "-c",
-          "import subprocess\nfrom pathlib import Path\npath = Path('docs/failures/0011-benchmark-noop-oracle-gap.md')\nassert path.exists(), f'missing {path}'\ntext = path.read_text(encoding='utf-8')\nrequired = [\n    '# 0011.',\n    '## Date Observed',\n    '## Failure Type',\n    '## Goal',\n    '## What Happened Or Was Tried',\n    '## Why It Failed',\n    '## Current Replacement',\n    '## Detection Or Prevention Check',\n    '## Agent Guidance',\n    '`expected_files`',\n    'allowlist',\n    'no-op',\n    '`tests/test_benchmark_tasks.py`',\n    '`test_expected_files_are_required_by_task_oracles`',\n]\nmissing = [item for item in required if item not in text]\nassert not missing, 'missing failure-note content: ' + ', '.join(missing)\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nassert str(path) in changed, f'{path} must be changed by this task'\n"
+          "import subprocess\nfrom pathlib import Path\npath = Path('docs/failures/0012-benchmark-noop-oracle-gap.md')\nassert path.exists(), f'missing {path}'\ntext = path.read_text(encoding='utf-8')\nrequired = [\n    '# 0012.',\n    '## Date Observed',\n    '## Failure Type',\n    '## Goal',\n    '## What Happened Or Was Tried',\n    '## Why It Failed',\n    '## Current Replacement',\n    '## Detection Or Prevention Check',\n    '## Agent Guidance',\n    '`expected_files`',\n    'allowlist',\n    'no-op',\n    '`tests/test_benchmark_tasks.py`',\n    '`test_expected_files_are_required_by_task_oracles`',\n]\nmissing = [item for item in required if item not in text]\nassert not missing, 'missing failure-note content: ' + ', '.join(missing)\nstatus = subprocess.check_output(['git', 'status', '--porcelain=v1'], text=True)\nchanged = {line[3:] for line in status.splitlines() if len(line) >= 4}\nassert str(path) in changed, f'{path} must be changed by this task'\n"
         ],
         "timeout_seconds": 60
       }
