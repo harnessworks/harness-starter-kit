@@ -1,6 +1,6 @@
-<img width="2172" height="724" alt="Harness Starter Kit 로고 배너" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
+<img width="2172" height="724" alt="Harness Starter Kit 標誌橫幅" src="https://github.com/user-attachments/assets/c303dffe-402d-44f4-8d11-3c28936f3a3e" />
 
-<img width="1536" height="1024" alt="Harness engineering 워크플로 다이어그램" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
+<img width="1536" height="1024" alt="Harness engineering 工作流程圖" src="https://github.com/user-attachments/assets/13dbc277-ec47-4c0b-87ca-d31a88e83f4f" />
 
 
 </p>
@@ -23,7 +23,7 @@
   <img alt="Contributors" src="https://img.shields.io/github/contributors/harnessworks/harness-starter-kit?style=flat-square" />
 </p>
 
-[English](README.md) | **한국어** | [日本語](README.ja.md) | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md)
+[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md) | [简体中文](README.zh-CN.md) | **繁體中文**
 
 <p align="center">
   <a href="https://harnessworks.github.io/harness-starter-kit/">
@@ -45,15 +45,15 @@
 
 # Harness Starter Kit
 
-반복되는 coding-agent 실수를 durable repository instructions, checks, memory,
-evaluation으로 바꾸기 위한 prompt-first starter kit입니다.
+一套 prompt-first starter kit，協助你把 coding agent 反覆出現的錯誤，整理成能
+長期留在儲存庫中的 instructions、checks、memory 與 evaluation。
 
-## 빠른 시작
+## 快速開始
 
-대상 저장소를 코딩 에이전트로 열고 아래 prompt를 전달하세요.
+用你的 coding agent 開啟目標儲存庫，並給它下面這段 prompt。
 
 <details>
-<summary>전체 도입 프롬프트 보기</summary>
+<summary>顯示完整導入 prompt</summary>
 
 ```text
 Use this kit to apply harness engineering to this repository:
@@ -109,116 +109,113 @@ Expected result:
 
 </details>
 
-전체 prompt와 workflow는
-[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)와
-[`docs/adoption-workflow.md`](docs/adoption-workflow.md)를 보세요.
+完整 prompt 與工作流程請見
+[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)
+與 [`docs/adoption-workflow.md`](docs/adoption-workflow.md)。
 
 <p align="center">
-  <img width="360" alt="Harness Starter Kit GitHub star 안내 이미지" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
+  <img width="360" alt="Harness Starter Kit GitHub star 支持插圖" src="https://github.com/user-attachments/assets/a09c060c-3ac1-4ca4-bbce-8220478da130" />
 </p>
 
 <p align="center">
-  <em>💫 If this kit helps you, a GitHub star would be appreciated. 💫</em>
+  <em>💫 如果這套 kit 對你有幫助，歡迎給一顆 GitHub star。 💫</em>
 </p>
 
 
-## 하네스 이론
+## Harness 理論
 
-Harness engineering은 저장소를 coding agent의 지속 가능한 운영 환경으로 다룹니다.
+Harness engineering 會把儲存庫視為 coding agent 可長期依賴的 operating
+environment：
 
 ```text
 Harness = Instructions + Constraints + Feedback + Memory + Evaluation + Governance
 ```
 
-Harness health는 agent effectiveness와 다릅니다. Harness Doctor는 지속되는
-저장소 evidence를 스캔할 수 있지만, 에이전트가 실수를 덜 한다는 것을 증명하지는
-못합니다. task outcomes와 effectiveness reports로 별도 측정하세요. 모델은
-[`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)를 보세요.
+Harness health 和 agent effectiveness 是不同的概念。Harness Doctor 可以掃描
+durable repository evidence，但不能證明 agent 會少犯錯。這件事需要另外用
+task outcomes 和 effectiveness reports 來衡量。模型說明請見
+[`docs/theory/harness-engineering.md`](docs/theory/harness-engineering.md)。
 
-반복되는 agent failure는 더 명확한 instruction, automated constraint, test 또는
-CI check, decision/failure record, drift check 중 하나 이상의 durable artifact로
-전환해야 합니다.
+每一個 repeated agent failure 都應該轉成至少一個 durable artifact：更清楚的
+instruction、automated constraint、test 或 CI check、decision/failure record，
+或 drift check。
 
-## 명령
+## 指令
 
-아래 `/harness ...` 이름은 기본적으로 내장 editor command가 아니라 prompt
-convention입니다. 코딩 에이전트 chat에 직접 입력하거나 붙여넣으세요. Cursor 같은
-editor에서는 matching custom slash command를 별도로 추가하지 않는 한 command
-palette에 표시되지 않습니다.
+下面的 `/harness ...` 名稱預設是 prompt convention，不是 editor 內建的
+command。請直接輸入或貼到 coding agent chat。像 Cursor 這類 editor，除非你另外
+新增對應的 custom slash command，否則這些名稱不會出現在 command palette。
 
 | Command | Use when |
 | --- | --- |
-| `/harness doctor` | 파일을 수정하지 않고 baseline harness evidence를 채점할 때. |
-| `/harness update` | 도입 후 로컬 `./harness-starter-kit` reference를 갱신할 때. |
-| `/harness refresh` | stale, duplicated, obsolete, unused target harness guidance를 검토할 때. |
-| `/harness review` | 마무리 전에 현재 change set을 비판적으로 점검할 때. |
-| `/harness review sub-agent` | runtime이 허용할 때 read-only reviewer subagent를 명시적으로 요청할 때. |
+| `/harness doctor` | 在不修改檔案的前提下，評估 baseline harness evidence。 |
+| `/harness update` | 導入之後，更新本機的 `./harness-starter-kit` reference。 |
+| `/harness refresh` | 檢查 stale、duplicated、obsolete 或 unused target harness guidance。 |
+| `/harness review` | 收尾前，從批判角度檢查目前的 change set。 |
+| `/harness review sub-agent` | runtime 允許時，明確要求 read-only reviewer subagent。 |
 
-전체 workflow는 [`commands/`](commands/)를 보세요:
+完整 workflow 請見 [`commands/`](commands/)：
 [`doctor`](commands/harness-doctor.md),
 [`update`](commands/harness-update.md),
 [`refresh`](commands/harness-refresh.md),
-[`review`](commands/harness-review.md).
+[`review`](commands/harness-review.md)。
 
-## 적용 방식
+## 導入方式
 
 <details>
-<summary>적용 세부사항 보기</summary>
+<summary>顯示導入細節</summary>
 
-이 kit은 주로 자동 installer가 아닙니다. 에이전트가 대상 저장소를 먼저 읽고,
-instructions, enforceable constraints, feedback loops, durable memory, drift
-checks, adoption report 중 가장 작은 유용한 세트만 적용해야 합니다.
-[`docs/adoption-workflow.md`](docs/adoption-workflow.md)와
-[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)를
-따르세요.
+這套 kit 的重點不是自動安裝。Agent 應該先檢查目標儲存庫，再導入最小但有用的
+harness artifacts：instructions、enforceable constraints、feedback loops、
+durable memory、drift checks，以及 adoption report。請依照
+[`docs/adoption-workflow.md`](docs/adoption-workflow.md) 和
+[`docs/prompts/apply-to-target-repo.md`](docs/prompts/apply-to-target-repo.md)。
 
-optional installer는 agent-driven adaptation 전에 skeleton이 필요할 때만 쓰세요.
-검토용 profile snippets를 `docs/harness/profiles/<profile>`에 복사합니다.
-Prompt-first adoption은 cloned kit의
-`harness-starter-kit/templates/profiles/<profile>`을 참조합니다.
+只有在 agent-driven adaptation 前需要初始骨架時，才使用 optional installer。它
+會把 profile snippets 複製到 `docs/harness/profiles/<profile>` 供你檢視；
+prompt-first adoption 則會讀取 cloned kit 裡的
+`harness-starter-kit/templates/profiles/<profile>`。
 
 ```powershell
 python harness-starter-kit/scripts/apply_harness.py --target . --profile generic --dry-run
 ```
 
-위 badge에 표시된 profiles는 보수적인 reference snippets이며 automatic
-migrations가 아닙니다. [`docs/profiles.md`](docs/profiles.md)와
-[`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption.md)를
-보세요.
+上方 badges 裡列出的 profiles 是保守的 reference snippets，不是 automatic
+migrations。請見 [`docs/profiles.md`](docs/profiles.md) 和
+[`docs/checklists/profile-absorption.md`](docs/checklists/profile-absorption.md)。
 
-자세한 문서 index는 [`docs/component-map.md`](docs/component-map.md)에 있습니다.
-주요 adoption references:
+詳細的 documentation index 請見
+[`docs/component-map.md`](docs/component-map.md)。常用 adoption references：
 [`docs/checklists/external-api-work.md`](docs/checklists/external-api-work.md),
 [`docs/checklists/decision-failure-memory.md`](docs/checklists/decision-failure-memory.md),
-[`docs/checklists/verification-scripts.md`](docs/checklists/verification-scripts.md).
+[`docs/checklists/verification-scripts.md`](docs/checklists/verification-scripts.md)。
 
-Validation coverage와 local checks는
-[`docs/validation.md`](docs/validation.md)에 있습니다. Lifecycle pilot details는
-[`docs/examples/lifecycle-pilot-results.md`](docs/examples/lifecycle-pilot-results.md)를
-보세요. 이 자료들은 harness adoption이 repeated agent mistakes를 줄인다는 것을
-증명하지 않습니다. comparable tasks, wrong-file edits, first-pass verification,
-human rework 측정에는 [`docs/evaluation.md`](docs/evaluation.md),
+Validation coverage 和 local checks 在
+[`docs/validation.md`](docs/validation.md)。Lifecycle pilot details 在
+[`docs/examples/lifecycle-pilot-results.md`](docs/examples/lifecycle-pilot-results.md)。
+這些內容不能證明 harness adoption 會減少 repeated agent mistakes。若要衡量
+comparable tasks、wrong-file edits、first-pass verification 與 human rework，請使用
+[`docs/evaluation.md`](docs/evaluation.md),
 [`docs/templates/effectiveness-report.md`](docs/templates/effectiveness-report.md),
-[`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml)을 사용하세요.
+[`docs/templates/task-outcome.yaml`](docs/templates/task-outcome.yaml)。
 
-Dogfood reports에는 Next.js public-data target인
-[`TodayBus`](docs/examples/effectiveness-report-todaybus-dogfood.md)와
-Spring/Maven backend 및 vanilla frontend target인
-[`Harness ERP`](docs/examples/effectiveness-report-harness-erp-dogfood.md)가
-포함됩니다. 둘 다 harnessed-only benchmarks이며 effectiveness improvement의
-증거는 아닙니다.
+Dogfood reports 包含 Next.js public-data target
+[`TodayBus`](docs/examples/effectiveness-report-todaybus-dogfood.md)，以及
+Spring/Maven backend 和 vanilla frontend target
+[`Harness ERP`](docs/examples/effectiveness-report-harness-erp-dogfood.md)。兩者都是
+harnessed-only benchmarks，不能當成 effectiveness improvement 的證明。
 
 </details>
 
-## 기여자
+## 貢獻者
 
-코드, 문서, 리뷰, 예시, 번역, dogfooding으로 이 kit을 다듬어준 모든 분께
-감사합니다.
+感謝所有透過 code、docs、reviews、examples、translations 和 dogfooding 一起打磨
+這套 kit 的人。
 
 <a href="https://github.com/harnessworks/harness-starter-kit/graphs/contributors">
   <img src="https://readme-contribs.as93.net/contributors/harnessworks/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
-## 라이선스
+## 授權
 
-이 프로젝트는 [MIT License](LICENSE)를 따릅니다.
+本專案採用 [MIT License](LICENSE)。
