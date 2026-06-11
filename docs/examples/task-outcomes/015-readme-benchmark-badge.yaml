@@ -1,0 +1,67 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: branch codex/readme-benchmark-badge based on fbcb14e1bfc0b2156a3e1e52efa24fc72cccc9b0
+  stack_or_framework: Markdown README localization and benchmark evidence
+  date: 2026-06-11
+  agent_or_model: Codex
+  reviewer: Codex primary agent
+
+task:
+  id: readme-benchmark-badge
+  run_id: harness-starter-kit-015
+  prompt_summary: Remove the README dogfood repository badges and add a benchmark badge linking to harnessworks/harness-agent-benchmark-runner across localized README files.
+  prompt_ref: current Codex thread request to replace README dogfood badges with the benchmark badge and update all README documents
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
+    - docs/examples/task-outcomes/015-readme-benchmark-badge.yaml
+  known_failure_mode: Top-level README badges can keep routing readers to stale dogfood repositories instead of the current benchmark runner status surface.
+
+harness_context:
+  harness_doctor_score: not run before this docs-only badge update
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: fbcb14e1bfc0b2156a3e1e52efa24fc72cccc9b0
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/evaluation.md
+  relevant_constraints:
+    - README language-switcher parity
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_effectiveness_plan.py
+  relevant_memory_records:
+    - docs/decisions/0006-trigger-task-outcome-evidence-for-substantial-harness-work.md
+    - docs/examples/task-outcomes/013-deterministic-benchmark-tasks.yaml
+
+outcome:
+  files_changed:
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
+    - docs/examples/task-outcomes/015-readme-benchmark-badge.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest tests.test_readme_prompt_drift && python3 scripts/check_docs_drift.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_encoding_hygiene.py && python3 -m unittest discover -s tests
+  first_pass_verification:
+    result: README prompt-drift unit coverage, docs drift check, effectiveness-plan check, encoding hygiene check, and full unittest suite passed after the first patch set
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The localized root README files now keep the launch and essay badges, remove the Django, Next.js, and Spring Boot dogfood repository badges, and add one Benchmark-Harness_Runner badge that links to the public harness-agent-benchmark-runner repository. Profile and fixture README files were left unchanged because they do not have the top-level badge block.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: No new ADR or failure record; this is evidence routing cleanup rather than a fixed runtime failure, failed harness check, or recurring bug path.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

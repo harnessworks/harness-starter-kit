@@ -32,14 +32,8 @@
   <a href="https://dev.to/baskduf/i-stopped-prompt-engineering-my-ai-coding-agent-i-started-engineering-the-repo-instead-1i3e">
     <img alt="Read the launch essay" src="https://img.shields.io/badge/Read-Launch_Essay-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white" />
   </a>
-  <a href="https://github.com/harnessworks/harness_starter_kit_django/tree/main">
-    <img alt="View Django dogfood repo" src="https://img.shields.io/badge/View-Django_Dogfood-092E20?style=for-the-badge&logo=django&logoColor=white" />
-  </a>
-  <a href="https://github.com/harnessworks/today-bus">
-    <img alt="View Next.js dogfood repo" src="https://img.shields.io/badge/View-Next.js_Dogfood-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
-  </a>
-  <a href="https://github.com/harnessworks/harness-erp">
-    <img alt="View Spring Boot dogfood repo" src="https://img.shields.io/badge/View-Spring_Boot_Dogfood-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" />
+  <a href="https://github.com/harnessworks/harness-agent-benchmark-runner">
+    <img alt="benchmark runner を見る" src="https://img.shields.io/badge/Benchmark-Harness_Runner-2F855A?style=for-the-badge&logo=github&logoColor=white" />
   </a>
 </p>
 
