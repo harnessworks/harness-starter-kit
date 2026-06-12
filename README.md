@@ -219,7 +219,7 @@ examples, translations, and dogfooding.
 
 ## Recognition
 
-- Listed in [Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents) as an AI agent tooling project.
+Listed in [Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents) as an AI agent tooling project.
 
 ## License
 
