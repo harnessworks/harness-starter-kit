@@ -217,6 +217,10 @@ examples, translations, and dogfooding.
   <img src="https://readme-contribs.as93.net/contributors/harnessworks/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
+## Recognition
+
+- Listed in [Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents) as an AI agent tooling project.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
