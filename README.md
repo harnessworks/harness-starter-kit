@@ -43,6 +43,25 @@
 A prompt-first starter kit for turning repeated coding-agent mistakes into
 durable repository instructions, checks, memory, and evaluation.
 
+## Product Effects
+
+Harness Starter Kit does not position repository harnessing as raw coding
+performance tuning. Its product effect is operational: make agent work safer to
+run, easier to diagnose, and easier to improve from repository evidence.
+
+- **Isolate agent work safely.** Run agent tasks inside clear repository
+  boundaries so hidden or sensitive files, generated outputs, credentials, and
+  forbidden paths stay out of normal task flow.
+- **Turn failures into diagnosis.** Separate functional, schema, workflow,
+  boundary, timeout, and hidden-access failures instead of reducing an agent
+  result to one pass/fail label.
+- **Transfer repository conventions.** Preserve local API style, documentation
+  placement, validation commands, and review expectations in durable repo
+  guidance that agents can follow repeatedly.
+- **Create an improvement loop.** Convert observed mistakes into instructions,
+  checks, failure records, decision memory, benchmark tasks, or review points
+  so the next agent run has better operating context.
+
 ## Quick Start
 
 Open the target repository with your coding agent and give it this prompt.
