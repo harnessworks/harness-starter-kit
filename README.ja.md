@@ -156,6 +156,24 @@ command palette には表示されません。
 [`refresh`](commands/harness-refresh.md),
 [`review`](commands/harness-review.md).
 
+## Universal Agent Skills パッケージ
+
+任意の [`agent-skills/`](agent-skills/) パッケージは、同じ harness workflows を
+Codex と Claude Code 向けの portable Agent Skills として提供します。これはこの
+リポジトリの prompt-first workflows の上に置く adapter layer であり、
+target-repository inspection の代替ではありません。
+
+- [`agent-skills/skills/harness/SKILL.md`](agent-skills/skills/harness/SKILL.md)
+  を `/harness adopt`、`/harness doctor`、`/harness update`、
+  `/harness refresh`、`/harness review` の router として使います。
+- runtime が workflow ごとに一つの command を好む場合は、
+  [`agent-skills/skills/`](agent-skills/skills/) 以下の shortcut skills を使います。
+- Codex plugin として package する場合は
+  [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)
+  を使います。
+- Codex、Claude Code、repo-local installation notes は
+  [`docs/agent-skills-package.md`](docs/agent-skills-package.md) を参照してください。
+
 ## 導入の仕組み
 
 <details>

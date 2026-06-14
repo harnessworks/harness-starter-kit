@@ -237,6 +237,13 @@ Runtime and CI adapters should remain optional, reference-only integrations.
 They are useful only after a target repository has chosen its own enforcement
 policy.
 
+The first runtime adapter is now the Universal Agent Skills package under
+`agent-skills/`. It exposes the prompt-first `/harness ...` workflows as Codex
+and Claude Code skills while keeping `commands/` and
+`docs/adoption-workflow.md` canonical. Future runtime adapters should follow
+the same pattern: thin invocation layer, bundled fallback references, and a
+drift check that prevents the adapter from becoming a second source of truth.
+
 Possible adapters include pre-commit hooks, GitHub Actions wiring, GitLab CI
 notes, and agent runtime hook examples. Adapters should call portable harness
 checks instead of owning separate policy logic, and they must not become part of

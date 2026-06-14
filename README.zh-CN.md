@@ -153,6 +153,23 @@ instruction、automated constraint、test 或 CI check、decision/failure record
 [`refresh`](commands/harness-refresh.md),
 [`review`](commands/harness-review.md).
 
+## Universal Agent Skills 包
+
+可选的 [`agent-skills/`](agent-skills/) 包会把同一组 harness workflows 封装成
+Codex 和 Claude Code 可用的 portable Agent Skills。它是建立在本仓库
+prompt-first workflows 之上的 adapter layer，并不替代 target-repository
+inspection。
+
+- 使用 [`agent-skills/skills/harness/SKILL.md`](agent-skills/skills/harness/SKILL.md)
+  作为 `/harness adopt`、`/harness doctor`、`/harness update`、
+  `/harness refresh`、`/harness review` 的 router。
+- 当 runtime 更适合每个 workflow 一个 command 时，使用
+  [`agent-skills/skills/`](agent-skills/skills/) 下的 shortcut skills。
+- 作为 Codex plugin 打包时，使用
+  [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)。
+- Codex、Claude Code 和 repo-local 安装说明见
+  [`docs/agent-skills-package.md`](docs/agent-skills-package.md)。
+
 ## 采用方式
 
 <details>

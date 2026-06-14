@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Doctor"
+  short_description: "Score repository harness readiness"
+  brand_color: "#2F855A"
+  default_prompt: "Use $harness-doctor to produce a no-edit Harness Doctor report."
+policy:
+  allow_implicit_invocation: true

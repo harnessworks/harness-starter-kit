@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Adopt"
+  short_description: "Apply prompt-first harness adoption"
+  brand_color: "#2F855A"
+  default_prompt: "Use $harness-adopt to apply harness engineering to this repository."
+policy:
+  allow_implicit_invocation: true

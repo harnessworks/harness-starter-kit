@@ -2,6 +2,7 @@
   "watched_paths": [
     ".github/workflows/**",
     "AGENTS.md",
+    "agent-skills/**",
     "commands/**",
     "docs/adoption-workflow.md",
     "docs/checklists/**",

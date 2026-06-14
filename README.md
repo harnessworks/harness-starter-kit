@@ -176,6 +176,23 @@ See [`commands/`](commands/) for full workflows:
 [`refresh`](commands/harness-refresh.md),
 and [`review`](commands/harness-review.md).
 
+## Universal Agent Skills Package
+
+The optional [`agent-skills/`](agent-skills/) package turns the same harness
+workflows into portable Agent Skills for Codex and Claude Code. It is an
+adapter layer over this repository's prompt-first workflows, not a replacement
+for target-repository inspection.
+
+- Use [`agent-skills/skills/harness/SKILL.md`](agent-skills/skills/harness/SKILL.md)
+  as a router for `/harness adopt`, `/harness doctor`, `/harness update`,
+  `/harness refresh`, and `/harness review`.
+- Use the shortcut skills under [`agent-skills/skills/`](agent-skills/skills/)
+  when the runtime prefers one command per workflow.
+- Use [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)
+  when packaging the skills as a Codex plugin.
+- See [`docs/agent-skills-package.md`](docs/agent-skills-package.md) for
+  Codex, Claude Code, and repo-local installation notes.
+
 ## How Adoption Works
 
 <details>
