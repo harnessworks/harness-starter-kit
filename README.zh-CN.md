@@ -153,24 +153,44 @@ instruction、automated constraint、test 或 CI check、decision/failure record
 [`refresh`](commands/harness-refresh.md),
 [`review`](commands/harness-review.md).
 
-## Universal Agent Skills 包
+## 安装 Agent Skills
 
-可选的 [`agent-skills/`](agent-skills/) 包会把同一组 harness workflows 封装成
-Codex 和 Claude Code 可用的 portable Agent Skills。它是建立在本仓库
-prompt-first workflows 之上的 adapter layer，并不替代 target-repository
-inspection。
+Harness workflows 默认是 prompt-first，但同一组 workflows 也可以作为 Codex 和
+Claude Code 的 runtime-native skills 安装。
 
-- 使用 [`agent-skills/skills/harness/SKILL.md`](agent-skills/skills/harness/SKILL.md)
-  作为 `/harness adopt`、`/harness doctor`、`/harness update`、
-  `/harness refresh`、`/harness review` 的 router。
-- 当 runtime 更适合每个 workflow 一个 command 时，使用
-  [`agent-skills/skills/`](agent-skills/skills/) 下的 shortcut skills。
-- 作为 Codex plugin 打包时，使用
-  [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)；
-  作为 Claude Code plugin 打包时，使用
-  [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)。
-- Codex、Claude Code 和 repo-local 安装说明见
-  [`docs/agent-skills-package.md`](docs/agent-skills-package.md)。
+### Codex
+
+```bash
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.14
+```
+
+重启 Codex，打开 Plugins 页面，在 `Harnessworks` marketplace 中安装
+`harness-agent-skills`。
+
+使用示例：
+
+```text
+$harness doctor
+$harness-review
+```
+
+### Claude Code
+
+```bash
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.14
+claude plugin install harness-agent-skills@harnessworks
+```
+
+使用示例：
+
+```text
+/harness-agent-skills:harness doctor
+/harness-agent-skills:harness review
+```
+
+源包位于 [`agent-skills/`](agent-skills/)。repo-local 直接安装、packaging 细节和
+update 行为见
+[`docs/agent-skills-package.md`](docs/agent-skills-package.md)。
 
 ## 采用方式
 

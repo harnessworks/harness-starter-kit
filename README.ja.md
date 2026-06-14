@@ -156,25 +156,44 @@ command palette には表示されません。
 [`refresh`](commands/harness-refresh.md),
 [`review`](commands/harness-review.md).
 
-## Universal Agent Skills パッケージ
+## Agent Skills のインストール
 
-任意の [`agent-skills/`](agent-skills/) パッケージは、同じ harness workflows を
-Codex と Claude Code 向けの portable Agent Skills として提供します。これはこの
-リポジトリの prompt-first workflows の上に置く adapter layer であり、
-target-repository inspection の代替ではありません。
+Harness workflows はデフォルトでは prompt-first ですが、同じ workflows を
+Codex と Claude Code の runtime-native skills として install できます。
 
-- [`agent-skills/skills/harness/SKILL.md`](agent-skills/skills/harness/SKILL.md)
-  を `/harness adopt`、`/harness doctor`、`/harness update`、
-  `/harness refresh`、`/harness review` の router として使います。
-- runtime が workflow ごとに一つの command を好む場合は、
-  [`agent-skills/skills/`](agent-skills/skills/) 以下の shortcut skills を使います。
-- Codex plugin として package する場合は
-  [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)
-  を使い、Claude Code plugin として package する場合は
-  [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)
-  を使います。
-- Codex、Claude Code、repo-local installation notes は
-  [`docs/agent-skills-package.md`](docs/agent-skills-package.md) を参照してください。
+### Codex
+
+```bash
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.14
+```
+
+Codex を再起動し、Plugins 画面を開いて `Harnessworks` marketplace から
+`harness-agent-skills` を install してください。
+
+使用例:
+
+```text
+$harness doctor
+$harness-review
+```
+
+### Claude Code
+
+```bash
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.14
+claude plugin install harness-agent-skills@harnessworks
+```
+
+使用例:
+
+```text
+/harness-agent-skills:harness doctor
+/harness-agent-skills:harness review
+```
+
+ソース package は [`agent-skills/`](agent-skills/) にあります。repo-local
+direct install、packaging details、update behavior については
+[`docs/agent-skills-package.md`](docs/agent-skills-package.md) を参照してください。
 
 ## 導入の仕組み
 

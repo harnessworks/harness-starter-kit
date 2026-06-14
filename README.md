@@ -176,23 +176,44 @@ See [`commands/`](commands/) for full workflows:
 [`refresh`](commands/harness-refresh.md),
 and [`review`](commands/harness-review.md).
 
-## Universal Agent Skills Package
+## Install Agent Skills
 
-The optional [`agent-skills/`](agent-skills/) package turns the same harness
-workflows into portable Agent Skills for Codex and Claude Code. It is an
-adapter layer over this repository's prompt-first workflows, not a replacement
-for target-repository inspection.
+Harness workflows are prompt-first by default, but the same workflows are also
+published as runtime-native skills for Codex and Claude Code.
 
-- Use [`agent-skills/skills/harness/SKILL.md`](agent-skills/skills/harness/SKILL.md)
-  as a router for `/harness adopt`, `/harness doctor`, `/harness update`,
-  `/harness refresh`, and `/harness review`.
-- Use the shortcut skills under [`agent-skills/skills/`](agent-skills/skills/)
-  when the runtime prefers one command per workflow.
-- Use [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)
-  and [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)
-  when packaging the skills as Codex or Claude Code plugins.
-- See [`docs/agent-skills-package.md`](docs/agent-skills-package.md) for
-  Codex, Claude Code, and repo-local installation notes.
+### Codex
+
+```bash
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.14
+```
+
+Restart Codex, open the Plugins screen, select `Harnessworks`, and install
+`harness-agent-skills`.
+
+Use:
+
+```text
+$harness doctor
+$harness-review
+```
+
+### Claude Code
+
+```bash
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.14
+claude plugin install harness-agent-skills@harnessworks
+```
+
+Use:
+
+```text
+/harness-agent-skills:harness doctor
+/harness-agent-skills:harness review
+```
+
+The source package lives in [`agent-skills/`](agent-skills/). For direct
+repo-local installs, packaging details, and update behavior, see
+[`docs/agent-skills-package.md`](docs/agent-skills-package.md).
 
 ## How Adoption Works
 
