@@ -21,6 +21,8 @@ This map connects harness engineering concepts to files in a target repository.
 | Harness update workflow | `/harness update` report | `commands/harness-update.md` |
 | Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
 | Harness change-set review | `/harness review` or `/harness review sub-agent` report | `commands/harness-review.md`, `docs/templates/harness-review-report.md` |
+| Universal Agent Skills package | Codex and Claude Code skill adapters for `/harness ...` workflows | `agent-skills/`, `docs/agent-skills-package.md` |
+| Agent Skills package validation | portable skill, metadata, manifest, and reference drift check | `scripts/check_agent_skills_package.py` |
 | Baseline harness score scan | six-element repository health and coupling scan | `scripts/harness_doctor.py` |
 | Deterministic benchmark tasks | repo-owned benchmark task definitions and project-specific oracles for `harness-agent-benchmark-runner` | `benchmarks/README.md`, `benchmarks/tasks/*.json` |
 | Optional scheduled harness check | `.github/workflows/harness-check.yml` | `templates/generic/.github/workflows/harness-check.yml` |
@@ -79,3 +81,8 @@ Use `/harness review sub-agent` when the maintainer explicitly wants the
 read-only reviewer subagent path. It uses the same report, still modifies no
 files, and records a fallback reason if the active runtime cannot call a
 subagent.
+
+Use the Universal Agent Skills package when maintainers want the prompt-first
+workflows exposed as runtime-native skills. The package keeps this repository's
+workflow docs as the canonical source while providing bundled fallback
+references for standalone skill installs.

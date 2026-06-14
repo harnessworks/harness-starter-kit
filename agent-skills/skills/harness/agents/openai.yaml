@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness"
+  short_description: "Route repository harness workflows"
+  brand_color: "#2F855A"
+  default_prompt: "Use $harness doctor to score this repository's harness health."
+policy:
+  allow_implicit_invocation: true

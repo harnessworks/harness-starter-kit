@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Refresh"
+  short_description: "Review stale harness guidance"
+  brand_color: "#2F855A"
+  default_prompt: "Use $harness-refresh to review stale or duplicated harness guidance."
+policy:
+  allow_implicit_invocation: true

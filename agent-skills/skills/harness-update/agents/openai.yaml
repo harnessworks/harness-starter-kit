@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Update"
+  short_description: "Refresh target harness source tracking"
+  brand_color: "#2F855A"
+  default_prompt: "Use $harness-update to refresh this repository's harness from the kit."
+policy:
+  allow_implicit_invocation: true

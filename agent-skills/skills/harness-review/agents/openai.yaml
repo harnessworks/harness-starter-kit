@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Review"
+  short_description: "Challenge harness changes before finish"
+  brand_color: "#2F855A"
+  default_prompt: "Use $harness-review to challenge the current change set."
+policy:
+  allow_implicit_invocation: true

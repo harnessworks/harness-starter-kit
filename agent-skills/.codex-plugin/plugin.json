@@ -1,0 +1,38 @@
+{
+  "name": "harness-agent-skills",
+  "version": "0.1.0",
+  "description": "Universal Agent Skills package for applying Harness Starter Kit workflows in coding-agent repositories.",
+  "author": {
+    "name": "Harnessworks",
+    "url": "https://github.com/harnessworks"
+  },
+  "homepage": "https://github.com/harnessworks/harness-starter-kit",
+  "repository": "https://github.com/harnessworks/harness-starter-kit",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "harness",
+    "codex",
+    "claude-code",
+    "repository-guidance"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Harness Agent Skills",
+    "shortDescription": "Repository harness workflows for coding agents.",
+    "longDescription": "Apply, diagnose, update, refresh, and review repository harness guidance from the Harness Starter Kit using portable Agent Skills.",
+    "developerName": "Harnessworks",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/harnessworks/harness-starter-kit",
+    "defaultPrompt": [
+      "Use $harness doctor to score this repository's harness.",
+      "Use $harness-adopt to apply harness engineering here.",
+      "Use $harness-review to challenge the current diff."
+    ],
+    "brandColor": "#2F855A"
+  }
+}

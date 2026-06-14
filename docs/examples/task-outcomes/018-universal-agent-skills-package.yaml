@@ -1,0 +1,101 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: branch universal-agent-skills-package based on c1458bdd73c8
+  stack_or_framework: Python unittest, Codex plugin manifest, Agent Skills, Markdown harness docs
+  date: 2026-06-14
+  agent_or_model: Codex
+  reviewer: Codex primary agent plus read-only sub-agent review
+
+task:
+  id: universal-agent-skills-package
+  run_id: harness-starter-kit-018
+  prompt_summary: Add a universal Agent Skills package for Codex and Claude Code that exposes the /harness workflows as runtime-native skills.
+  prompt_ref: current Codex thread request to create a branch, plan, and implement the larger universal Agent Skills package
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - agent-skills/
+    - scripts/check_agent_skills_package.py
+    - tests/test_agent_skills_package.py
+    - docs/agent-skills-package.md
+    - docs/decisions/0008-universal-agent-skills-package.md
+    - docs/component-map.md
+    - docs/validation.md
+    - ROADMAP.md
+    - README.md
+    - AGENTS.md
+    - .harness/decision-memory-rules.json
+    - .github/workflows/harness-check.yml
+    - docs/examples/task-outcomes/018-universal-agent-skills-package.yaml
+  known_failure_mode: Runtime-native skill packages can drift from canonical command workflows, omit one runtime's install shape, or become unusable when metadata, bundled references, and docs are not validated together.
+
+harness_context:
+  harness_doctor_score: 100/100 after implementation; this record is harness-maintenance evidence, not effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: c1458bdd73c8
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/validation.md
+    - docs/component-map.md
+  relevant_constraints:
+    - python3 scripts/check_agent_skills_package.py
+    - python3 -m unittest tests.test_agent_skills_package
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_decision_memory.py
+    - .github/workflows/harness-check.yml
+  relevant_memory_records:
+    - docs/decisions/0008-universal-agent-skills-package.md
+
+outcome:
+  files_changed:
+    - agent-skills/.codex-plugin/plugin.json
+    - agent-skills/references/package-contract.md
+    - agent-skills/references/adopt-workflow.md
+    - agent-skills/references/doctor-workflow.md
+    - agent-skills/references/update-workflow.md
+    - agent-skills/references/refresh-workflow.md
+    - agent-skills/references/review-workflow.md
+    - agent-skills/skills/harness/SKILL.md
+    - agent-skills/skills/harness/agents/openai.yaml
+    - agent-skills/skills/harness-adopt/SKILL.md
+    - agent-skills/skills/harness-adopt/agents/openai.yaml
+    - agent-skills/skills/harness-doctor/SKILL.md
+    - agent-skills/skills/harness-doctor/agents/openai.yaml
+    - agent-skills/skills/harness-update/SKILL.md
+    - agent-skills/skills/harness-update/agents/openai.yaml
+    - agent-skills/skills/harness-refresh/SKILL.md
+    - agent-skills/skills/harness-refresh/agents/openai.yaml
+    - agent-skills/skills/harness-review/SKILL.md
+    - agent-skills/skills/harness-review/agents/openai.yaml
+    - scripts/check_agent_skills_package.py
+    - tests/test_agent_skills_package.py
+    - docs/agent-skills-package.md
+    - docs/decisions/0008-universal-agent-skills-package.md
+    - docs/component-map.md
+    - docs/validation.md
+    - ROADMAP.md
+    - README.md
+    - AGENTS.md
+    - .harness/decision-memory-rules.json
+    - .github/workflows/harness-check.yml
+    - docs/examples/task-outcomes/018-universal-agent-skills-package.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_agent_skills_package.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_agent_skills_package.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: passed after sub-agent review findings were patched; full unittest, py_compile, package, docs drift, structure, encoding, effectiveness, failure memory, decision memory, and Harness Doctor checks completed successfully
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The package adds a shared /harness router, workflow shortcut skills, bundled fallback references, Codex plugin metadata, Claude Code copy-path documentation, and a repo-local package drift check. Read-only sub-agent review found a broken direct-install reference-copy layout, missing installed-layout smoke coverage, missing review subagent ownership safeguards, missing gate-placement fallback guidance, and CI not explicitly running the new package check; these findings were patched. The sub-agent also questioned Codex direct-skill install paths, but current Codex documentation names .agents/skills and ~/.agents/skills as valid skill discovery locations. External helper validators from local Codex skills could not run because the local Python environment lacks the yaml module; scripts/check_agent_skills_package.py covers the package-specific manifest, skill, reference, installed-layout, safeguard, and documentation contracts.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: Decision record added in docs/decisions/0008-universal-agent-skills-package.md; no failure record because this change adds a new distribution surface rather than fixing a recurring runtime failure.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

@@ -13,7 +13,8 @@ drift scripts, command documents, or README structure. On macOS/Linux, use
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile scripts/apply_harness.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
+python -m py_compile scripts/apply_harness.py scripts/check_agent_skills_package.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py
+python scripts/check_agent_skills_package.py
 python scripts/check_docs_drift.py
 python scripts/check_structure.py
 python scripts/check_encoding_hygiene.py
@@ -29,6 +30,17 @@ suite. Run it directly when adding or changing profile guidance:
 
 ```powershell
 python -m unittest tests.test_profile_consistency
+```
+
+Agent Skills package consistency is covered by
+`tests/test_agent_skills_package.py` and
+`scripts/check_agent_skills_package.py`. Run them directly when changing
+`agent-skills/`, Codex plugin metadata, Claude Code skill guidance, or the
+skills installation docs:
+
+```powershell
+python -m unittest tests.test_agent_skills_package
+python scripts/check_agent_skills_package.py
 ```
 
 ## Fixture Smoke Tests
