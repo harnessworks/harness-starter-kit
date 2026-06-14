@@ -4,6 +4,18 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+## v0.1.14 - 2026-06-14
+
+Patch release for corrected Claude Code marketplace launch guidance.
+
+### Changed
+
+- Isolate the local Claude marketplace example with a local-only marketplace
+  name and scope so testing does not replace a user's configured Harnessworks
+  marketplace.
+- Bump Agent Skills plugin manifests to `0.1.14` for the corrected marketplace
+  release.
+
 ## v0.1.13 - 2026-06-14
 
 Patch release for Claude Code plugin distribution of the Universal Agent Skills

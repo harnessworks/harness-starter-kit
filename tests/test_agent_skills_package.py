@@ -28,7 +28,7 @@ class AgentSkillsPackageTests(unittest.TestCase):
         )
 
         self.assertEqual("harness-agent-skills", manifest["name"])
-        self.assertEqual("0.1.13", manifest["version"])
+        self.assertEqual("0.1.14", manifest["version"])
         self.assertEqual("./skills/", manifest["skills"])
         self.assertEqual("MIT", manifest["license"])
         self.assertIn("$harness", " ".join(manifest["interface"]["defaultPrompt"]))
@@ -42,7 +42,7 @@ class AgentSkillsPackageTests(unittest.TestCase):
 
         self.assertEqual("harness-agent-skills", manifest["name"])
         self.assertEqual("Harness Agent Skills", manifest["displayName"])
-        self.assertEqual("0.1.13", manifest["version"])
+        self.assertEqual("0.1.14", manifest["version"])
         self.assertEqual("MIT", manifest["license"])
         self.assertEqual(
             "https://github.com/harnessworks/harness-starter-kit",
