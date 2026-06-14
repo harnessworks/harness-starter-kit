@@ -148,7 +148,7 @@ mkdir -p "$MARKETPLACE_ROOT/.claude-plugin" "$MARKETPLACE_ROOT/plugins"
 cp -R agent-skills "$MARKETPLACE_ROOT/plugins/harness-agent-skills"
 cat > "$MARKETPLACE_ROOT/.claude-plugin/marketplace.json" <<'JSON'
 {
-  "name": "harnessworks",
+  "name": "harness-starter-kit-local",
   "owner": {
     "name": "Harnessworks"
   },
@@ -165,13 +165,13 @@ cat > "$MARKETPLACE_ROOT/.claude-plugin/marketplace.json" <<'JSON'
 JSON
 claude plugin validate "$MARKETPLACE_ROOT"
 claude plugin validate "$MARKETPLACE_ROOT/plugins/harness-agent-skills"
-claude plugin marketplace add "$MARKETPLACE_ROOT"
+claude plugin marketplace add "$MARKETPLACE_ROOT" --scope local
 ```
 
 After adding the marketplace, install the plugin with:
 
 ```bash
-claude plugin install harness-agent-skills@harnessworks
+claude plugin install harness-agent-skills@harness-starter-kit-local --scope local
 ```
 
 ## Validation
