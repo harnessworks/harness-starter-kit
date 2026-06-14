@@ -12,6 +12,8 @@ The package lives in [`agent-skills/`](../agent-skills/) and contains:
   fallback workflow references
 - [`agent-skills/.codex-plugin/plugin.json`](../agent-skills/.codex-plugin/plugin.json)
   for Codex plugin packaging
+- [`agent-skills/.claude-plugin/plugin.json`](../agent-skills/.claude-plugin/plugin.json)
+  for Claude Code plugin packaging
 
 ## Design Contract
 
@@ -93,8 +95,10 @@ restart Codex so the updated package is discovered.
 
 ## Claude Code Usage
 
-Claude Code uses the same `SKILL.md` files. For a repo-local install, copy the
-skills and references into the repository's Claude configuration directory:
+Claude Code can use the package either as direct skills or as a plugin.
+
+For a repo-local direct-skill install, copy the skills and references into the
+repository's Claude configuration directory:
 
 ```bash
 mkdir -p .claude/skills .claude/references
@@ -115,6 +119,61 @@ The `harness` skill is the router, so users can invoke it with a subcommand
 such as `/harness doctor` in Claude Code. The shortcut skills are available for
 runtimes or teams that prefer one command per workflow.
 
+For Claude Code plugin packaging, use [`agent-skills/`](../agent-skills/) as
+the plugin root. The manifest at
+[`agent-skills/.claude-plugin/plugin.json`](../agent-skills/.claude-plugin/plugin.json)
+defines the Claude plugin metadata and lets Claude Code discover the packaged
+skills directory.
+
+To test the package locally without installing from a remote marketplace:
+
+```bash
+claude --plugin-dir ./agent-skills
+```
+
+Inside Claude Code, plugin skills are namespaced by plugin name. Invoke the
+router as:
+
+```text
+/harness-agent-skills:harness doctor
+```
+
+To test through a local Claude marketplace, copy the plugin into a temporary
+marketplace root and create the Claude marketplace JSON file:
+
+```bash
+MARKETPLACE_ROOT=/tmp/harness-agent-skills-claude-marketplace
+rm -rf "$MARKETPLACE_ROOT"
+mkdir -p "$MARKETPLACE_ROOT/.claude-plugin" "$MARKETPLACE_ROOT/plugins"
+cp -R agent-skills "$MARKETPLACE_ROOT/plugins/harness-agent-skills"
+cat > "$MARKETPLACE_ROOT/.claude-plugin/marketplace.json" <<'JSON'
+{
+  "name": "harnessworks",
+  "owner": {
+    "name": "Harnessworks"
+  },
+  "description": "Harness Starter Kit Agent Skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "harness-agent-skills",
+      "source": "./plugins/harness-agent-skills",
+      "description": "Portable Harness Starter Kit workflows for Claude Code.",
+      "category": "Productivity"
+    }
+  ]
+}
+JSON
+claude plugin validate "$MARKETPLACE_ROOT"
+claude plugin validate "$MARKETPLACE_ROOT/plugins/harness-agent-skills"
+claude plugin marketplace add "$MARKETPLACE_ROOT"
+```
+
+After adding the marketplace, install the plugin with:
+
+```bash
+claude plugin install harness-agent-skills@harnessworks
+```
+
 ## Validation
 
 Run the package drift check after changing skills, skill references, plugin
@@ -124,5 +183,10 @@ metadata, or installation guidance:
 python3 scripts/check_agent_skills_package.py
 ```
 
-The check validates skill frontmatter, Codex metadata, plugin manifest fields,
-reference coverage, router coverage, and documentation wiring.
+The check validates skill frontmatter, Codex metadata, Codex and Claude plugin
+manifest fields, reference coverage, router coverage, and documentation wiring.
+When Claude Code is installed locally, also run:
+
+```bash
+claude plugin validate agent-skills
+```

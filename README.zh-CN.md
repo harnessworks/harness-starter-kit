@@ -166,7 +166,9 @@ inspection。
 - 当 runtime 更适合每个 workflow 一个 command 时，使用
   [`agent-skills/skills/`](agent-skills/skills/) 下的 shortcut skills。
 - 作为 Codex plugin 打包时，使用
-  [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)。
+  [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)；
+  作为 Claude Code plugin 打包时，使用
+  [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)。
 - Codex、Claude Code 和 repo-local 安装说明见
   [`docs/agent-skills-package.md`](docs/agent-skills-package.md)。
 

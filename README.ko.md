@@ -168,6 +168,8 @@ prompt-first workflows 위에 얹는 adapter layer이며, target-repository insp
   [`agent-skills/skills/`](agent-skills/skills/) 아래 shortcut skills를 사용하세요.
 - Codex plugin으로 패키징할 때는
   [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)을
+  사용하고, Claude Code plugin으로 패키징할 때는
+  [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)을
   사용하세요.
 - Codex, Claude Code, repo-local 설치 안내는
   [`docs/agent-skills-package.md`](docs/agent-skills-package.md)를 보세요.

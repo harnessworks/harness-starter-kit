@@ -189,7 +189,8 @@ for target-repository inspection.
 - Use the shortcut skills under [`agent-skills/skills/`](agent-skills/skills/)
   when the runtime prefers one command per workflow.
 - Use [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)
-  when packaging the skills as a Codex plugin.
+  and [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)
+  when packaging the skills as Codex or Claude Code plugins.
 - See [`docs/agent-skills-package.md`](docs/agent-skills-package.md) for
   Codex, Claude Code, and repo-local installation notes.
 

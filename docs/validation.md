@@ -35,12 +35,18 @@ python -m unittest tests.test_profile_consistency
 Agent Skills package consistency is covered by
 `tests/test_agent_skills_package.py` and
 `scripts/check_agent_skills_package.py`. Run them directly when changing
-`agent-skills/`, Codex plugin metadata, Claude Code skill guidance, or the
-skills installation docs:
+`agent-skills/`, Codex plugin metadata, Claude Code plugin metadata, skill
+guidance, or the skills installation docs:
 
 ```powershell
 python -m unittest tests.test_agent_skills_package
 python scripts/check_agent_skills_package.py
+```
+
+When Claude Code is installed locally, also run its plugin validator:
+
+```powershell
+claude plugin validate agent-skills
 ```
 
 ## Fixture Smoke Tests

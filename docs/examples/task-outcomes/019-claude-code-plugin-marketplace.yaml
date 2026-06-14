@@ -1,0 +1,89 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: branch claude-agent-skills-package based on da3612753989
+  stack_or_framework: Python unittest, Claude Code plugin manifest, Codex plugin manifest, Agent Skills, Markdown harness docs
+  date: 2026-06-14
+  agent_or_model: Codex
+  reviewer: Codex primary agent with official Claude Code documentation lookup
+
+task:
+  id: claude-code-plugin-marketplace
+  run_id: harness-starter-kit-019
+  prompt_summary: Publish the Universal Agent Skills package for Claude Code while preserving the prompt-first source model.
+  prompt_ref: current Codex thread request "claude도 출시하자"
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - agent-skills/.claude-plugin/plugin.json
+    - agent-skills/.codex-plugin/plugin.json
+    - scripts/check_agent_skills_package.py
+    - tests/test_agent_skills_package.py
+    - docs/agent-skills-package.md
+    - docs/decisions/0008-universal-agent-skills-package.md
+    - docs/decisions/0009-claude-code-plugin-marketplace.md
+    - docs/component-map.md
+    - docs/validation.md
+    - CHANGELOG.md
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
+    - docs/examples/task-outcomes/019-claude-code-plugin-marketplace.yaml
+  known_failure_mode: Runtime plugin publication can drift from prompt-first skill content, use the wrong Claude marketplace shape, or hide the difference between direct-skill and plugin-namespaced invocation.
+
+harness_context:
+  harness_doctor_score: 100/100 after implementation; this record is harness-maintenance evidence, not effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: da3612753989
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - docs/agent-skills-package.md
+    - docs/validation.md
+  relevant_constraints:
+    - python3 scripts/check_agent_skills_package.py
+    - python3 -m unittest tests.test_agent_skills_package
+    - claude plugin validate agent-skills
+    - python3 scripts/check_decision_memory.py
+  relevant_memory_records:
+    - docs/decisions/0008-universal-agent-skills-package.md
+    - docs/decisions/0009-claude-code-plugin-marketplace.md
+
+outcome:
+  files_changed:
+    - agent-skills/.claude-plugin/plugin.json
+    - agent-skills/.codex-plugin/plugin.json
+    - scripts/check_agent_skills_package.py
+    - tests/test_agent_skills_package.py
+    - docs/agent-skills-package.md
+    - docs/decisions/0008-universal-agent-skills-package.md
+    - docs/decisions/0009-claude-code-plugin-marketplace.md
+    - docs/component-map.md
+    - docs/validation.md
+    - CHANGELOG.md
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
+    - docs/examples/task-outcomes/019-claude-code-plugin-marketplace.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_agent_skills_package.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_agent_skills_package.py && claude plugin validate agent-skills && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target .
+  first_pass_verification:
+    result: passed; unittest, py_compile, package check, Claude plugin validator, docs drift, structure, encoding, effectiveness, failure memory, decision memory, and Harness Doctor checks completed successfully
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: The package keeps one prompt-first skill body and adds Claude Code plugin metadata plus validation and documentation for namespaced plugin invocation. Official Claude Code documentation was checked for plugin manifests, marketplace structure, validation commands, version behavior, and community submission paths.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: Decision record added in docs/decisions/0009-claude-code-plugin-marketplace.md; no failure record because this change adds a new distribution surface rather than fixing a recurring runtime failure.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false

@@ -170,6 +170,8 @@ target-repository inspection の代替ではありません。
   [`agent-skills/skills/`](agent-skills/skills/) 以下の shortcut skills を使います。
 - Codex plugin として package する場合は
   [`agent-skills/.codex-plugin/plugin.json`](agent-skills/.codex-plugin/plugin.json)
+  を使い、Claude Code plugin として package する場合は
+  [`agent-skills/.claude-plugin/plugin.json`](agent-skills/.claude-plugin/plugin.json)
   を使います。
 - Codex、Claude Code、repo-local installation notes は
   [`docs/agent-skills-package.md`](docs/agent-skills-package.md) を参照してください。
