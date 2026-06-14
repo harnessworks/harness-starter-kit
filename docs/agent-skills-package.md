@@ -52,6 +52,45 @@ plugin root. The manifest at
 [`agent-skills/.codex-plugin/plugin.json`](../agent-skills/.codex-plugin/plugin.json)
 points Codex at the packaged skills directory.
 
+To test the package through a local Codex marketplace without committing
+workspace-specific config, copy the plugin into a temporary marketplace root and
+register that root with Codex:
+
+```bash
+MARKETPLACE_ROOT=/tmp/harness-agent-skills-marketplace
+rm -rf "$MARKETPLACE_ROOT"
+mkdir -p "$MARKETPLACE_ROOT/plugins"
+cp -R agent-skills "$MARKETPLACE_ROOT/plugins/harness-agent-skills"
+cat > "$MARKETPLACE_ROOT/marketplace.json" <<'JSON'
+{
+  "name": "harness-starter-kit-local",
+  "interface": {
+    "displayName": "Harness Starter Kit Local"
+  },
+  "plugins": [
+    {
+      "name": "harness-agent-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/harness-agent-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
+JSON
+codex plugin marketplace add "$MARKETPLACE_ROOT"
+```
+
+After registering the marketplace, restart Codex and install
+`harness-agent-skills` from the plugin directory. When iterating locally, copy
+the updated `agent-skills/` directory into the marketplace plugin path again and
+restart Codex so the updated package is discovered.
+
 ## Claude Code Usage
 
 Claude Code uses the same `SKILL.md` files. For a repo-local install, copy the

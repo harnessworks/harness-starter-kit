@@ -4,6 +4,37 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+## v0.1.12 - 2026-06-14
+
+Minor release for the Universal Agent Skills package. This release exposes the
+prompt-first `/harness ...` workflows as portable Agent Skills for Codex and
+Claude Code while preserving the target repository as the source of truth.
+
+### Added
+
+- `agent-skills/` package with a `harness` router skill, workflow shortcut
+  skills, bundled fallback references, Codex skill metadata, and a Codex plugin
+  manifest.
+- Agent Skills package installation and packaging guidance in
+  `docs/agent-skills-package.md`, including direct Codex and Claude Code copy
+  flows and a Codex local-marketplace example.
+- `scripts/check_agent_skills_package.py`, unit coverage, and GitHub Actions
+  wiring to validate skill frontmatter, plugin metadata, bundled references,
+  installed-layout reference resolution, fallback safeguards, and documentation
+  wiring.
+- Decision memory and task outcome evidence for packaging harness workflows as
+  a universal Agent Skills adapter.
+- README package sections in English, Korean, Japanese, Simplified Chinese, and
+  Traditional Chinese.
+
+### Changed
+
+- Add `agent-skills/**` to decision-memory watched paths so runtime adapter
+  changes are treated as decision-bearing harness product behavior.
+- Update the component map, validation docs, roadmap, and README product
+  effects to describe the new runtime adapter surface without changing the
+  prompt-first adoption model.
+
 ## v0.1.11 - 2026-06-11
 
 Patch release for deterministic benchmark tasks, stack-profile fixture
