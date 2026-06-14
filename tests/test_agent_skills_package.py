@@ -28,9 +28,37 @@ class AgentSkillsPackageTests(unittest.TestCase):
         )
 
         self.assertEqual("harness-agent-skills", manifest["name"])
+        self.assertEqual("0.1.13", manifest["version"])
         self.assertEqual("./skills/", manifest["skills"])
         self.assertEqual("MIT", manifest["license"])
         self.assertIn("$harness", " ".join(manifest["interface"]["defaultPrompt"]))
+
+    def test_claude_plugin_manifest_points_to_packaged_skills(self) -> None:
+        manifest = json.loads(
+            (
+                REPO_ROOT / "agent-skills" / ".claude-plugin" / "plugin.json"
+            ).read_text(encoding="utf-8")
+        )
+
+        self.assertEqual("harness-agent-skills", manifest["name"])
+        self.assertEqual("Harness Agent Skills", manifest["displayName"])
+        self.assertEqual("0.1.13", manifest["version"])
+        self.assertEqual("MIT", manifest["license"])
+        self.assertEqual(
+            "https://github.com/harnessworks/harness-starter-kit",
+            manifest["repository"],
+        )
+        self.assertIn("claude-code", manifest["keywords"])
+
+    def test_claude_plugin_validate_passes_when_claude_is_available(self) -> None:
+        if shutil.which("claude") is None:
+            self.skipTest("Claude Code CLI is not installed")
+
+        subprocess.run(
+            ["claude", "plugin", "validate", "agent-skills"],
+            cwd=REPO_ROOT,
+            check=True,
+        )
 
     def test_router_and_shortcut_skills_cover_all_harness_commands(self) -> None:
         skills_root = REPO_ROOT / "agent-skills" / "skills"

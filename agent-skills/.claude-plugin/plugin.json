@@ -1,0 +1,19 @@
+{
+  "name": "harness-agent-skills",
+  "displayName": "Harness Agent Skills",
+  "version": "0.1.13",
+  "description": "Portable Harness Starter Kit workflows for Claude Code.",
+  "author": {
+    "name": "Harnessworks",
+    "url": "https://github.com/harnessworks"
+  },
+  "homepage": "https://github.com/harnessworks/harness-starter-kit",
+  "repository": "https://github.com/harnessworks/harness-starter-kit",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "harness",
+    "claude-code",
+    "repository-guidance"
+  ]
+}

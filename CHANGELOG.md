@@ -4,6 +4,31 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+## v0.1.13 - 2026-06-14
+
+Patch release for Claude Code plugin distribution of the Universal Agent Skills
+package.
+
+### Added
+
+- Claude Code plugin manifest at
+  `agent-skills/.claude-plugin/plugin.json` so the existing prompt-first skills
+  can be installed through Claude Code plugin marketplaces.
+- Claude plugin packaging, local marketplace, validator, and namespaced
+  invocation guidance in `docs/agent-skills-package.md`.
+- Decision memory for publishing Harness Agent Skills through Claude Code
+  plugin marketplaces.
+
+### Changed
+
+- Bump Agent Skills plugin manifests to `0.1.13` for aligned Codex and Claude
+  package releases.
+- Extend Agent Skills package validation and tests to cover both Codex and
+  Claude plugin manifests, including optional `claude plugin validate` coverage
+  when Claude Code is available.
+- Update README package summaries and validation docs for dual Codex and
+  Claude plugin packaging.
+
 ## v0.1.12 - 2026-06-14
 
 Minor release for the Universal Agent Skills package. This release exposes the

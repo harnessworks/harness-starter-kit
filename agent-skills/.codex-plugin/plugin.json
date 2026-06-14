@@ -1,6 +1,6 @@
 {
   "name": "harness-agent-skills",
-  "version": "0.1.0",
+  "version": "0.1.13",
   "description": "Universal Agent Skills package for applying Harness Starter Kit workflows in coding-agent repositories.",
   "author": {
     "name": "Harnessworks",

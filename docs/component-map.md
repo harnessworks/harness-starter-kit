@@ -21,7 +21,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Harness update workflow | `/harness update` report | `commands/harness-update.md` |
 | Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
 | Harness change-set review | `/harness review` or `/harness review sub-agent` report | `commands/harness-review.md`, `docs/templates/harness-review-report.md` |
-| Universal Agent Skills package | Codex and Claude Code skill adapters for `/harness ...` workflows | `agent-skills/`, `docs/agent-skills-package.md` |
+| Universal Agent Skills package | Codex and Claude Code skill/plugin adapters for `/harness ...` workflows | `agent-skills/`, `agent-skills/.codex-plugin/plugin.json`, `agent-skills/.claude-plugin/plugin.json`, `docs/agent-skills-package.md` |
 | Agent Skills package validation | portable skill, metadata, manifest, and reference drift check | `scripts/check_agent_skills_package.py` |
 | Baseline harness score scan | six-element repository health and coupling scan | `scripts/harness_doctor.py` |
 | Deterministic benchmark tasks | repo-owned benchmark task definitions and project-specific oracles for `harness-agent-benchmark-runner` | `benchmarks/README.md`, `benchmarks/tasks/*.json` |

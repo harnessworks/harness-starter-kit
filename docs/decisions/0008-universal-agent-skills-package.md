@@ -35,6 +35,7 @@ The package includes:
 - shortcut skills for each workflow
 - bundled workflow references for standalone installs
 - a Codex plugin manifest at `agent-skills/.codex-plugin/plugin.json`
+- a Claude Code plugin manifest at `agent-skills/.claude-plugin/plugin.json`
 - validation through `scripts/check_agent_skills_package.py`
 
 The repository workflow docs remain canonical. Skills must first prefer target
@@ -67,5 +68,5 @@ package's bundled fallback references.
   for the canonical command docs.
 - The package does not install itself into a user's Codex or Claude Code
   configuration; it documents copy and plugin-packaging paths.
-- Public marketplace or registry publication should wait until local package
-  usage validates the invocation names and reference shape.
+- Public marketplace publication remains a separate release operation from the
+  prompt-first package source.
