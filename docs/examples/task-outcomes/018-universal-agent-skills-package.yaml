@@ -26,6 +26,10 @@ task:
     - docs/validation.md
     - ROADMAP.md
     - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
     - AGENTS.md
     - .harness/decision-memory-rules.json
     - .github/workflows/harness-check.yml
@@ -80,6 +84,10 @@ outcome:
     - docs/validation.md
     - ROADMAP.md
     - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
     - AGENTS.md
     - .harness/decision-memory-rules.json
     - .github/workflows/harness-check.yml
@@ -92,7 +100,7 @@ outcome:
   drift_violations_detected: []
   human_rework_minutes: 0
   reverted_files: []
-  notes: The package adds a shared /harness router, workflow shortcut skills, bundled fallback references, Codex plugin metadata, Claude Code copy-path documentation, and a repo-local package drift check. Read-only sub-agent review found a broken direct-install reference-copy layout, missing installed-layout smoke coverage, missing review subagent ownership safeguards, missing gate-placement fallback guidance, and CI not explicitly running the new package check; these findings were patched. The sub-agent also questioned Codex direct-skill install paths, but current Codex documentation names .agents/skills and ~/.agents/skills as valid skill discovery locations. External helper validators from local Codex skills could not run because the local Python environment lacks the yaml module; scripts/check_agent_skills_package.py covers the package-specific manifest, skill, reference, installed-layout, safeguard, and documentation contracts.
+  notes: The package adds a shared /harness router, workflow shortcut skills, bundled fallback references, Codex plugin metadata, Claude Code copy-path documentation, localized README package sections, and a repo-local package drift check. Read-only sub-agent review found a broken direct-install reference-copy layout, missing installed-layout smoke coverage, missing review subagent ownership safeguards, missing gate-placement fallback guidance, and CI not explicitly running the new package check; these findings were patched. The sub-agent also questioned Codex direct-skill install paths, but current Codex documentation names .agents/skills and ~/.agents/skills as valid skill discovery locations. External helper validators from local Codex skills could not run because the local Python environment lacks the yaml module; scripts/check_agent_skills_package.py covers the package-specific manifest, skill, reference, installed-layout, safeguard, and documentation contracts.
 
 follow_up:
   harness_change_needed: false
