@@ -248,6 +248,11 @@ harnessed-only benchmarks，并不能证明 effectiveness improvement。
   <img src="https://readme-contribs.as93.net/contributors/harnessworks/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
+## 收录
+
+- [Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents)：AI agent tooling project。
+- [github/awesome-copilot](https://github.com/github/awesome-copilot)：Copilot customization resource。
+
 ## 许可证
 
 本项目使用 [MIT License](LICENSE)。

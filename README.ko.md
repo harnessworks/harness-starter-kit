@@ -252,6 +252,11 @@ Spring/Maven backend 및 vanilla frontend target인
   <img src="https://readme-contribs.as93.net/contributors/harnessworks/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
+## 소개된 곳
+
+- [Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents): AI agent tooling project.
+- [github/awesome-copilot](https://github.com/github/awesome-copilot): Copilot customization resource.
+
 ## 라이선스
 
 이 프로젝트는 [MIT License](LICENSE)를 따릅니다.

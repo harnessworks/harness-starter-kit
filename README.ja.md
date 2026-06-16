@@ -256,6 +256,11 @@ code、docs、reviews、examples、translations、dogfooding を通じてこの 
   <img src="https://readme-contribs.as93.net/contributors/harnessworks/harness-starter-kit?v=20260608-yunhwane" alt="Contributors" />
 </a>
 
+## 掲載
+
+- [Awesome-AI-Agents](https://github.com/Jenqyang/Awesome-AI-Agents): AI agent tooling project.
+- [github/awesome-copilot](https://github.com/github/awesome-copilot): Copilot customization resource.
+
 ## ライセンス
 
 このプロジェクトは [MIT License](LICENSE) の下で公開されています。
