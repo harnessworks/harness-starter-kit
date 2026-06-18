@@ -4,6 +4,11 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+### Changed
+
+- Align localized README command sections with the stage-based command UX used
+  by the English README.
+
 ## v0.1.15 - 2026-06-18
 
 Patch release for clearer Codex and Claude command UX.
