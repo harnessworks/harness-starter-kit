@@ -37,6 +37,10 @@ conventions.
 
 ## Command Routing
 
+- `/harness adopt`: use `commands/harness-adopt.md`. Apply prompt-first
+  harness engineering to the target repository. Inspect first, preserve target
+  source-of-truth, avoid blind template copying, and finish with an adoption
+  report.
 - `/harness doctor`: use `commands/harness-doctor.md`. It is diagnostic only:
   inspect and report, do not modify files, and do not remove a target-local
   `./harness-starter-kit` directory.
@@ -78,8 +82,9 @@ decisions, known failures, drift checks, and recommended next work.
 ## Editing This Kit
 
 - Read the relevant workflow doc before changing command behavior:
-  `commands/harness-doctor.md`, `commands/harness-update.md`, or
-  `commands/harness-refresh.md`, or `commands/harness-review.md`.
+  `commands/harness-adopt.md`, `commands/harness-doctor.md`,
+  `commands/harness-update.md`, `commands/harness-refresh.md`, or
+  `commands/harness-review.md`.
 - For adoption behavior, keep `docs/adoption-workflow.md`,
   `docs/prompts/apply-to-target-repo.md`, `docs/templates/adoption-report.md`,
   and examples aligned.

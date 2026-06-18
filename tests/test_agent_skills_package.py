@@ -28,7 +28,7 @@ class AgentSkillsPackageTests(unittest.TestCase):
         )
 
         self.assertEqual("harness-agent-skills", manifest["name"])
-        self.assertEqual("0.1.14", manifest["version"])
+        self.assertEqual("0.1.15", manifest["version"])
         self.assertEqual("./skills/", manifest["skills"])
         self.assertEqual("MIT", manifest["license"])
         self.assertIn("$harness", " ".join(manifest["interface"]["defaultPrompt"]))
@@ -42,13 +42,24 @@ class AgentSkillsPackageTests(unittest.TestCase):
 
         self.assertEqual("harness-agent-skills", manifest["name"])
         self.assertEqual("Harness Agent Skills", manifest["displayName"])
-        self.assertEqual("0.1.14", manifest["version"])
+        self.assertEqual("0.1.15", manifest["version"])
         self.assertEqual("MIT", manifest["license"])
         self.assertEqual(
             "https://github.com/harnessworks/harness-starter-kit",
             manifest["repository"],
         )
         self.assertIn("claude-code", manifest["keywords"])
+
+    def test_agent_skills_docs_show_codex_and_claude_adopt_commands(self) -> None:
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        package_doc = (REPO_ROOT / "docs" / "agent-skills-package.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("$harness adopt", readme)
+        self.assertIn("/harness-agent-skills:harness adopt", readme)
+        self.assertIn("$harness adopt", package_doc)
+        self.assertIn("/harness-agent-skills:harness adopt", package_doc)
 
     def test_claude_plugin_validate_passes_when_claude_is_available(self) -> None:
         if shutil.which("claude") is None:

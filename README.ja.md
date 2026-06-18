@@ -164,7 +164,7 @@ Codex と Claude Code の runtime-native skills として install できます�
 ### Codex
 
 ```bash
-codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.14
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.15
 ```
 
 Codex を再起動し、Plugins 画面を開いて `Harnessworks` marketplace から
@@ -180,7 +180,7 @@ $harness-review
 ### Claude Code
 
 ```bash
-claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.14
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.15
 claude plugin install harness-agent-skills@harnessworks
 ```
 

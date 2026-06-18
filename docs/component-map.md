@@ -17,6 +17,7 @@ This map connects harness engineering concepts to files in a target repository.
 | Failure-memory check | `scripts/check_failure_memory.py` | `templates/generic/scripts/check_failure_memory.py` |
 | Decision-memory diff warning | `scripts/check_decision_memory.py`, `.harness/decision-memory-rules.json` | `templates/generic/scripts/check_decision_memory.py`, `templates/generic/.harness/decision-memory-rules.json` |
 | Harness readiness diagnostic | six-element `/harness doctor` report with coupling findings | `commands/harness-doctor.md`, `docs/scoring/harness-score-rubric.md` |
+| Harness adoption workflow | `/harness adopt` report | `commands/harness-adopt.md`, `docs/adoption-workflow.md`, `docs/templates/adoption-report.md` |
 | Harness source tracking | `.harness/source.json` | documented in `commands/harness-update.md` |
 | Harness update workflow | `/harness update` report | `commands/harness-update.md` |
 | Harness refresh workflow | `/harness refresh` report | `commands/harness-refresh.md` |
@@ -55,6 +56,11 @@ For a very small project, the agent should add or adapt only:
 Then grow the harness as the project and agent usage mature.
 Use the optional GitHub Actions workflow skeleton with `--with-ci` only after
 confirming the target repository uses GitHub Actions.
+
+Use `/harness adopt` when the maintainer wants first-time prompt-first harness
+adoption. The command inspects the target, applies only the smallest useful
+harness pieces, and finishes with an adoption report and effectiveness
+measurement plan.
 
 Use `/harness doctor` when the maintainer wants a diagnostic score before or
 after adoption. The command reports readiness; it does not install harness

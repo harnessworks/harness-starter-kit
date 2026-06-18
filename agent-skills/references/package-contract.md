@@ -9,7 +9,8 @@ for target-repository judgment.
    docs, package manager, CI, naming, and conventions.
 2. If the target has a local Harness Starter Kit clone, prefer its canonical
    workflow docs:
-   - adoption: `harness-starter-kit/docs/adoption-workflow.md`
+   - adoption: `harness-starter-kit/commands/harness-adopt.md`
+   - adoption background: `harness-starter-kit/docs/adoption-workflow.md`
    - doctor: `harness-starter-kit/commands/harness-doctor.md`
    - update: `harness-starter-kit/commands/harness-update.md`
    - refresh: `harness-starter-kit/commands/harness-refresh.md`

@@ -4,6 +4,24 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+## v0.1.15 - 2026-06-18
+
+Patch release for clearer Codex and Claude command UX.
+
+### Added
+
+- Canonical `/harness adopt` command workflow for first-time prompt-first
+  adoption.
+- Decision and task-outcome evidence for the stage-based command UX model.
+
+### Changed
+
+- Present harness commands by user stage: First time, Daily work, and
+  Maintenance.
+- Align Codex and Claude Code command examples around the same
+  `doctor → adopt`, `review`, and `update`/`refresh` flow.
+- Bump Agent Skills plugin manifests to `0.1.15` for the command UX release.
+
 ## v0.1.14 - 2026-06-14
 
 Patch release for corrected Claude Code marketplace launch guidance.
