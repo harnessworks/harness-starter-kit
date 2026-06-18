@@ -80,21 +80,30 @@ def language_switcher_entries(
 
 
 class ReadmePromptDriftTests(unittest.TestCase):
-    def test_readme_explains_command_flow_by_user_stage(self) -> None:
-        text = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    def test_readmes_explain_command_flow_by_user_stage(self) -> None:
+        expectations = {
+            "README.md": ("## Command Flow", "First time", "Daily work", "Maintenance"),
+            "README.ko.md": ("## 명령 흐름", "처음 사용", "일상 작업", "유지보수"),
+            "README.ja.md": ("## コマンドフロー", "初回", "日常作業", "メンテナンス"),
+            "README.zh-CN.md": ("## 命令流程", "首次使用", "日常工作", "维护"),
+            "README.zh-TW.md": ("## 指令流程", "初次使用", "日常工作", "維護"),
+        }
 
-        self.assertIn("## Command Flow", text)
-        self.assertIn("First time", text)
-        self.assertIn("Daily work", text)
-        self.assertIn("Maintenance", text)
-        self.assertIn("/harness adopt", text)
-        self.assertIn("commands/harness-adopt.md", text)
+        for filename, (heading, first, daily, maintenance) in expectations.items():
+            with self.subTest(readme=filename):
+                text = (REPO_ROOT / filename).read_text(encoding="utf-8")
 
-        first_time = text.index("First time")
-        daily_work = text.index("Daily work")
-        maintenance = text.index("Maintenance")
-        self.assertLess(first_time, daily_work)
-        self.assertLess(daily_work, maintenance)
+                self.assertIn(heading, text)
+                self.assertIn(first, text)
+                self.assertIn(daily, text)
+                self.assertIn(maintenance, text)
+                self.assertIn("/harness adopt", text)
+                self.assertIn("commands/harness-adopt.md", text)
+                self.assertIn("$harness adopt", text)
+                self.assertIn("/harness-agent-skills:harness adopt", text)
+
+                self.assertLess(text.index(first), text.index(daily))
+                self.assertLess(text.index(daily), text.index(maintenance))
 
     def test_localized_readmes_are_valid_utf8(self) -> None:
         for path in localized_readmes():

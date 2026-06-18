@@ -133,21 +133,33 @@ effectiveness reports 单独测量。模型见
 instruction、automated constraint、test 或 CI check、decision/failure record，
 或 drift check。
 
-## 命令
+## 命令流程
 
 下面的 `/harness ...` 名称默认是 prompt convention，不是内置 editor command。
 请把它们输入或粘贴到 coding agent chat 中。在 Cursor 等 editor 里，除非另外添加
 对应的 custom slash command，否则它们不会出现在 command palette 中。
 
-| Command | Use when |
-| --- | --- |
-| `/harness doctor` | 在不修改文件的情况下评分 baseline harness evidence。 |
-| `/harness update` | adoption 后刷新本地 `./harness-starter-kit` reference。 |
-| `/harness refresh` | 检查 stale、duplicated、obsolete 或 unused target harness guidance。 |
-| `/harness review` | 完成前批判性检查当前 change set。 |
-| `/harness review sub-agent` | runtime 允许时明确请求 read-only reviewer subagent。 |
+按用户阶段理解这些命令:
+
+| 阶段 | Command | Use when |
+| --- | --- | --- |
+| 首次使用 | `/harness doctor` | 在不修改文件的情况下检查当前 harness readiness。 |
+| 首次使用 | `/harness adopt` | 为这个 repository 应用最小但有用的 harness 部分。 |
+| 日常工作 | `/harness review` | 在 commit 或 PR 前批判性检查当前 diff。 |
+| 日常工作 | `/harness review sub-agent` | runtime 允许时明确请求 read-only reviewer subagent。 |
+| 维护 | `/harness update` | 引入更新的 `harness-starter-kit` reference，并选择性更新这个 repo。 |
+| 维护 | `/harness refresh` | 清理这个 repo 中 stale、duplicated、obsolete 或 unused harness guidance。 |
+
+快速规则:
+
+- 用 `doctor` 做检查。
+- 用 `adopt` 开始采用。
+- 用 `review` 在完成工作前复核。
+- kit version 改变时用 `update`。
+- 这个 repo 的既有 harness guidance 变旧时用 `refresh`。
 
 完整 workflow 见 [`commands/`](commands/):
+[`adopt`](commands/harness-adopt.md),
 [`doctor`](commands/harness-doctor.md),
 [`update`](commands/harness-update.md),
 [`refresh`](commands/harness-refresh.md),
@@ -167,11 +179,27 @@ codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref
 重启 Codex，打开 Plugins 页面，在 `Harnessworks` marketplace 中安装
 `harness-agent-skills`。
 
-使用示例：
+所有 runtime 使用同一套 command model:
+
+```text
+Start:      $harness doctor → $harness adopt
+Daily:      $harness review
+Maintain:   $harness update or $harness refresh
+```
+
+常用命令:
 
 ```text
 $harness doctor
-$harness-review
+$harness adopt
+$harness review
+```
+
+维护命令:
+
+```text
+$harness update
+$harness refresh
 ```
 
 ### Claude Code
@@ -181,11 +209,27 @@ claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1
 claude plugin install harness-agent-skills@harnessworks
 ```
 
-使用示例：
+使用 router command:
+
+```text
+Start:      /harness-agent-skills:harness doctor → /harness-agent-skills:harness adopt
+Daily:      /harness-agent-skills:harness review
+Maintain:   /harness-agent-skills:harness update or /harness-agent-skills:harness refresh
+```
+
+常用命令:
 
 ```text
 /harness-agent-skills:harness doctor
+/harness-agent-skills:harness adopt
 /harness-agent-skills:harness review
+```
+
+维护命令:
+
+```text
+/harness-agent-skills:harness update
+/harness-agent-skills:harness refresh
 ```
 
 源包位于 [`agent-skills/`](agent-skills/)。repo-local 直接安装、packaging 细节和
