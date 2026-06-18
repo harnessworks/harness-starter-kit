@@ -80,6 +80,22 @@ def language_switcher_entries(
 
 
 class ReadmePromptDriftTests(unittest.TestCase):
+    def test_readme_explains_command_flow_by_user_stage(self) -> None:
+        text = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("## Command Flow", text)
+        self.assertIn("First time", text)
+        self.assertIn("Daily work", text)
+        self.assertIn("Maintenance", text)
+        self.assertIn("/harness adopt", text)
+        self.assertIn("commands/harness-adopt.md", text)
+
+        first_time = text.index("First time")
+        daily_work = text.index("Daily work")
+        maintenance = text.index("Maintenance")
+        self.assertLess(first_time, daily_work)
+        self.assertLess(daily_work, maintenance)
+
     def test_localized_readmes_are_valid_utf8(self) -> None:
         for path in localized_readmes():
             with self.subTest(readme=path.name):

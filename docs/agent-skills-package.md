@@ -89,9 +89,18 @@ codex plugin marketplace add "$MARKETPLACE_ROOT"
 ```
 
 After registering the marketplace, restart Codex and install
-`harness-agent-skills` from the plugin directory. When iterating locally, copy
-the updated `agent-skills/` directory into the marketplace plugin path again and
-restart Codex so the updated package is discovered.
+`harness-agent-skills` from the plugin directory. Use the same stage model as
+other runtimes:
+
+```text
+Start:      $harness doctor → $harness adopt
+Daily:      $harness review
+Maintain:   $harness update or $harness refresh
+```
+
+When iterating locally, copy the updated `agent-skills/` directory into the
+marketplace plugin path again and restart Codex so the updated package is
+discovered.
 
 ## Claude Code Usage
 
@@ -131,11 +140,13 @@ To test the package locally without installing from a remote marketplace:
 claude --plugin-dir ./agent-skills
 ```
 
-Inside Claude Code, plugin skills are namespaced by plugin name. Invoke the
-router as:
+Inside Claude Code, plugin skills are namespaced by plugin name. Use the router
+with the same stage model as other runtimes:
 
 ```text
-/harness-agent-skills:harness doctor
+Start:      /harness-agent-skills:harness doctor → /harness-agent-skills:harness adopt
+Daily:      /harness-agent-skills:harness review
+Maintain:   /harness-agent-skills:harness update or /harness-agent-skills:harness refresh
 ```
 
 To test through a local Claude marketplace, copy the plugin into a temporary

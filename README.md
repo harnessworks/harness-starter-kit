@@ -155,22 +155,34 @@ Every recurring agent failure should be converted into at least one durable
 artifact: a clearer instruction, an automated constraint, a test or CI check, a
 decision or failure record, or a drift check.
 
-## Commands
+## Command Flow
 
 The `/harness ...` names below are prompt conventions by default, not built-in
 editor commands. Type or paste them into your coding agent chat. In editors such
 as Cursor, they will not appear in the command palette unless you separately add
 matching custom slash commands.
 
-| Command | Use when |
-| --- | --- |
-| `/harness doctor` | Score baseline harness evidence without modifying files. |
-| `/harness update` | Refresh the local `./harness-starter-kit` reference after adoption. |
-| `/harness refresh` | Review stale, duplicated, obsolete, or unused target harness guidance. |
-| `/harness review` | Challenge the current change set before finishing. |
-| `/harness review sub-agent` | Explicitly request a read-only reviewer subagent when the runtime permits it. |
+Think about the commands by user stage:
+
+| Stage | Command | Use when |
+| --- | --- | --- |
+| First time | `/harness doctor` | Inspect current harness readiness without modifying files. |
+| First time | `/harness adopt` | Apply the smallest useful harness pieces to this repository. |
+| Daily work | `/harness review` | Challenge the current diff before commit or PR. |
+| Daily work | `/harness review sub-agent` | Explicitly request a read-only reviewer subagent when the runtime permits it. |
+| Maintenance | `/harness update` | Bring in a newer `harness-starter-kit` reference and selectively update this repo. |
+| Maintenance | `/harness refresh` | Clean up stale, duplicated, obsolete, or unused harness guidance already in this repo. |
+
+Quick rule:
+
+- Use `doctor` to inspect.
+- Use `adopt` to start.
+- Use `review` before finishing work.
+- Use `update` when the kit version changes.
+- Use `refresh` when this repo's existing harness guidance gets stale.
 
 See [`commands/`](commands/) for full workflows:
+[`adopt`](commands/harness-adopt.md),
 [`doctor`](commands/harness-doctor.md),
 [`update`](commands/harness-update.md),
 [`refresh`](commands/harness-refresh.md),
@@ -184,31 +196,63 @@ published as runtime-native skills for Codex and Claude Code.
 ### Codex
 
 ```bash
-codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.14
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.15
 ```
 
 Restart Codex, open the Plugins screen, select `Harnessworks`, and install
 `harness-agent-skills`.
 
-Use:
+Use the same command model in every runtime:
+
+```text
+Start:      $harness doctor → $harness adopt
+Daily:      $harness review
+Maintain:   $harness update or $harness refresh
+```
+
+Common commands:
 
 ```text
 $harness doctor
-$harness-review
+$harness adopt
+$harness review
+```
+
+Maintenance commands:
+
+```text
+$harness update
+$harness refresh
 ```
 
 ### Claude Code
 
 ```bash
-claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.14
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.15
 claude plugin install harness-agent-skills@harnessworks
 ```
 
-Use:
+Use the router command:
+
+```text
+Start:      /harness-agent-skills:harness doctor → /harness-agent-skills:harness adopt
+Daily:      /harness-agent-skills:harness review
+Maintain:   /harness-agent-skills:harness update or /harness-agent-skills:harness refresh
+```
+
+Common commands:
 
 ```text
 /harness-agent-skills:harness doctor
+/harness-agent-skills:harness adopt
 /harness-agent-skills:harness review
+```
+
+Maintenance commands:
+
+```text
+/harness-agent-skills:harness update
+/harness-agent-skills:harness refresh
 ```
 
 The source package lives in [`agent-skills/`](agent-skills/). For direct

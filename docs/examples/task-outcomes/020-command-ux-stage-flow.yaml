@@ -1,0 +1,95 @@
+schema_version: 1
+
+target:
+  repository: harnessworks/harness-starter-kit
+  repository_ref: main at 3aae5aa before local edits
+  stack_or_framework: Markdown command docs, Python unittest, Agent Skills packaging
+  date: 2026-06-18
+  agent_or_model: Hermes Agent
+  reviewer: primary agent with local validation
+
+task:
+  id: command-ux-stage-flow
+  run_id: harness-starter-kit-020
+  prompt_summary: Clarify Codex and Claude command UX by organizing harness commands into first-time, daily-work, and maintenance stages.
+  prompt_ref: current Hermes thread request "ux 정리를 진행하자"
+  prompt_hash: not recorded
+  comparable_task_group: harness-maintenance
+  condition: harnessed-only
+  expected_boundary:
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
+    - CHANGELOG.md
+    - AGENTS.md
+    - agent-skills/.codex-plugin/plugin.json
+    - agent-skills/.claude-plugin/plugin.json
+    - commands/harness-adopt.md
+    - docs/agent-skills-package.md
+    - docs/component-map.md
+    - agent-skills/references/package-contract.md
+    - scripts/check_agent_skills_package.py
+    - tests/test_readme_prompt_drift.py
+    - tests/test_agent_skills_package.py
+    - docs/decisions/0010-stage-command-ux-for-agent-runtimes.md
+    - docs/examples/task-outcomes/020-command-ux-stage-flow.yaml
+  known_failure_mode: Command UX can become runtime-specific, omit the first-time adopt path, or make update and refresh look like interchangeable maintenance commands.
+
+harness_context:
+  harness_doctor_score: 100/100 after implementation; this record is harness-maintenance evidence, not effectiveness proof
+  harness_source:
+    kit_url: https://github.com/harnessworks/harness-starter-kit
+    kit_commit: 3aae5aa
+    source_tracking_ref: none; this repository is the kit source
+  relevant_instructions:
+    - AGENTS.md
+    - README.md
+    - docs/agent-skills-package.md
+  relevant_constraints:
+    - python3 -m unittest tests.test_readme_prompt_drift tests.test_agent_skills_package tests.test_repository_hygiene
+    - python3 scripts/check_agent_skills_package.py
+    - python3 scripts/check_docs_drift.py
+    - python3 scripts/check_structure.py
+    - python3 scripts/check_decision_memory.py
+  relevant_memory_records:
+    - docs/decisions/0008-universal-agent-skills-package.md
+    - docs/decisions/0009-claude-code-plugin-marketplace.md
+    - docs/decisions/0010-stage-command-ux-for-agent-runtimes.md
+
+outcome:
+  files_changed:
+    - README.md
+    - README.ko.md
+    - README.ja.md
+    - README.zh-CN.md
+    - README.zh-TW.md
+    - CHANGELOG.md
+    - AGENTS.md
+    - agent-skills/.codex-plugin/plugin.json
+    - agent-skills/.claude-plugin/plugin.json
+    - commands/harness-adopt.md
+    - docs/agent-skills-package.md
+    - docs/component-map.md
+    - agent-skills/references/package-contract.md
+    - scripts/check_agent_skills_package.py
+    - tests/test_readme_prompt_drift.py
+    - tests/test_agent_skills_package.py
+    - docs/decisions/0010-stage-command-ux-for-agent-runtimes.md
+    - docs/examples/task-outcomes/020-command-ux-stage-flow.yaml
+  wrong_file_edits: 0
+  repeated_known_mistake: false
+  verification_command: python3 -m unittest discover -s tests && python3 -m py_compile scripts/apply_harness.py scripts/check_agent_skills_package.py scripts/check_docs_drift.py scripts/check_structure.py scripts/check_encoding_hygiene.py scripts/check_effectiveness_plan.py scripts/check_failure_memory.py scripts/check_decision_memory.py scripts/harness_doctor.py && python3 scripts/check_agent_skills_package.py && python3 scripts/check_docs_drift.py && python3 scripts/check_structure.py && python3 scripts/check_encoding_hygiene.py && python3 scripts/check_effectiveness_plan.py && python3 scripts/check_failure_memory.py && python3 scripts/check_decision_memory.py && python3 scripts/harness_doctor.py --target . && git diff --check
+  first_pass_verification:
+    result: passed after adding the decision record required by decision-memory review; unittest, py_compile, package check, docs drift, structure, encoding, effectiveness, failure memory, decision memory, Harness Doctor, and diff whitespace checks completed successfully
+  drift_violations_detected: []
+  human_rework_minutes: 0
+  reverted_files: []
+  notes: Added failing regression tests first for README command-stage UX and Codex/Claude adopt command visibility, then updated docs and package contract to pass them.
+
+follow_up:
+  harness_change_needed: false
+  decision_or_failure_record: Decision record added in docs/decisions/0010-stage-command-ux-for-agent-runtimes.md; no failure record because this was a UX clarification rather than a recurring runtime failure fix.
+  include_in_effectiveness_report: false
+  include_in_comparable_product_task_count: false
