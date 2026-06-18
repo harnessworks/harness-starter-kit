@@ -4,10 +4,15 @@ Notable project changes should be recorded here before release tags are cut.
 
 ## Unreleased
 
+## v0.1.16 - 2026-06-18
+
+Patch release for localized README command UX alignment.
+
 ### Changed
 
 - Align localized README command sections with the stage-based command UX used
   by the English README.
+- Bump Agent Skills plugin manifests and stable install references to `0.1.16`.
 
 ## v0.1.15 - 2026-06-18
 

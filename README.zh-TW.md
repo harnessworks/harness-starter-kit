@@ -174,7 +174,7 @@ Claude Code 的 runtime-native skills 安裝。
 ### Codex
 
 ```bash
-codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.15
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.16
 ```
 
 重新啟動 Codex，開啟 Plugins 畫面，在 `Harnessworks` marketplace 中安裝
@@ -206,7 +206,7 @@ $harness refresh
 ### Claude Code
 
 ```bash
-claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.15
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.16
 claude plugin install harness-agent-skills@harnessworks
 ```
 
