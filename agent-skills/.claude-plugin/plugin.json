@@ -1,7 +1,7 @@
 {
   "name": "harness-agent-skills",
   "displayName": "Harness Agent Skills",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Portable Harness Starter Kit workflows for Claude Code.",
   "author": {
     "name": "Harnessworks",

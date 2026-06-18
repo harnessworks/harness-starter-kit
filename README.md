@@ -196,7 +196,7 @@ published as runtime-native skills for Codex and Claude Code.
 ### Codex
 
 ```bash
-codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.15
+codex plugin marketplace add harnessworks/harness-agent-skills-marketplace --ref v0.1.16
 ```
 
 Restart Codex, open the Plugins screen, select `Harnessworks`, and install
@@ -228,7 +228,7 @@ $harness refresh
 ### Claude Code
 
 ```bash
-claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.15
+claude plugin marketplace add harnessworks/harness-agent-skills-marketplace@v0.1.16
 claude plugin install harness-agent-skills@harnessworks
 ```
 

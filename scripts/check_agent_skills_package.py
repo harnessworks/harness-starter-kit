@@ -17,7 +17,7 @@ SKILLS_ROOT = PACKAGE_ROOT / "skills"
 REFERENCES_ROOT = PACKAGE_ROOT / "references"
 CODEX_PLUGIN_MANIFEST = PACKAGE_ROOT / ".codex-plugin" / "plugin.json"
 CLAUDE_PLUGIN_MANIFEST = PACKAGE_ROOT / ".claude-plugin" / "plugin.json"
-PACKAGE_VERSION = "0.1.15"
+PACKAGE_VERSION = "0.1.16"
 
 WORKFLOW_SKILLS = {
     "harness": None,
